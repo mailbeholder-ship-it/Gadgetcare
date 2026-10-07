@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Home Service Cell</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0b1117;
+      color: white;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #8c9aa8;
+      margin-bottom: 25px;
+    }
+
+    .login-box,
+    .dashboard {
+      background: #111a22;
+      border: 1px solid #24313d;
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    input,
+    button,
+    select {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #334454;
+      background: #18232d;
+      color: white;
+      font-size: 15px;
+    }
+
+    button {
+      background: #00c8ff;
+      color: #001018;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: .9;
+    }
+
+    .logout {
+      width: auto;
+      background: #ef4444;
+      color: white;
+      float: right;
+      padding: 10px 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat {
+      background: #16212b;
+      border: 1px solid #293947;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: bold;
+      margin-top: 8px;
+      color: #00c8ff;
+    }
+
+    .booking {
+      background: #16212b;
+      border: 1px solid #293947;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 15px;
+    }
+
+    .booking-code {
+      color: #00c8ff;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .info {
+      margin-top: 10px;
+      line-height: 1.7;
+      color: #d5dde5;
+    }
+
+    .status {
+      margin-top: 12px;
+    }
+
+    .refresh {
+      background: #263746;
+      color: white;
+      margin-bottom: 15px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .message {
+      margin-top: 12px;
+      color: #ff8585;
+    }
+
+    @media(max-width: 700px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div id="loginSection">
+    <div class="login-box">
+      <h1>🔐 Admin Login</h1>
+      <p class="subtitle">Home Service Cell</p>
+
+      <input
+        type="email"
+        id="email"
+        placeholder="Email admin"
+      >
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+      >
+
+      <button onclick="login()">
+        LOGIN
+      </button>
+
+      <div id="loginMessage" class="message"></div>
+    </div>
+  </div>
+
+
+  <!-- DASHBOARD -->
+  <div id="dashboardSection" class="hidden">
+
+    <button class="logout" onclick="logout()">
+      Logout
+    </button>
+
+    <h1>📱 Home Service Cell</h1>
+    <p class="subtitle">Admin Dashboard</p>
+
+    <div class="stats">
+
+      <div class="stat">
+        <div>📋 Total Booking</div>
+        <div class="stat-number" id="totalBooking">0</div>
+      </div>
+
+      <div class="stat">
+        <div>🔧 Sedang Diproses</div>
+        <div class="stat-number" id="processingBooking">0</div>
+      </div>
+
+      <div class="stat">
+        <div>✅ Selesai</div>
+        <div class="stat-number" id="completedBooking">0</div>
+      </div>
+
+    </div>
+
+    <button class="refresh" onclick="loadBookings()">
+      🔄 Refresh Booking
+    </button>
+
+    <div id="bookingList">
+      Memuat booking...
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://sqpolxwdyypbxylgvihi.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+// LOGIN
+async function login() {
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("loginMessage");
+
+  message.textContent = "Memproses login...";
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if (error) {
+    message.textContent =
+      "Login gagal: " + error.message;
+    return;
+  }
+
+  showDashboard();
+
+}
+
+
+// CEK SESSION
+async function checkSession() {
+
+  const { data } =
+    await supabaseClient.auth.getSession();
+
+  if (data.session) {
+    showDashboard();
+  }
+
+}
+
+
+// TAMPILKAN DASHBOARD
+function showDashboard() {
+
+  document
+    .getElementById("loginSection")
+    .classList.add("hidden");
+
+  document
+    .getElementById("dashboardSection")
+    .classList.remove("hidden");
+
+  loadBookings();
+
+}
+
+
+// LOGOUT
+async function logout() {
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+
+}
+
+
+// LOAD BOOKING
+async function loadBookings() {
+
+  const list =
+    document.getElementById("bookingList");
+
+  list.innerHTML = "Memuat booking...";
+
+  const { data, error } =
+    await supabaseClient
+      .from("bookings")
+      .select("*")
+      .order("created_at", {
+        ascending: false
+      });
+
+  if (error) {
+
+    list.innerHTML =
+      "<p>Gagal mengambil booking: " +
+      error.message +
+      "</p>";
+
+    return;
+  }
+
+
+  // STATISTIK
+
+  document.getElementById("totalBooking")
+    .textContent = data.length;
+
+  document.getElementById("processingBooking")
+    .textContent =
+      data.filter(item =>
+        item.status !== "Menunggu" &&
+        item.status !== "Selesai"
+      ).length;
+
+  document.getElementById("completedBooking")
+    .textContent =
+      data.filter(item =>
+        item.status === "Selesai"
+      ).length;
+
+
+  if (data.length === 0) {
+
+    list.innerHTML =
+      "<div class='booking'>" +
+      "Belum ada booking masuk." +
+      "</div>";
+
+    return;
+  }
+
+
+  list.innerHTML = "";
+
+
+  data.forEach(item => {
+
+    const date =
+      new Date(item.created_at)
+        .toLocaleString("id-ID");
+
+    const booking = document.createElement("div");
+
+    booking.className = "booking";
+
+    booking.innerHTML = `
+
+      <div class="booking-code">
+        ${item.booking_code}
+      </div>
+
+      <div class="info">
+
+        👤 <b>Nama:</b>
+        ${item.customer_name}
+        <br>
+
+        📱 <b>No. HP:</b>
+        ${item.phone}
+        <br>
+
+        📱 <b>Perangkat:</b>
+        ${item.device}
+        <br>
+
+        🔧 <b>Kerusakan:</b>
+        ${item.damage}
+        <br>
+
+        📝 <b>Keterangan:</b>
+        ${item.description || "-"}
+        <br>
+
+        📍 <b>Alamat:</b>
+        ${item.address}
+        <br>
+
+        🕐 <b>Masuk:</b>
+        ${date}
+
+      </div>
+
+      <div class="status">
+
+        <select
+          onchange="updateStatus('${item.id}', this.value)"
+        >
+
+          <option value="Menunggu"
+            ${item.status === "Menunggu" ? "selected" : ""}>
+            Menunggu
+          </option>
+
+          <option value="Dikonfirmasi"
+            ${item.status === "Dikonfirmasi" ? "selected" : ""}>
+            Dikonfirmasi
+          </option>
+
+          <option value="Teknisi Berangkat"
+            ${item.status === "Teknisi Berangkat" ? "selected" : ""}>
+            Teknisi Berangkat
+          </option>
+
+          <option value="Sedang Diperbaiki"
+            ${item.status === "Sedang Diperbaiki" ? "selected" : ""}>
+            Sedang Diperbaiki
+          </option>
+
+          <option value="Selesai"
+            ${item.status === "Selesai" ? "selected" : ""}>
+            Selesai
+          </option>
+
+        </select>
+
+      </div>
+
+    `;
+
+    list.appendChild(booking);
+
+  });
+
+}
+
+
+// UPDATE STATUS
+async function updateStatus(id, status) {
+
+  const { error } =
+    await supabaseClient
+      .from("bookings")
+      .update({
+        status: status
+      })
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Gagal mengubah status: " +
+      error.message
+    );
+
+    return;
+  }
+
+  loadBookings();
+
+}
+
+
+// Jalankan ketika halaman dibuka
+checkSession();
+
+</script>
+
+</body>
+</html>
