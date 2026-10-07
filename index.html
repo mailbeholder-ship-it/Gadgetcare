@@ -1199,6 +1199,12 @@ document.getElementById("bookingForm").addEventListener("submit", async function
 
     const bookingCode = generateBookingCode();
 
+const latitude =
+    document.getElementById("latitude").value;
+
+const longitude =
+    document.getElementById("longitude").value;
+    
     const { error } = await supabaseClient.rpc("create_booking", {
         p_booking_code: bookingCode,
         p_customer_name: name,
