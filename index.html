@@ -732,35 +732,65 @@
 </footer>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+const SUPABASE_URL = "https://sqpolxwdyypbxylgvihi.supabase.co";
+const SUPABASE_KEY = "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 
-document.getElementById("bookingForm").addEventListener("submit", function(e) {
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
+function generateBookingCode() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "";
+
+    for (let i = 0; i < 6; i++) {
+        code += chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    return "HSC-" + code;
+}
+
+document.getElementById("bookingForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
-    const name =
-        document.getElementById("name").value;
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const device = document.getElementById("device").value;
+    const damage = document.getElementById("damage").value;
+    const description = document.getElementById("description").value;
+    const address = document.getElementById("address").value;
 
-    const phone =
-        document.getElementById("phone").value;
+    const bookingCode = generateBookingCode();
 
-    const device =
-        document.getElementById("device").value;
+    const { error } = await supabaseClient
+        .from("bookings")
+        .insert([{
+            booking_code: bookingCode,
+            customer_name: name,
+            phone: phone,
+            device: device,
+            damage: damage,
+            description: description,
+            address: address
+        }]);
 
-    const damage =
-        document.getElementById("damage").value;
-
-    const description =
-        document.getElementById("description").value;
-
-    const address =
-        document.getElementById("address").value;
-
+    if (error) {
+        console.error(error);
+        alert("Pesanan gagal disimpan. Silakan coba lagi.");
+        return;
+    }
 
     const message =
 `Halo Home Service Cell 👋
 
 Saya ingin melakukan servis HP.
+
+🎫 Kode Booking:
+${bookingCode}
 
 👤 Nama:
 ${name}
@@ -784,17 +814,16 @@ Mohon informasi estimasi biaya dan jadwal teknisi.
 
 Terima kasih.`;
 
-
     const whatsapp =
         "https://wa.me/6285846009748?text=" +
         encodeURIComponent(message);
 
+    alert(
+        "Pesanan berhasil disimpan!\n\n" +
+        "Kode Booking: " + bookingCode +
+        "\n\nSimpan kode ini untuk mengecek status servis."
+    );
 
-    window.open(whatsapp, "_blank");
-
+    window.location.href = whatsapp;
 });
-
 </script>
-
-</body>
-</html>
