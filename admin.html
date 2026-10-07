@@ -403,13 +403,47 @@ async function loadBookings() {
         📝 <b>Keterangan:</b>
         ${item.description || "-"}
         <br>
+📍 <b>Alamat:</b>
+${item.address}
+<br>
 
-        📍 <b>Alamat:</b>
-        ${item.address}
-        <br>
+${
+  item.latitude && item.longitude
+    ? `
+      📌 <b>Koordinat:</b>
+      ${Number(item.latitude).toFixed(6)},
+      ${Number(item.longitude).toFixed(6)}
+      <br>
 
-        🕐 <b>Masuk:</b>
-        ${date}
+      <a
+        href="https://www.google.com/maps?q=${item.latitude},${item.longitude}"
+        target="_blank"
+        style="
+          display:inline-block;
+          margin-top:10px;
+          padding:10px 14px;
+          background:#00c8ff;
+          color:#001018;
+          text-decoration:none;
+          border-radius:8px;
+          font-weight:bold;
+        "
+      >
+        🗺️ Lihat Lokasi di Google Maps
+      </a>
+      <br>
+    `
+    : `
+      📌 <b>Koordinat:</b>
+      <span style="color:#ff8585;">
+        Belum tersedia
+      </span>
+      <br>
+    `
+}
+
+🕐 <b>Masuk:</b>
+${date}
 
       </div>
 
