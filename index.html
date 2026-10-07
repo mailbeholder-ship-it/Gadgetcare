@@ -28,7 +28,7 @@
         .container {
             width: 92%;
             max-width: 1100px;
-            margin: auto;
+!            margin: auto;
         }
 
         /* NAVBAR */
@@ -547,6 +547,72 @@
             * Harga merupakan estimasi awal.
             Harga final ditentukan setelah pengecekan teknisi.
         </p>
+
+    </div>
+
+</section>
+
+<!-- STATUS SERVIS -->
+
+<section id="status">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <small>STATUS SERVIS</small>
+
+            <h2>
+                Cek Status Servis
+            </h2>
+
+            <p>
+                Masukkan kode booking untuk melihat perkembangan servis HP kamu.
+            </p>
+
+        </div>
+
+        <div class="booking-box">
+
+            <form id="statusForm">
+
+                <div class="form-group">
+
+                    <label>
+                        Kode Booking
+                    </label>
+
+                    <input
+                        type="text"
+                        id="bookingCode"
+                        placeholder="Contoh: HSC-ABC123"
+                        required
+                    >
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="button submit"
+                >
+                    🔍 Cek Status
+                </button>
+
+            </form>
+
+            <div
+                id="statusResult"
+                style="
+                    display:none;
+                    margin-top:20px;
+                    padding:18px;
+                    background:#101720;
+                    border:1px solid #222e3c;
+                    border-radius:12px;
+                "
+            ></div>
+
+        </div>
 
     </div>
 
