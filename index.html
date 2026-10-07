@@ -895,12 +895,16 @@ document.getElementById("bookingForm").addEventListener("submit", async function
             address: address
         }]);
 
-    if (error) {
-        console.error(error);
-        alert("Pesanan gagal disimpan. Silakan coba lagi.");
-        return;
-    }
+if (error) {
+    console.error("SUPABASE ERROR:", error);
 
+    alert(
+        "Pesanan gagal disimpan.\n\n" +
+        "Error: " + error.message
+    );
+
+    return;
+}
     const message =
 `Halo Home Service Cell 👋
 
