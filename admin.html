@@ -833,7 +833,31 @@ async function updateStatus(
   loadBookings();
 
 }
+const harga = Number(data.total_price || 0);
 
+const hargaRupiah = harga.toLocaleString("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0
+});
+  <div style="
+    margin-top:15px;
+    padding:15px;
+    border-radius:10px;
+    background:#16212b;
+    border:1px solid #293947;
+">
+    💰 <b>Total Harga</b>
+
+    <div style="
+        font-size:24px;
+        font-weight:bold;
+        color:#00c8ff;
+        margin-top:6px;
+    ">
+        ${hargaRupiah}
+    </div>
+</div>
 
 /* =========================================
    JALANKAN SAAT HALAMAN DIBUKA
