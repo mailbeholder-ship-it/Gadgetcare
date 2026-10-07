@@ -838,24 +838,27 @@ document.getElementById("statusForm").addEventListener("submit", async function(
 
     result.style.display = "block";
     result.innerHTML = "🔄 Memeriksa status...";
+const { data, error } = await supabaseClient.rpc("create_booking", {
+    p_booking_code: bookingCode,
+    p_customer_name: name,
+    p_phone: phone,
+    p_device: device,
+    p_damage: damage,
+    p_description: description,
+    p_address: address
+});
 
-    const { data, error } = await supabaseClient.rpc("check_booking", {
-        p_booking_code: code
-    });
+if (error) {
+    console.error("SUPABASE ERROR:", error);
 
-    if (error) {
-        console.error(error);
-        result.innerHTML =
-            "<p>❌ Terjadi kesalahan saat mengecek status.</p>";
-        return;
-    }
+    alert(
+        "Pesanan gagal disimpan.\n\n" +
+        "Error: " + error.message
+    );
 
-    if (!data || data.length === 0) {
-        result.innerHTML =
-            "<p>❌ Kode booking tidak ditemukan.</p>" +
-            "<p>Pastikan kode yang dimasukkan benar.</p>";
-        return;
-    }
+    return;
+}
+    
 
     const booking = data[0];
 
