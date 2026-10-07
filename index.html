@@ -834,7 +834,67 @@
     </div>
 
 </footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    if (typeof L === "undefined") {
+        console.error("Leaflet belum berhasil dimuat.");
+        return;
+    }
+
+    const mapElement = document.getElementById("map");
+
+    if (!mapElement) {
+        console.error("Elemen map tidak ditemukan.");
+        return;
+    }
+
+    const defaultLat = -6.914744;
+    const defaultLng = 107.609810;
+
+    const map = L.map("map").setView(
+        [defaultLat, defaultLng],
+        13
+    );
+
+    L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution: "&copy; OpenStreetMap contributors"
+        }
+    ).addTo(map);
+
+    let marker = null;
+
+    map.on("click", function (e) {
+
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng]).addTo(map);
+        }
+
+        document.getElementById("latitude").value = lat;
+        document.getElementById("longitude").value = lng;
+
+        document.getElementById("locationStatus").innerHTML =
+            "📍 Lokasi dipilih: " +
+            lat.toFixed(6) +
+            ", " +
+            lng.toFixed(6);
+
+    });
+
+    setTimeout(function () {
+        map.invalidateSize();
+    }, 300);
+
+});
+</script>
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -857,86 +917,7 @@ const supabaseClient = window.supabase.createClient(
     SUPABASE_KEY
 );
 
-<script>
-/* =========================
-   PETA LOKASI CUSTOMER
-========================= */
 
-let map;
-let marker;
-
-/* Lokasi awal: Bandung */
-const defaultLat = -6.914744;
-const defaultLng = 107.609810;
-
-function initMap() {
-
-    map = L.map("map").setView(
-        [defaultLat, defaultLng],
-        13
-    );
-
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 19,
-            attribution: "&copy; OpenStreetMap"
-        }
-    ).addTo(map);
-
-
-    map.on("click", function(e) {
-
-        const lat = e.latlng.lat;
-        const lng = e.latlng.lng;
-
-        setLocation(lat, lng);
-
-    });
-
-}
-
-
-/* =========================
-   SET LOKASI
-========================= */
-
-function setLocation(lat, lng) {
-
-    document.getElementById("latitude").value = lat;
-    document.getElementById("longitude").value = lng;
-
-    if (marker) {
-
-        marker.setLatLng([lat, lng]);
-
-    } else {
-
-        marker = L.marker([lat, lng])
-            .addTo(map);
-
-    }
-
-    document.getElementById("locationStatus").innerHTML =
-        "📍 Lokasi dipilih: " +
-        lat.toFixed(6) +
-        ", " +
-        lng.toFixed(6);
-
-}
-
-
-/* Jalankan peta setelah halaman siap */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        initMap();
-
-    }
-);
-</script>
 /* =========================
    GENERATE KODE BOOKING
 ========================= */
