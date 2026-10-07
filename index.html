@@ -806,15 +806,267 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const SUPABASE_URL = "https://sqpolxwdyypbxylgvihi.supabase.co";
-const SUPABASE_KEY = "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+const SUPABASE_URL =
+    "https://sqpolxwdyypbxylgvihi.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
 
+
+/* =========================
+   GENERATE KODE BOOKING
+========================= */
+
+function generateBookingCode() {
+
+    const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    let code = "";
+
+    for (let i = 0; i < 6; i++) {
+        code += chars[
+            Math.floor(Math.random() * chars.length)
+        ];
+    }
+
+    return "HSC-" + code;
+}
+
+
+/* =========================
+   CEK STATUS SERVIS
+========================= */
+
+document
+    .getElementById("statusForm")
+    .addEventListener("submit", async function(e) {
+
+        e.preventDefault();
+
+        const code = document
+            .getElementById("bookingCode")
+            .value
+            .trim()
+            .toUpperCase();
+
+        const result =
+            document.getElementById("statusResult");
+
+        result.style.display = "block";
+
+        result.innerHTML =
+            "🔄 Memeriksa status...";
+
+
+        const { data, error } =
+            await supabaseClient.rpc(
+                "check_booking",
+                {
+                    p_booking_code: code
+                }
+            );
+
+
+        if (error) {
+
+            console.error(error);
+
+            result.innerHTML =
+                "<p>❌ Terjadi kesalahan saat mengecek status.</p>" +
+                "<p>" + error.message + "</p>";
+
+            return;
+        }
+
+
+        if (!data || data.length === 0) {
+
+            result.innerHTML =
+                "<p>❌ Kode booking tidak ditemukan.</p>" +
+                "<p>Pastikan kode yang dimasukkan benar.</p>";
+
+            return;
+        }
+
+
+        const booking = data[0];
+
+
+        const price =
+            booking.estimated_price
+                ? "Rp" +
+                  Number(
+                      booking.estimated_price
+                  ).toLocaleString("id-ID")
+                : "Belum ditentukan";
+
+
+        result.innerHTML =
+
+            "<p><strong>🎫 Kode:</strong> " +
+            booking.booking_code +
+            "</p>" +
+
+            "<p><strong>👤 Nama:</strong> " +
+            booking.customer_name +
+            "</p>" +
+
+            "<p><strong>📱 HP:</strong> " +
+            booking.device +
+            "</p>" +
+
+            "<p><strong>🔧 Kerusakan:</strong> " +
+            booking.damage +
+            "</p>" +
+
+            "<p><strong>🔄 Status:</strong> " +
+            booking.status +
+            "</p>" +
+
+            "<p><strong>💰 Estimasi:</strong> " +
+            price +
+            "</p>";
+
+    });
+
+
+/* =========================
+   PESAN TEKNISI
+========================= */
+
+document
+    .getElementById("bookingForm")
+    .addEventListener("submit", async function(e) {
+
+        e.preventDefault();
+
+
+        const name =
+            document.getElementById("name")
+            .value.trim();
+
+        const phone =
+            document.getElementById("phone")
+            .value.trim();
+
+        const device =
+            document.getElementById("device")
+            .value.trim();
+
+        const damage =
+            document.getElementById("damage")
+            .value;
+
+        const description =
+            document.getElementById("description")
+            .value.trim();
+
+        const address =
+            document.getElementById("address")
+            .value.trim();
+
+
+        const bookingCode =
+            generateBookingCode();
+
+
+        /* SIMPAN KE SUPABASE */
+
+        const { data, error } =
+            await supabaseClient.rpc(
+                "create_booking",
+                {
+                    p_booking_code: bookingCode,
+                    p_customer_name: name,
+                    p_phone: phone,
+                    p_device: device,
+                    p_damage: damage,
+                    p_description: description,
+                    p_address: address
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "SUPABASE ERROR:",
+                error
+            );
+
+            alert(
+                "Pesanan gagal disimpan.\n\n" +
+                "Error: " +
+                error.message
+            );
+
+            return;
+        }
+
+
+        /* PESAN WHATSAPP */
+
+        const message =
+`Halo Home Service Cell 👋
+
+Saya ingin melakukan servis HP.
+
+🎫 Kode Booking:
+${bookingCode}
+
+👤 Nama:
+${name}
+
+📱 No. WhatsApp:
+${phone}
+
+📱 HP:
+${device}
+
+🔧 Kerusakan:
+${damage}
+
+📝 Keterangan:
+${description || "-"}
+
+📍 Alamat:
+${address}
+
+Mohon informasi estimasi biaya dan jadwal teknisi.
+
+Terima kasih.`;
+
+
+        const whatsapp =
+            "https://wa.me/6285846009748?text=" +
+            encodeURIComponent(message);
+
+
+        alert(
+            "Pesanan berhasil disimpan!\n\n" +
+            "Kode Booking: " +
+            bookingCode +
+            "\n\n" +
+            "Klik OK untuk melanjutkan ke WhatsApp."
+        );
+
+
+        window.location.href =
+            whatsapp;
+
+    });
+
+</script>
 function generateBookingCode() {
     const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     let code = "";
