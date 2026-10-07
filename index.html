@@ -1214,7 +1214,9 @@ const longitude =
 const longitude =
     document.getElementById("longitude").value;
 
-
+console.log("LATITUDE:", latitude);
+console.log("LONGITUDE:", longitude);
+    
 const { error } =
     await supabaseClient.rpc(
         "create_booking",
