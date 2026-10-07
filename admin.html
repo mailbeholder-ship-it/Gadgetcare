@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Admin - Home Service Cell</title>
 
+  <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -109,6 +112,7 @@
       color: #00c8ff;
       font-size: 18px;
       font-weight: bold;
+      margin-bottom: 5px;
     }
 
     .info {
@@ -136,7 +140,46 @@
       color: #ff8585;
     }
 
+    /* ========================= */
+    /* LOKASI */
+    /* ========================= */
+
+    .coordinates {
+      margin-top: 8px;
+      color: #8fdcff;
+      font-size: 14px;
+    }
+
+    .map-button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: #00c8ff;
+      color: #001018;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: .2s;
+    }
+
+    .map-button:hover {
+      opacity: .85;
+      transform: translateY(-1px);
+    }
+
+    .no-location {
+      color: #ff8585;
+      font-size: 14px;
+    }
+
+    .booking-divider {
+      height: 1px;
+      background: #293947;
+      margin: 15px 0;
+    }
+
     @media(max-width: 700px) {
+
       .stats {
         grid-template-columns: 1fr;
       }
@@ -144,19 +187,37 @@
       body {
         padding: 12px;
       }
+
+      .logout {
+        float: none;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
     }
+
   </style>
 </head>
+
 
 <body>
 
 <div class="container">
 
+
+  <!-- ========================= -->
   <!-- LOGIN -->
+  <!-- ========================= -->
+
   <div id="loginSection">
+
     <div class="login-box">
+
       <h1>🔐 Admin Login</h1>
-      <p class="subtitle">Home Service Cell</p>
+
+      <p class="subtitle">
+        Home Service Cell
+      </p>
 
       <input
         type="email"
@@ -174,47 +235,120 @@
         LOGIN
       </button>
 
-      <div id="loginMessage" class="message"></div>
+      <div
+        id="loginMessage"
+        class="message"
+      ></div>
+
     </div>
+
   </div>
 
 
+  <!-- ========================= -->
   <!-- DASHBOARD -->
-  <div id="dashboardSection" class="hidden">
+  <!-- ========================= -->
 
-    <button class="logout" onclick="logout()">
+  <div
+    id="dashboardSection"
+    class="hidden"
+  >
+
+    <button
+      class="logout"
+      onclick="logout()"
+    >
       Logout
     </button>
 
-    <h1>📱 Home Service Cell</h1>
-    <p class="subtitle">Admin Dashboard</p>
+
+    <h1>
+      📱 Home Service Cell
+    </h1>
+
+    <p class="subtitle">
+      Admin Dashboard
+    </p>
+
+
+    <!-- ========================= -->
+    <!-- STATISTIK -->
+    <!-- ========================= -->
 
     <div class="stats">
 
-      <div class="stat">
-        <div>📋 Total Booking</div>
-        <div class="stat-number" id="totalBooking">0</div>
-      </div>
 
       <div class="stat">
-        <div>🔧 Sedang Diproses</div>
-        <div class="stat-number" id="processingBooking">0</div>
+
+        <div>
+          📋 Total Booking
+        </div>
+
+        <div
+          class="stat-number"
+          id="totalBooking"
+        >
+          0
+        </div>
+
       </div>
 
+
       <div class="stat">
-        <div>✅ Selesai</div>
-        <div class="stat-number" id="completedBooking">0</div>
+
+        <div>
+          🔧 Sedang Diproses
+        </div>
+
+        <div
+          class="stat-number"
+          id="processingBooking"
+        >
+          0
+        </div>
+
       </div>
+
+
+      <div class="stat">
+
+        <div>
+          ✅ Selesai
+        </div>
+
+        <div
+          class="stat-number"
+          id="completedBooking"
+        >
+          0
+        </div>
+
+      </div>
+
 
     </div>
 
-    <button class="refresh" onclick="loadBookings()">
+
+    <!-- ========================= -->
+    <!-- REFRESH -->
+    <!-- ========================= -->
+
+    <button
+      class="refresh"
+      onclick="loadBookings()"
+    >
       🔄 Refresh Booking
     </button>
+
+
+    <!-- ========================= -->
+    <!-- BOOKING LIST -->
+    <!-- ========================= -->
 
     <div id="bookingList">
       Memuat booking...
     </div>
+
 
   </div>
 
@@ -222,6 +356,10 @@
 
 
 <script>
+
+/* =========================================
+   SUPABASE
+========================================= */
 
 const SUPABASE_URL =
   "https://sqpolxwdyypbxylgvihi.supabase.co";
@@ -236,67 +374,112 @@ const supabaseClient =
   );
 
 
-// LOGIN
+/* =========================================
+   LOGIN
+========================================= */
+
 async function login() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document
+      .getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document
+      .getElementById("password")
+      .value;
 
   const message =
-    document.getElementById("loginMessage");
+    document
+      .getElementById("loginMessage");
 
-  message.textContent = "Memproses login...";
+
+  if (!email || !password) {
+
+    message.textContent =
+      "Email dan password wajib diisi.";
+
+    return;
+  }
+
+
+  message.textContent =
+    "Memproses login...";
+
 
   const { data, error } =
     await supabaseClient.auth.signInWithPassword({
-      email,
-      password
+
+      email: email,
+
+      password: password
+
     });
 
+
   if (error) {
+
     message.textContent =
-      "Login gagal: " + error.message;
+      "Login gagal: " +
+      error.message;
+
     return;
   }
+
 
   showDashboard();
 
 }
 
 
-// CEK SESSION
+/* =========================================
+   CEK SESSION
+========================================= */
+
 async function checkSession() {
 
   const { data } =
     await supabaseClient.auth.getSession();
 
+
   if (data.session) {
+
     showDashboard();
+
   }
 
 }
 
 
-// TAMPILKAN DASHBOARD
+/* =========================================
+   TAMPILKAN DASHBOARD
+========================================= */
+
 function showDashboard() {
 
   document
     .getElementById("loginSection")
-    .classList.add("hidden");
+    .classList
+    .add("hidden");
+
 
   document
     .getElementById("dashboardSection")
-    .classList.remove("hidden");
+    .classList
+    .remove("hidden");
+
 
   loadBookings();
 
 }
 
 
-// LOGOUT
+/* =========================================
+   LOGOUT
+========================================= */
+
 async function logout() {
 
   await supabaseClient.auth.signOut();
@@ -306,13 +489,20 @@ async function logout() {
 }
 
 
-// LOAD BOOKING
+/* =========================================
+   LOAD BOOKING
+========================================= */
+
 async function loadBookings() {
 
   const list =
-    document.getElementById("bookingList");
+    document
+      .getElementById("bookingList");
 
-  list.innerHTML = "Memuat booking...";
+
+  list.innerHTML =
+    "<div class='booking'>Memuat booking...</div>";
+
 
   const { data, error } =
     await supabaseClient
@@ -322,35 +512,57 @@ async function loadBookings() {
         ascending: false
       });
 
+
+  /* ERROR */
+
   if (error) {
 
     list.innerHTML =
-      "<p>Gagal mengambil booking: " +
+      "<div class='booking'>" +
+      "<p>❌ Gagal mengambil booking:</p>" +
+      "<p>" +
       error.message +
-      "</p>";
+      "</p>" +
+      "</div>";
 
     return;
   }
 
 
-  // STATISTIK
+  /* =========================================
+     STATISTIK
+  ========================================= */
 
-  document.getElementById("totalBooking")
+  document
+    .getElementById("totalBooking")
     .textContent = data.length;
 
-  document.getElementById("processingBooking")
+
+  document
+    .getElementById("processingBooking")
     .textContent =
       data.filter(item =>
+
         item.status !== "Menunggu" &&
+
         item.status !== "Selesai"
+
       ).length;
 
-  document.getElementById("completedBooking")
+
+  document
+    .getElementById("completedBooking")
     .textContent =
       data.filter(item =>
+
         item.status === "Selesai"
+
       ).length;
 
+
+  /* =========================================
+     TIDAK ADA BOOKING
+  ========================================= */
 
   if (data.length === 0) {
 
@@ -363,118 +575,212 @@ async function loadBookings() {
   }
 
 
+  /* =========================================
+     KOSONGKAN LIST
+  ========================================= */
+
   list.innerHTML = "";
 
 
+  /* =========================================
+     TAMPILKAN BOOKING
+  ========================================= */
+
   data.forEach(item => {
+
 
     const date =
       new Date(item.created_at)
         .toLocaleString("id-ID");
 
-    const booking = document.createElement("div");
 
-    booking.className = "booking";
+    const booking =
+      document.createElement("div");
+
+
+    booking.className =
+      "booking";
+
+
+    /* =========================================
+       LOKASI
+    ========================================= */
+
+    let locationHTML = "";
+
+
+    if (
+      item.latitude !== null &&
+      item.latitude !== undefined &&
+      item.longitude !== null &&
+      item.longitude !== undefined
+    ) {
+
+      const latitude =
+        Number(item.latitude)
+          .toFixed(6);
+
+      const longitude =
+        Number(item.longitude)
+          .toFixed(6);
+
+
+      locationHTML = `
+
+        <div class="coordinates">
+
+          📌 <b>Koordinat:</b><br>
+
+          ${latitude},
+          ${longitude}
+
+        </div>
+
+
+        <a
+          class="map-button"
+          href="https://www.google.com/maps?q=${item.latitude},${item.longitude}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          🗺️ Lihat Lokasi di Google Maps
+        </a>
+
+      `;
+
+    } else {
+
+      locationHTML = `
+
+        <div class="no-location">
+
+          📌 Koordinat belum tersedia
+
+        </div>
+
+      `;
+
+    }
+
+
+    /* =========================================
+       HTML BOOKING
+    ========================================= */
 
     booking.innerHTML = `
 
       <div class="booking-code">
+
         ${item.booking_code}
+
       </div>
+
 
       <div class="info">
 
         👤 <b>Nama:</b>
         ${item.customer_name}
+
         <br>
+
 
         📱 <b>No. HP:</b>
         ${item.phone}
+
         <br>
+
 
         📱 <b>Perangkat:</b>
         ${item.device}
+
         <br>
+
 
         🔧 <b>Kerusakan:</b>
         ${item.damage}
+
         <br>
+
 
         📝 <b>Keterangan:</b>
         ${item.description || "-"}
+
         <br>
-📍 <b>Alamat:</b>
-${item.address}
-<br>
 
-${
-  item.latitude && item.longitude
-    ? `
-      📌 <b>Koordinat:</b>
-      ${Number(item.latitude).toFixed(6)},
-      ${Number(item.longitude).toFixed(6)}
-      <br>
 
-      <a
-        href="https://www.google.com/maps?q=${item.latitude},${item.longitude}"
-        target="_blank"
-        style="
-          display:inline-block;
-          margin-top:10px;
-          padding:10px 14px;
-          background:#00c8ff;
-          color:#001018;
-          text-decoration:none;
-          border-radius:8px;
-          font-weight:bold;
-        "
-      >
-        🗺️ Lihat Lokasi di Google Maps
-      </a>
-      <br>
-    `
-    : `
-      📌 <b>Koordinat:</b>
-      <span style="color:#ff8585;">
-        Belum tersedia
-      </span>
-      <br>
-    `
-}
+        📍 <b>Alamat:</b>
+        ${item.address}
 
-🕐 <b>Masuk:</b>
-${date}
+
+        ${locationHTML}
+
+
+        <div class="booking-divider"></div>
+
+
+        🕐 <b>Masuk:</b>
+        ${date}
 
       </div>
+
+
+      <!-- STATUS -->
 
       <div class="status">
 
         <select
-          onchange="updateStatus('${item.id}', this.value)"
+          onchange="updateStatus(
+            '${item.id}',
+            this.value
+          )"
         >
 
-          <option value="Menunggu"
-            ${item.status === "Menunggu" ? "selected" : ""}>
+          <option
+            value="Menunggu"
+            ${item.status === "Menunggu"
+              ? "selected"
+              : ""}
+          >
             Menunggu
           </option>
 
-          <option value="Dikonfirmasi"
-            ${item.status === "Dikonfirmasi" ? "selected" : ""}>
+
+          <option
+            value="Dikonfirmasi"
+            ${item.status === "Dikonfirmasi"
+              ? "selected"
+              : ""}
+          >
             Dikonfirmasi
           </option>
 
-          <option value="Teknisi Berangkat"
-            ${item.status === "Teknisi Berangkat" ? "selected" : ""}>
+
+          <option
+            value="Teknisi Berangkat"
+            ${item.status === "Teknisi Berangkat"
+              ? "selected"
+              : ""}
+          >
             Teknisi Berangkat
           </option>
 
-          <option value="Sedang Diperbaiki"
-            ${item.status === "Sedang Diperbaiki" ? "selected" : ""}>
+
+          <option
+            value="Sedang Diperbaiki"
+            ${item.status === "Sedang Diperbaiki"
+              ? "selected"
+              : ""}
+          >
             Sedang Diperbaiki
           </option>
 
-          <option value="Selesai"
-            ${item.status === "Selesai" ? "selected" : ""}>
+
+          <option
+            value="Selesai"
+            ${item.status === "Selesai"
+              ? "selected"
+              : ""}
+          >
             Selesai
           </option>
 
@@ -484,6 +790,7 @@ ${date}
 
     `;
 
+
     list.appendChild(booking);
 
   });
@@ -491,16 +798,26 @@ ${date}
 }
 
 
-// UPDATE STATUS
-async function updateStatus(id, status) {
+/* =========================================
+   UPDATE STATUS
+========================================= */
+
+async function updateStatus(
+  id,
+  status
+) {
+
 
   const { error } =
     await supabaseClient
       .from("bookings")
       .update({
+
         status: status
+
       })
       .eq("id", id);
+
 
   if (error) {
 
@@ -512,15 +829,20 @@ async function updateStatus(id, status) {
     return;
   }
 
+
   loadBookings();
 
 }
 
 
-// Jalankan ketika halaman dibuka
+/* =========================================
+   JALANKAN SAAT HALAMAN DIBUKA
+========================================= */
+
 checkSession();
 
 </script>
+
 
 </body>
 </html>
