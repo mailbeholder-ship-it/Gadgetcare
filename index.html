@@ -1204,16 +1204,32 @@ const latitude =
 
 const longitude =
     document.getElementById("longitude").value;
-    
-    const { error } = await supabaseClient.rpc("create_booking", {
-        p_booking_code: bookingCode,
-        p_customer_name: name,
-        p_phone: phone,
-        p_device: device,
-        p_damage: damage,
-        p_description: description,
-        p_address: address
-    });
+    const latitude =
+    document.getElementById("latitude").value;
+
+const longitude =
+    document.getElementById("longitude").value;
+
+
+const { error } =
+    await supabaseClient.rpc(
+        "create_booking",
+        {
+            p_booking_code: bookingCode,
+            p_customer_name: name,
+            p_phone: phone,
+            p_device: device,
+            p_damage: damage,
+            p_description: description,
+            p_address: address,
+            p_latitude: latitude
+                ? Number(latitude)
+                : null,
+            p_longitude: longitude
+                ? Number(longitude)
+                : null
+        }
+    );
 
     if (error) {
         console.error("SUPABASE ERROR:", error);
