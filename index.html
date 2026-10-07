@@ -825,7 +825,52 @@ function generateBookingCode() {
 
     return "HSC-" + code;
 }
+document.getElementById("statusForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
 
+    const code = document
+        .getElementById("bookingCode")
+        .value
+        .trim()
+        .toUpperCase();
+
+    const result = document.getElementById("statusResult");
+
+    result.style.display = "block";
+    result.innerHTML = "🔄 Memeriksa status...";
+
+    const { data, error } = await supabaseClient.rpc("check_booking", {
+        p_booking_code: code
+    });
+
+    if (error) {
+        console.error(error);
+        result.innerHTML =
+            "<p>❌ Terjadi kesalahan saat mengecek status.</p>";
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        result.innerHTML =
+            "<p>❌ Kode booking tidak ditemukan.</p>" +
+            "<p>Pastikan kode yang dimasukkan benar.</p>";
+        return;
+    }
+
+    const booking = data[0];
+
+    const price = booking.estimated_price
+        ? "Rp" + Number(booking.estimated_price).toLocaleString("id-ID")
+        : "Belum ditentukan";
+
+    result.innerHTML =
+        "<p><strong>🎫 Kode:</strong> " + booking.booking_code + "</p>" +
+        "<p><strong>👤 Nama:</strong> " + booking.customer_name + "</p>" +
+        "<p><strong>📱 HP:</strong> " + booking.device + "</p>" +
+        "<p><strong>🔧 Kerusakan:</strong> " + booking.damage + "</p>" +
+        "<p><strong>🔄 Status:</strong> " + booking.status + "</p>" +
+        "<p><strong>💰 Estimasi:</strong> " + price + "</p>";
+});
 document.getElementById("bookingForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
