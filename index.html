@@ -883,19 +883,26 @@ document.getElementById("bookingForm").addEventListener("submit", async function
 
     const bookingCode = generateBookingCode();
 
-    const { error } = await supabaseClient
-        .from("bookings")
-        .insert([{
-            booking_code: bookingCode,
-            customer_name: name,
-            phone: phone,
-            device: device,
-            damage: damage,
-            description: description,
-            address: address
-        }]);
+    const { data, error } = await supabaseClient.rpc("create_booking", {
+    p_booking_code: bookingCode,
+    p_customer_name: name,
+    p_phone: phone,
+    p_device: device,
+    p_damage: damage,
+    p_description: description,
+    p_address: address
+});
 
 if (error) {
+    console.error("SUPABASE ERROR:", error);
+
+    alert(
+        "Pesanan gagal disimpan.\n\n" +
+        "Error: " + error.message
+    );
+
+    return;
+}
     console.error("SUPABASE ERROR:", error);
 
     alert(
