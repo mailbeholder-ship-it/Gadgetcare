@@ -1,1 +1,708 @@
+<!DOCTYPE html>
+<html lang="id">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Nota Servis - Home Service Cell</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #081018;
+            color: #111;
+            font-family: Arial, sans-serif;
+        }
+
+        .page {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .actions button {
+            flex: 1;
+            border: none;
+            border-radius: 9px;
+            padding: 13px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .print-button {
+            background: #00c8ff;
+            color: #001018;
+        }
+
+        .back-button {
+            background: #263746;
+            color: white;
+        }
+
+        .nota {
+            background: white;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 15px 40px rgba(0,0,0,.35);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #111;
+            padding-bottom: 18px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 38px;
+            margin-bottom: 5px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #555;
+        }
+
+        .booking-code {
+            margin-top: 12px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 22px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            color: #555;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            line-height: 1.5;
+        }
+
+        .label {
+            color: #666;
+            min-width: 110px;
+        }
+
+        .value {
+            text-align: right;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .damage-box {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .status-box {
+            margin-top: 20px;
+            padding: 13px;
+            border-radius: 8px;
+            background: #e8f7ff;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .total-box {
+            margin-top: 25px;
+            padding: 18px;
+            border: 2px solid #111;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .total-label {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 7px;
+        }
+
+        .total {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            border-top: 1px dashed #999;
+            margin-top: 25px;
+            padding-top: 18px;
+            color: #666;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .loading,
+        .error {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .error {
+            color: #b91c1c;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .nota {
+                padding: 22px;
+            }
+
+            .row {
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .value {
+                text-align: left;
+            }
+
+        }
+
+        @media print {
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .actions {
+                display: none;
+            }
+
+            .nota {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 15px;
+            }
+
+            .page {
+                max-width: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <div class="actions">
+
+        <button
+            type="button"
+            class="back-button"
+            id="backButton"
+        >
+            ← Kembali
+        </button>
+
+        <button
+            type="button"
+            class="print-button"
+            id="printButton"
+        >
+            🖨️ Cetak / PDF
+        </button>
+
+    </div>
+
+
+    <div id="content">
+
+        <div class="loading">
+            Memuat nota...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+    "https://sqpolxwdyypbxylgvihi.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* =====================================================
+   ELEMENT
+===================================================== */
+
+const content =
+    document.getElementById("content");
+
+const printButton =
+    document.getElementById("printButton");
+
+const backButton =
+    document.getElementById("backButton");
+
+
+/* =====================================================
+   FORMAT RUPIAH
+===================================================== */
+
+function formatRupiah(number) {
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
+        }
+    ).format(
+        Number(number) || 0
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =====================================================
+   GET BOOKING CODE
+===================================================== */
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+const bookingCode =
+    params.get("kode");
+
+
+/* =====================================================
+   LOAD BOOKING
+===================================================== */
+
+async function loadBooking() {
+
+    if (!bookingCode) {
+
+        content.innerHTML =
+            `
+            <div class="error">
+
+                <h3>
+                    ❌ Kode booking tidak ditemukan
+                </h3>
+
+                <p>
+                    Gunakan format:
+                </p>
+
+                <b>
+                    nota.html?kode=KODEBOOKING
+                </b>
+
+            </div>
+            `;
+
+        return;
+    }
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient.rpc(
+        "check_booking",
+        {
+            p_booking_code:
+                bookingCode
+        }
+    );
+
+
+    if (error) {
+
+        content.innerHTML =
+            `
+            <div class="error">
+
+                <h3>
+                    ❌ Gagal mengambil data
+                </h3>
+
+                <p>
+                    ${escapeHTML(error.message)}
+                </p>
+
+            </div>
+            `;
+
+        return;
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        content.innerHTML =
+            `
+            <div class="error">
+
+                <h3>
+                    ❌ Booking tidak ditemukan
+                </h3>
+
+                <p>
+                    Kode:
+                    <strong>
+                        ${escapeHTML(bookingCode)}
+                    </strong>
+                </p>
+
+            </div>
+            `;
+
+        return;
+    }
+
+
+    const booking =
+        data[0];
+
+
+    renderNota(booking);
+
+}
+
+
+/* =====================================================
+   RENDER NOTA
+===================================================== */
+
+function renderNota(booking) {
+
+    const tanggal =
+        new Date(
+            booking.created_at
+        ).toLocaleString(
+            "id-ID",
+            {
+                dateStyle: "long",
+                timeStyle: "short"
+            }
+        );
+
+
+    const total =
+        formatRupiah(
+            booking.total_price
+        );
+
+
+    content.innerHTML =
+        `
+        <div class="nota">
+
+
+            <div class="header">
+
+                <div class="logo">
+                    📱
+                </div>
+
+                <h1>
+                    HOME SERVICE CELL
+                </h1>
+
+                <p>
+                    Nota Servis Handphone
+                </p>
+
+                <div class="booking-code">
+                    ${escapeHTML(
+                        booking.booking_code
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="section-title">
+                Informasi Pelanggan
+            </div>
+
+
+            <div class="row">
+
+                <div class="label">
+                    Nama
+                </div>
+
+                <div class="value">
+                    ${escapeHTML(
+                        booking.customer_name
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="label">
+                    No. HP
+                </div>
+
+                <div class="value">
+                    ${escapeHTML(
+                        booking.phone
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="label">
+                    Tanggal
+                </div>
+
+                <div class="value">
+                    ${escapeHTML(
+                        tanggal
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="section-title">
+                Detail Servis
+            </div>
+
+
+            <div class="row">
+
+                <div class="label">
+                    Perangkat
+                </div>
+
+                <div class="value">
+                    ${escapeHTML(
+                        booking.device
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="row">
+
+                <div class="label">
+                    Kerusakan
+                </div>
+
+                <div class="value">
+                    ${escapeHTML(
+                        booking.damage
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="section-title">
+                Keterangan Kerusakan
+            </div>
+
+
+            <div class="damage-box">
+
+                ${escapeHTML(
+                    booking.description || "-"
+                )}
+
+            </div>
+
+
+            <div class="section-title">
+                Alamat Servis
+            </div>
+
+
+            <div class="damage-box">
+
+                ${escapeHTML(
+                    booking.address
+                )}
+
+            </div>
+
+
+            <div class="status-box">
+
+                STATUS:
+                ${escapeHTML(
+                    booking.status
+                )}
+
+            </div>
+
+
+            <div class="total-box">
+
+                <div class="total-label">
+                    TOTAL BIAYA SERVIS
+                </div>
+
+                <div class="total">
+                    ${total}
+                </div>
+
+            </div>
+
+
+            <div class="footer">
+
+                Terima kasih telah menggunakan
+                <strong>
+                    Home Service Cell
+                </strong>
+
+                <br>
+
+                Servis HP • Home Service • Profesional
+
+                <br><br>
+
+                Simpan nota ini sebagai bukti servis.
+
+            </div>
+
+
+        </div>
+        `;
+
+}
+
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+printButton.addEventListener(
+    "click",
+    function() {
+
+        window.print();
+
+    }
+);
+
+
+/* =====================================================
+   BACK
+===================================================== */
+
+backButton.addEventListener(
+    "click",
+    function() {
+
+        window.history.back();
+
+    }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadBooking();
+
+</script>
+
+</body>
+
+</html>
