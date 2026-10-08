@@ -1,1128 +1,1791 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<title>GadgetCare - Admin</title>
 
-  <title>GadgetCare - Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <link rel="icon" href="./logo.png">
+<style>
+* {
+    box-sizing: border-box;
+}
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0f1115;
+    color: #fff;
+}
 
-  <style>
+/* =========================
+   HEADER
+========================= */
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+header {
+    background: #151820;
+    border-bottom: 1px solid #292d36;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0b0f14;
-      color: #fff;
-    }
+.brand {
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: 800;
+}
 
-    button,
-    input,
-    select {
-      font-family: inherit;
+.gadget {
+    color: #fff;
+}
+
+.care {
+    color: #FF5722;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logout-btn {
+    background: #ff3d3d;
+    border: none;
+    color: white;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+#loginPage {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 420px;
+    background: #171a21;
+    border: 1px solid #292d36;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+
+.login-box h1 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.login-box p {
+    text-align: center;
+    color: #9da3ae;
+}
+
+.input {
+    width: 100%;
+    background: #0f1115;
+    border: 1px solid #343945;
+    color: white;
+    padding: 13px;
+    border-radius: 9px;
+    margin-bottom: 13px;
+    outline: none;
+}
+
+.input:focus {
+    border-color: #FF5722;
+}
+
+.primary-btn {
+    width: 100%;
+    background: #FF5722;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.alert {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #351b1b;
+    color: #ff7777;
+    display: none;
+}
+
+/* =========================
+   ADMIN
+========================= */
+
+#adminPage {
+    display: none;
+}
+
+.container {
+    max-width: 1500px;
+    margin: auto;
+    padding: 25px;
+}
+
+.page-title {
+    margin-bottom: 20px;
+}
+
+.page-title h1 {
+    margin: 0;
+}
+
+.page-title p {
+    color: #9299a5;
+}
+
+/* =========================
+   STATISTIC
+========================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: #171a21;
+    border: 1px solid #292d36;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.stat-title {
+    color: #9299a5;
+    font-size: 14px;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+/* =========================
+   FILTER
+========================= */
+
+.toolbar {
+    background: #171a21;
+    border: 1px solid #292d36;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.search {
+    flex: 1;
+    min-width: 230px;
+}
+
+select.input {
+    width: auto;
+    min-width: 180px;
+    margin: 0;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-container {
+    background: #171a21;
+    border: 1px solid #292d36;
+    border-radius: 14px;
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1300px;
+}
+
+th {
+    background: #20242c;
+    color: #dfe2e7;
+    text-align: left;
+    padding: 13px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+td {
+    padding: 13px;
+    border-top: 1px solid #292d36;
+    vertical-align: top;
+    font-size: 13px;
+}
+
+tr:hover {
+    background: #1c2027;
+}
+
+.device {
+    font-weight: bold;
+    color: #fff;
+}
+
+.damage {
+    display: inline-block;
+    background: rgba(255,87,34,.15);
+    color: #FF7043;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.description {
+    max-width: 230px;
+    color: #b8bec8;
+    line-height: 1.5;
+}
+
+.address {
+    max-width: 250px;
+    color: #b8bec8;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status {
+    display: inline-block;
+    padding: 6px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.status-menunggu {
+    background: #493b17;
+    color: #ffc107;
+}
+
+.status-diproses {
+    background: #153c50;
+    color: #29b6f6;
+}
+
+.status-selesai {
+    background: #163d25;
+    color: #4caf50;
+}
+
+.status-diambil {
+    background: #33204a;
+    color: #ce93d8;
+}
+
+.status-batal {
+    background: #4a1d1d;
+    color: #ff6b6b;
+}
+
+/* =========================
+   ACTION
+========================= */
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.action-btn {
+    border: none;
+    padding: 7px 9px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.price-btn {
+    background: #6c5ce7;
+}
+
+.status-btn {
+    background: #1976d2;
+}
+
+.wa-btn {
+    background: #20a464;
+}
+
+.map-btn {
+    background: #455a64;
+}
+
+.note-btn {
+    background: #FF5722;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.75);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-box {
+    background: #181b22;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 15px;
+    border: 1px solid #30343d;
+    padding: 25px;
+}
+
+.modal-box h2 {
+    margin-top: 0;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    flex: 1;
+}
+
+.cancel-btn {
+    background: #343943;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* =========================
+   DETAIL
+========================= */
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    background: #111318;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.detail-label {
+    color: #858c98;
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.detail-value {
+    color: white;
+    font-weight: bold;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width: 800px) {
+
+    header {
+        padding: 13px 15px;
     }
 
     .brand {
-      font-size: 25px;
-      font-weight: 800;
-    }
-
-    .gadget {
-      color: #fff;
-    }
-
-    .care {
-      color: #FF5722;
-    }
-
-    .login-page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background:
-        radial-gradient(
-          circle at top right,
-          rgba(255,87,34,.15),
-          transparent 35%
-        ),
-        #0b0f14;
-    }
-
-    .login-box {
-      width: 100%;
-      max-width: 420px;
-      background: #111820;
-      border: 1px solid #25303b;
-      padding: 30px;
-      border-radius: 16px;
-    }
-
-    .login-box h1 {
-      margin: 15px 0 5px;
-    }
-
-    .login-box p {
-      color: #8995a2;
-      margin-bottom: 25px;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      background: #0a0f14;
-      border: 1px solid #293540;
-      color: #fff;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #FF5722;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      color: #b9c2cb;
-      font-size: 13px;
-      margin-bottom: 7px;
-    }
-
-    .btn {
-      border: 0;
-      border-radius: 8px;
-      padding: 11px 15px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .btn-orange {
-      background: #FF5722;
-      color: white;
-    }
-
-    .btn-dark {
-      background: #18212a;
-      border: 1px solid #2a3540;
-      color: #fff;
-    }
-
-    .btn-danger {
-      background: #c62828;
-      color: #fff;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    header {
-      border-bottom: 1px solid #202a34;
-      background: #0d1218;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-inner {
-      min-height: 70px;
-      width: 94%;
-      max-width: 1300px;
-      margin: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .admin-label {
-      color: #8e99a6;
-      font-size: 13px;
+        font-size: 21px;
     }
 
     .container {
-      width: 94%;
-      max-width: 1300px;
-      margin: auto;
-      padding: 30px 0;
-    }
-
-    .top-title {
-      margin-bottom: 25px;
-    }
-
-    .top-title h1 {
-      font-size: 30px;
-      margin-bottom: 5px;
-    }
-
-    .top-title p {
-      color: #84909d;
+        padding: 15px;
     }
 
     .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
-      margin-bottom: 25px;
+        grid-template-columns: 1fr 1fr;
     }
 
-    .stat {
-      background: #111820;
-      border: 1px solid #202a34;
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .stat-title {
-      color: #8b96a2;
-      font-size: 13px;
-    }
-
-    .stat-value {
-      font-size: 27px;
-      font-weight: 800;
-      margin-top: 7px;
+    .stat-number {
+        font-size: 22px;
     }
 
     .toolbar {
-      background: #111820;
-      border: 1px solid #202a34;
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .toolbar input {
-      flex: 1;
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      background: #111820;
-      border: 1px solid #202a34;
-      border-radius: 12px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 950px;
-    }
-
-    th,
-    td {
-      padding: 13px;
-      text-align: left;
-      border-bottom: 1px solid #202a34;
-      font-size: 13px;
-    }
-
-    th {
-      color: #8e99a5;
-      font-weight: 600;
-      background: #0f151c;
-    }
-
-    td {
-      color: #d9dfe5;
-    }
-
-    .status {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      color: #FF5722;
-      background: rgba(255,87,34,.12);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .actions {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .actions button {
-      font-size: 11px;
-      padding: 7px 9px;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 20px;
-    }
-
-    .modal-box {
-      width: 100%;
-      max-width: 430px;
-      background: #111820;
-      border: 1px solid #293440;
-      border-radius: 14px;
-      padding: 25px;
-    }
-
-    .modal-box h2 {
-      margin-bottom: 20px;
-    }
-
-    .modal-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 20px;
-    }
-
-    .error {
-      color: #ef9a9a;
-      margin-top: 10px;
-      font-size: 13px;
-    }
-
-    @media (max-width: 800px) {
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .toolbar {
         flex-direction: column;
-      }
-
-      .header-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 15px 0;
-      }
-
     }
 
-  </style>
+    .search,
+    select.input {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media(max-width: 500px) {
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<!-- =========================
+     LOGIN PAGE
+========================= -->
 
-<div id="loginPage" class="login-page">
+<div id="loginPage">
 
-  <div class="login-box">
+    <div class="login-box">
 
-    <div class="brand">
-      <span class="gadget">Gadget</span><span class="care">Care</span>
+        <h1>
+            <span class="gadget">Gadget</span><span class="care">Care</span>
+        </h1>
+
+        <p>Admin Panel</p>
+
+        <input
+            id="email"
+            class="input"
+            type="email"
+            placeholder="Email admin"
+        >
+
+        <input
+            id="password"
+            class="input"
+            type="password"
+            placeholder="Password"
+        >
+
+        <button
+            class="primary-btn"
+            onclick="login()"
+        >
+            Login
+        </button>
+
+        <div id="loginAlert" class="alert"></div>
+
     </div>
-
-    <h1>Admin Dashboard</h1>
-
-    <p>
-      Masuk untuk mengelola data service pelanggan.
-    </p>
-
-    <form id="loginForm">
-
-      <div class="form-group">
-        <label>Email</label>
-
-        <input
-          id="email"
-          type="email"
-          placeholder="admin@email.com"
-          required>
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-
-        <input
-          id="password"
-          type="password"
-          placeholder="Password"
-          required>
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-orange"
-        style="width:100%;">
-        Login
-      </button>
-
-      <div id="loginError" class="error"></div>
-
-    </form>
-
-  </div>
 
 </div>
 
 
-<!-- DASHBOARD -->
+<!-- =========================
+     ADMIN PAGE
+========================= -->
 
-<div id="dashboard" class="hidden">
+<div id="adminPage">
 
-  <header>
+<header>
 
-    <div class="header-inner">
+    <a href="./index.html" class="brand">
+        <span class="gadget">Gadget</span><span class="care">Care</span>
+    </a>
 
-      <div>
-        <div class="brand">
-          <span class="gadget">Gadget</span><span class="care">Care</span>
-        </div>
+    <div class="header-right">
 
-        <div class="admin-label">
-          Admin Dashboard
-        </div>
-      </div>
+        <span id="adminEmail"></span>
 
-      <button
-        id="logoutBtn"
-        class="btn btn-dark">
-        Logout
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <main class="container">
-
-    <div class="top-title">
-
-      <h1>Dashboard Service</h1>
-
-      <p>
-        Kelola booking dan perkembangan service pelanggan.
-      </p>
+        <button
+            class="logout-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
 
     </div>
 
+</header>
 
-    <!-- STATS -->
+
+<div class="container">
+
+    <div class="page-title">
+
+        <h1>Dashboard Service</h1>
+
+        <p>
+            Kelola semua data service GadgetCare
+        </p>
+
+    </div>
+
+
+    <!-- STATISTICS -->
 
     <div class="stats">
 
-      <div class="stat">
-        <div class="stat-title">Total Booking</div>
-        <div id="totalStat" class="stat-value">0</div>
-      </div>
+        <div class="stat-card">
+            <div class="stat-title">
+                Total Booking
+            </div>
 
-      <div class="stat">
-        <div class="stat-title">Menunggu</div>
-        <div id="waitingStat" class="stat-value">0</div>
-      </div>
+            <div
+                id="totalBooking"
+                class="stat-number"
+            >
+                0
+            </div>
+        </div>
 
-      <div class="stat">
-        <div class="stat-title">Diproses</div>
-        <div id="processStat" class="stat-value">0</div>
-      </div>
 
-      <div class="stat">
-        <div class="stat-title">Selesai</div>
-        <div id="doneStat" class="stat-value">0</div>
-      </div>
+        <div class="stat-card">
+            <div class="stat-title">
+                Menunggu
+            </div>
+
+            <div
+                id="waitingBooking"
+                class="stat-number"
+            >
+                0
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-title">
+                Diproses
+            </div>
+
+            <div
+                id="processBooking"
+                class="stat-number"
+            >
+                0
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-title">
+                Selesai
+            </div>
+
+            <div
+                id="doneBooking"
+                class="stat-number"
+            >
+                0
+            </div>
+        </div>
 
     </div>
 
 
-    <!-- TOOLBAR -->
+    <!-- SEARCH -->
 
     <div class="toolbar">
 
-      <input
-        id="search"
-        type="text"
-        placeholder="Cari nama, nomor, gadget, atau kode booking...">
+        <input
+            id="searchInput"
+            class="input search"
+            placeholder="Cari nama, nomor HP, kode booking, device..."
+            oninput="renderBookings()"
+        >
 
-      <select id="statusFilter">
 
-        <option value="">Semua Status</option>
-        <option value="Menunggu">Menunggu</option>
-        <option value="Dikonfirmasi">Dikonfirmasi</option>
-        <option value="Diproses">Diproses</option>
-        <option value="Menunggu Sparepart">Menunggu Sparepart</option>
-        <option value="Selesai">Selesai</option>
-        <option value="Dibatalkan">Dibatalkan</option>
+        <select
+            id="statusFilter"
+            class="input"
+            onchange="renderBookings()"
+        >
 
-      </select>
+            <option value="">
+                Semua Status
+            </option>
 
-      <button
-        id="refreshBtn"
-        class="btn btn-orange">
-        Refresh
-      </button>
+            <option value="Menunggu">
+                Menunggu
+            </option>
+
+            <option value="Diproses">
+                Diproses
+            </option>
+
+            <option value="Selesai">
+                Selesai
+            </option>
+
+            <option value="Diambil">
+                Diambil
+            </option>
+
+            <option value="Batal">
+                Batal
+            </option>
+
+        </select>
+
+
+        <button
+            class="primary-btn"
+            style="width:auto;padding:12px 20px;"
+            onclick="loadBookings()"
+        >
+            Refresh
+        </button>
 
     </div>
 
 
     <!-- TABLE -->
 
-    <div class="table-wrapper">
+    <div class="table-container">
 
-      <table>
+        <table>
 
-        <thead>
+            <thead>
 
-          <tr>
-            <th>Kode</th>
-            <th>Pelanggan</th>
-            <th>Gadget</th>
-            <th>Kerusakan</th>
-            <th>Status</th>
-            <th>Harga</th>
-            <th>Tanggal</th>
-            <th>Aksi</th>
-          </tr>
+                <tr>
 
-        </thead>
+                    <th>
+                        Kode
+                    </th>
 
-        <tbody id="bookingTable">
-        </tbody>
+                    <th>
+                        Customer
+                    </th>
 
-      </table>
+                    <th>
+                        WhatsApp
+                    </th>
+
+                    <th>
+                        Merk / Device
+                    </th>
+
+                    <th>
+                        Kode Kerusakan
+                    </th>
+
+                    <th>
+                        Keterangan Kerusakan
+                    </th>
+
+                    <th>
+                        Alamat
+                    </th>
+
+                    <th>
+                        Harga
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Tanggal
+                    </th>
+
+                    <th>
+                        Aksi
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="bookingTable">
+
+                <tr>
+                    <td colspan="11" style="text-align:center;">
+                        Memuat data...
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
 
     </div>
 
-  </main>
+</div>
 
 </div>
 
 
-<!-- PRICE MODAL -->
+<!-- =========================
+     PRICE MODAL
+========================= -->
 
-<div id="priceModal" class="modal hidden">
+<div id="priceModal" class="modal">
 
-  <div class="modal-box">
+    <div class="modal-box">
 
-    <h2>Update Harga</h2>
+        <h2>
+            Atur Harga Service
+        </h2>
 
-    <div class="form-group">
+        <p id="priceCustomer"></p>
 
-      <label>Harga Service</label>
+        <input
+            id="priceInput"
+            class="input"
+            type="number"
+            min="0"
+            placeholder="Masukkan harga"
+        >
 
-      <input
-        id="priceInput"
-        type="number"
-        min="0"
-        placeholder="Contoh: 250000">
+        <div class="modal-buttons">
+
+            <button
+                class="cancel-btn"
+                onclick="closePriceModal()"
+            >
+                Batal
+            </button>
+
+            <button
+                class="primary-btn"
+                onclick="savePrice()"
+            >
+                Simpan Harga
+            </button>
+
+        </div>
 
     </div>
-
-    <div class="modal-buttons">
-
-      <button
-        id="cancelPrice"
-        class="btn btn-dark">
-        Batal
-      </button>
-
-      <button
-        id="savePrice"
-        class="btn btn-orange">
-        Simpan
-      </button>
-
-    </div>
-
-  </div>
 
 </div>
 
 
-<!-- STATUS MODAL -->
+<!-- =========================
+     STATUS MODAL
+========================= -->
 
-<div id="statusModal" class="modal hidden">
+<div id="statusModal" class="modal">
 
-  <div class="modal-box">
+    <div class="modal-box">
 
-    <h2>Update Status</h2>
+        <h2>
+            Update Status
+        </h2>
 
-    <div class="form-group">
+        <p id="statusCustomer"></p>
 
-      <label>Status Service</label>
+        <select
+            id="statusInput"
+            class="input"
+        >
 
-      <select id="statusInput">
+            <option value="Menunggu">
+                Menunggu
+            </option>
 
-        <option value="Menunggu">Menunggu</option>
-        <option value="Dikonfirmasi">Dikonfirmasi</option>
-        <option value="Diproses">Diproses</option>
-        <option value="Menunggu Sparepart">
-          Menunggu Sparepart
-        </option>
-        <option value="Selesai">Selesai</option>
-        <option value="Dibatalkan">Dibatalkan</option>
+            <option value="Diproses">
+                Diproses
+            </option>
 
-      </select>
+            <option value="Selesai">
+                Selesai
+            </option>
+
+            <option value="Diambil">
+                Diambil
+            </option>
+
+            <option value="Batal">
+                Batal
+            </option>
+
+        </select>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="cancel-btn"
+                onclick="closeStatusModal()"
+            >
+                Batal
+            </button>
+
+            <button
+                class="primary-btn"
+                onclick="saveStatus()"
+            >
+                Simpan Status
+            </button>
+
+        </div>
 
     </div>
-
-    <div class="modal-buttons">
-
-      <button
-        id="cancelStatus"
-        class="btn btn-dark">
-        Batal
-      </button>
-
-      <button
-        id="saveStatus"
-        class="btn btn-orange">
-        Simpan
-      </button>
-
-    </div>
-
-  </div>
 
 </div>
 
 
 <script>
 
-  const SUPABASE_URL =
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
     "https://sqpolxwdyypbxylgvihi.supabase.co";
 
-  const SUPABASE_KEY =
+const SUPABASE_KEY =
     "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 
-  const supabaseClient =
+const supabaseClient =
     window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
+        SUPABASE_URL,
+        SUPABASE_KEY
     );
 
 
-  let bookings = [];
-  let selectedBooking = null;
+/* =========================
+   DATA
+========================= */
+
+let bookings = [];
+
+let selectedBooking = null;
 
 
-  /* =====================
-     LOGIN
-  ===================== */
+/* =========================
+   LOGIN
+========================= */
 
-  async function checkSession() {
+async function login() {
 
-    const {
-      data: { session }
-    } = await supabaseClient.auth.getSession();
+    const email =
+        document.getElementById("email").value.trim();
 
-    if (session) {
-
-      showDashboard();
-
-    } else {
-
-      showLogin();
-
-    }
-  }
-
-
-  function showLogin() {
-
-    document
-      .getElementById("loginPage")
-      .classList.remove("hidden");
-
-    document
-      .getElementById("dashboard")
-      .classList.add("hidden");
-
-  }
-
-
-  function showDashboard() {
-
-    document
-      .getElementById("loginPage")
-      .classList.add("hidden");
-
-    document
-      .getElementById("dashboard")
-      .classList.remove("hidden");
-
-    loadBookings();
-
-  }
-
-
-  document
-    .getElementById("loginForm")
-    .addEventListener("submit", async e => {
-
-      e.preventDefault();
-
-      const email =
-        document.getElementById("email").value;
-
-      const password =
+    const password =
         document.getElementById("password").value;
 
-      const errorBox =
-        document.getElementById("loginError");
+    const alertBox =
+        document.getElementById("loginAlert");
 
-      errorBox.textContent = "";
+    alertBox.style.display = "none";
 
-      const {
-        error
-      } = await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+    if (!email || !password) {
 
-      if (error) {
+        alertBox.textContent =
+            "Email dan password wajib diisi.";
 
-        errorBox.textContent =
-          "Login gagal: " + error.message;
+        alertBox.style.display = "block";
 
         return;
-      }
+    }
 
-      showDashboard();
-
-    });
-
-
-  document
-    .getElementById("logoutBtn")
-    .addEventListener("click", async () => {
-
-      await supabaseClient.auth.signOut();
-
-      showLogin();
-
-    });
-
-
-  /* =====================
-     LOAD BOOKINGS
-  ===================== */
-
-  async function loadBookings() {
 
     const {
-      data,
-      error
-    } = await supabaseClient
-      .from("bookings")
-      .select("*")
-      .order("created_at", {
-        ascending: false
-      });
+        data,
+        error
+    } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
+
 
     if (error) {
 
-      console.error(error);
+        alertBox.textContent =
+            error.message;
 
-      alert("Gagal mengambil data booking.");
+        alertBox.style.display =
+            "block";
 
-      return;
+        return;
     }
+
+
+    showAdmin(data.user);
+
+}
+
+
+/* =========================
+   SHOW ADMIN
+========================= */
+
+function showAdmin(user) {
+
+    document.getElementById("loginPage")
+        .style.display = "none";
+
+    document.getElementById("adminPage")
+        .style.display = "block";
+
+    document.getElementById("adminEmail")
+        .textContent = user.email || "";
+
+    loadBookings();
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout() {
+
+    await supabaseClient.auth.signOut();
+
+    location.reload();
+
+}
+
+
+/* =========================
+   CHECK SESSION
+========================= */
+
+async function checkSession() {
+
+    const {
+        data
+    } = await supabaseClient.auth.getSession();
+
+    if (data.session) {
+
+        showAdmin(data.session.user);
+
+    }
+
+}
+
+
+/* =========================
+   LOAD BOOKINGS
+========================= */
+
+async function loadBookings() {
+
+    const table =
+        document.getElementById("bookingTable");
+
+    table.innerHTML = `
+        <tr>
+            <td colspan="11" style="text-align:center;">
+                Memuat data...
+            </td>
+        </tr>
+    `;
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("bookings")
+        .select("*")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="11" style="text-align:center;color:#ff6b6b;">
+                    ${escapeHtml(error.message)}
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
 
     bookings = data || [];
 
-    renderStats();
+    updateStatistics();
+
     renderBookings();
 
-  }
+}
 
 
-  function renderStats() {
+/* =========================
+   STATISTICS
+========================= */
 
-    document.getElementById("totalStat")
-      .textContent = bookings.length;
+function updateStatistics() {
 
-    document.getElementById("waitingStat")
-      .textContent =
-      bookings.filter(x =>
-        x.status === "Menunggu"
-      ).length;
-
-    document.getElementById("processStat")
-      .textContent =
-      bookings.filter(x =>
-        x.status === "Diproses"
-      ).length;
-
-    document.getElementById("doneStat")
-      .textContent =
-      bookings.filter(x =>
-        x.status === "Selesai"
-      ).length;
-
-  }
+    document.getElementById("totalBooking")
+        .textContent = bookings.length;
 
 
-  function renderBookings() {
+    document.getElementById("waitingBooking")
+        .textContent =
+        bookings.filter(
+            x => x.status === "Menunggu"
+        ).length;
 
-    const tbody =
-      document.getElementById("bookingTable");
+
+    document.getElementById("processBooking")
+        .textContent =
+        bookings.filter(
+            x => x.status === "Diproses"
+        ).length;
+
+
+    document.getElementById("doneBooking")
+        .textContent =
+        bookings.filter(
+            x => x.status === "Selesai"
+        ).length;
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderBookings() {
+
+    const table =
+        document.getElementById("bookingTable");
 
     const search =
-      document.getElementById("search")
-        .value.toLowerCase();
+        document.getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
 
-    const status =
-      document.getElementById("statusFilter")
-        .value;
+    const filter =
+        document.getElementById("statusFilter")
+            .value;
+
 
     const filtered =
-      bookings.filter(item => {
+        bookings.filter(item => {
 
-        const text =
-          `${item.booking_code}
-           ${item.customer_name}
-           ${item.phone}
-           ${item.device}`
-          .toLowerCase();
+            const text = [
 
-        const matchSearch =
-          text.includes(search);
+                item.booking_code,
 
-        const matchStatus =
-          !status || item.status === status;
+                item.customer_name,
 
-        return matchSearch && matchStatus;
+                item.phone,
 
-      });
+                item.device,
 
+                item.damage,
 
-    tbody.innerHTML = "";
+                item.description,
 
+                item.address
 
-    filtered.forEach(item => {
+            ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
 
-      const tr =
-        document.createElement("tr");
 
-      const price =
-        Number(item.total_price || item.estimated_price || 0)
-          .toLocaleString("id-ID");
+            const searchMatch =
+                !search ||
+                text.includes(search);
 
-      const date =
-        new Date(item.created_at)
-          .toLocaleString("id-ID");
 
+            const statusMatch =
+                !filter ||
+                item.status === filter;
 
-      const maps =
-        item.latitude && item.longitude
-          ? `https://www.google.com/maps?q=${item.latitude},${item.longitude}`
-          : "";
 
+            return searchMatch &&
+                   statusMatch;
 
-      const whatsapp =
-        `https://wa.me/${normalizePhone(item.phone)}`;
+        });
 
 
-      tr.innerHTML = `
+    if (!filtered.length) {
 
-        <td>
-          <strong>${escapeHtml(item.booking_code)}</strong>
-        </td>
-
-        <td>
-          ${escapeHtml(item.customer_name)}<br>
-          <small>${escapeHtml(item.phone)}</small>
-        </td>
-
-        <td>
-          ${escapeHtml(item.device)}
-        </td>
-
-        <td>
-          ${escapeHtml(item.damage)}
-        </td>
-
-        <td>
-          <span class="status">
-            ${escapeHtml(item.status)}
-          </span>
-        </td>
-
-        <td>
-          Rp${price}
-        </td>
-
-        <td>
-          ${date}
-        </td>
-
-        <td>
-
-          <div class="actions">
-
-            <button
-              class="btn btn-orange"
-              onclick="openPriceModal('${item.id}')">
-              Harga
-            </button>
-
-            <button
-              class="btn btn-dark"
-              onclick="openStatusModal('${item.id}')">
-              Status
-            </button>
-
-            <a
-              class="btn btn-dark"
-              href="${whatsapp}"
-              target="_blank">
-              WA
-            </a>
-
-            ${
-              maps
-              ? `
-              <a
-                class="btn btn-dark"
-                href="${maps}"
-                target="_blank">
-                Maps
-              </a>
-              `
-              : ""
-            }
-
-            <a
-              class="btn btn-dark"
-              href="./nota.html?kode=${encodeURIComponent(item.booking_code)}"
-              target="_blank">
-              Nota
-            </a>
-
-          </div>
-
-        </td>
-
-      `;
-
-      tbody.appendChild(tr);
-
-    });
-
-  }
-
-
-  function escapeHtml(value) {
-
-    if (value === null || value === undefined)
-      return "";
-
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-
-  }
-
-
-  function normalizePhone(phone) {
-
-    let p =
-      String(phone || "")
-        .replace(/\D/g, "");
-
-    if (p.startsWith("0")) {
-      p = "62" + p.substring(1);
-    }
-
-    if (!p.startsWith("62")) {
-      p = "62" + p;
-    }
-
-    return p;
-  }
-
-
-  /* =====================
-     PRICE
-  ===================== */
-
-  window.openPriceModal =
-    function(id) {
-
-      selectedBooking =
-        bookings.find(x => x.id === id);
-
-      if (!selectedBooking) return;
-
-      document.getElementById("priceInput")
-        .value =
-        selectedBooking.total_price ||
-        selectedBooking.estimated_price ||
-        0;
-
-      document
-        .getElementById("priceModal")
-        .classList.remove("hidden");
-
-    };
-
-
-  document
-    .getElementById("cancelPrice")
-    .addEventListener("click", () => {
-
-      document
-        .getElementById("priceModal")
-        .classList.add("hidden");
-
-    });
-
-
-  document
-    .getElementById("savePrice")
-    .addEventListener("click", async () => {
-
-      if (!selectedBooking) return;
-
-      const price =
-        Number(
-          document.getElementById("priceInput").value
-        );
-
-      const {
-        error
-      } = await supabaseClient.rpc(
-        "update_booking_price",
-        {
-          p_booking_id: selectedBooking.id,
-          p_price: price
-        }
-      );
-
-      if (error) {
-
-        alert(error.message);
+        table.innerHTML = `
+            <tr>
+                <td
+                    colspan="11"
+                    style="text-align:center;padding:30px;color:#858c98;"
+                >
+                    Tidak ada booking ditemukan.
+                </td>
+            </tr>
+        `;
 
         return;
-      }
-
-      document
-        .getElementById("priceModal")
-        .classList.add("hidden");
-
-      await loadBookings();
-
-    });
+    }
 
 
-  /* =====================
-     STATUS
-  ===================== */
+    table.innerHTML =
+        filtered.map(item => {
 
-  window.openStatusModal =
-    function(id) {
-
-      selectedBooking =
-        bookings.find(x => x.id === id);
-
-      if (!selectedBooking) return;
-
-      document.getElementById("statusInput")
-        .value = selectedBooking.status;
-
-      document
-        .getElementById("statusModal")
-        .classList.remove("hidden");
-
-    };
+            const price =
+                Number(item.total_price || 0)
+                .toLocaleString("id-ID");
 
 
-  document
-    .getElementById("cancelStatus")
-    .addEventListener("click", () => {
-
-      document
-        .getElementById("statusModal")
-        .classList.add("hidden");
-
-    });
+            const date =
+                item.created_at
+                ? new Date(item.created_at)
+                    .toLocaleString("id-ID")
+                : "-";
 
 
-  document
-    .getElementById("saveStatus")
-    .addEventListener("click", async () => {
+            const statusClass =
+                getStatusClass(item.status);
 
-      if (!selectedBooking) return;
 
-      const status =
-        document.getElementById("statusInput")
-          .value;
+            return `
 
-      const {
+            <tr>
+
+                <!-- KODE -->
+
+                <td>
+
+                    <strong>
+                        ${escapeHtml(
+                            item.booking_code || "-"
+                        )}
+                    </strong>
+
+                </td>
+
+
+                <!-- CUSTOMER -->
+
+                <td>
+
+                    <strong>
+                        ${escapeHtml(
+                            item.customer_name || "-"
+                        )}
+                    </strong>
+
+                </td>
+
+
+                <!-- WHATSAPP -->
+
+                <td>
+
+                    ${escapeHtml(
+                        item.phone || "-"
+                    )}
+
+                </td>
+
+
+                <!-- DEVICE / MERK -->
+
+                <td>
+
+                    <div class="device">
+
+                        ${escapeHtml(
+                            item.device || "-"
+                        )}
+
+                    </div>
+
+                </td>
+
+
+                <!-- KODE KERUSAKAN -->
+
+                <td>
+
+                    <span class="damage">
+
+                        ${escapeHtml(
+                            item.damage || "-"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <!-- KETERANGAN -->
+
+                <td>
+
+                    <div class="description">
+
+                        ${escapeHtml(
+                            item.description || "-"
+                        )}
+
+                    </div>
+
+                </td>
+
+
+                <!-- ALAMAT -->
+
+                <td>
+
+                    <div class="address">
+
+                        ${escapeHtml(
+                            item.address || "-"
+                        )}
+
+                    </div>
+
+                </td>
+
+
+                <!-- HARGA -->
+
+                <td>
+
+                    <strong>
+                        Rp ${price}
+                    </strong>
+
+                </td>
+
+
+                <!-- STATUS -->
+
+                <td>
+
+                    <span class="status ${statusClass}">
+
+                        ${escapeHtml(
+                            item.status || "Menunggu"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <!-- TANGGAL -->
+
+                <td>
+
+                    ${date}
+
+                </td>
+
+
+                <!-- ACTION -->
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            class="action-btn price-btn"
+                            onclick="openPriceModal('${item.id}')"
+                        >
+                            Harga
+                        </button>
+
+
+                        <button
+                            class="action-btn status-btn"
+                            onclick="openStatusModal('${item.id}')"
+                        >
+                            Status
+                        </button>
+
+
+                        <button
+                            class="action-btn wa-btn"
+                            onclick="openWhatsApp('${item.id}')"
+                        >
+                            WA
+                        </button>
+
+
+                        <button
+                            class="action-btn map-btn"
+                            onclick="openMaps('${item.id}')"
+                        >
+                            Maps
+                        </button>
+
+
+                        <button
+                            class="action-btn note-btn"
+                            onclick="openNota('${item.booking_code}')"
+                        >
+                            Nota
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================
+   STATUS CLASS
+========================= */
+
+function getStatusClass(status) {
+
+    switch (status) {
+
+        case "Diproses":
+            return "status-diproses";
+
+        case "Selesai":
+            return "status-selesai";
+
+        case "Diambil":
+            return "status-diambil";
+
+        case "Batal":
+            return "status-batal";
+
+        default:
+            return "status-menunggu";
+
+    }
+
+}
+
+
+/* =========================
+   PRICE
+========================= */
+
+function openPriceModal(id) {
+
+    selectedBooking =
+        bookings.find(
+            x => x.id === id
+        );
+
+
+    if (!selectedBooking) return;
+
+
+    document.getElementById("priceCustomer")
+        .textContent =
+        `${selectedBooking.customer_name} — ${selectedBooking.device}`;
+
+
+    document.getElementById("priceInput")
+        .value =
+        selectedBooking.total_price || "";
+
+
+    document.getElementById("priceModal")
+        .style.display = "flex";
+
+}
+
+
+function closePriceModal() {
+
+    document.getElementById("priceModal")
+        .style.display = "none";
+
+    selectedBooking = null;
+
+}
+
+
+async function savePrice() {
+
+    if (!selectedBooking) return;
+
+
+    const price =
+        Number(
+            document.getElementById("priceInput")
+                .value
+        );
+
+
+    if (isNaN(price) || price < 0) {
+
+        alert("Harga tidak valid.");
+
+        return;
+
+    }
+
+
+    const {
+        data,
         error
-      } = await supabaseClient
+    } = await supabaseClient.rpc(
+        "update_booking_price",
+        {
+            p_booking_id:
+                selectedBooking.id,
+
+            p_price:
+                price
+        }
+    );
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Gagal mengubah harga:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    closePriceModal();
+
+    await loadBookings();
+
+    alert("Harga berhasil diperbarui.");
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function openStatusModal(id) {
+
+    selectedBooking =
+        bookings.find(
+            x => x.id === id
+        );
+
+
+    if (!selectedBooking) return;
+
+
+    document.getElementById("statusCustomer")
+        .textContent =
+        `${selectedBooking.customer_name} — ${selectedBooking.device}`;
+
+
+    document.getElementById("statusInput")
+        .value =
+        selectedBooking.status || "Menunggu";
+
+
+    document.getElementById("statusModal")
+        .style.display = "flex";
+
+}
+
+
+function closeStatusModal() {
+
+    document.getElementById("statusModal")
+        .style.display = "none";
+
+    selectedBooking = null;
+
+}
+
+
+async function saveStatus() {
+
+    if (!selectedBooking) return;
+
+
+    const status =
+        document.getElementById("statusInput")
+            .value;
+
+
+    const {
+        error
+    } = await supabaseClient
         .from("bookings")
         .update({
-          status: status
+            status: status
         })
         .eq("id", selectedBooking.id);
 
-      if (error) {
 
-        alert(error.message);
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Gagal mengubah status:\n" +
+            error.message
+        );
 
         return;
-      }
-
-      document
-        .getElementById("statusModal")
-        .classList.add("hidden");
-
-      await loadBookings();
-
-    });
+    }
 
 
-  /* =====================
-     SEARCH
-  ===================== */
+    closeStatusModal();
 
-  document
-    .getElementById("search")
-    .addEventListener("input", renderBookings);
+    await loadBookings();
 
-  document
-    .getElementById("statusFilter")
-    .addEventListener("change", renderBookings);
+    alert("Status berhasil diperbarui.");
 
-  document
-    .getElementById("refreshBtn")
-    .addEventListener("click", loadBookings);
+}
 
 
-  /* START */
+/* =========================
+   WHATSAPP
+========================= */
 
-  checkSession();
+function openWhatsApp(id) {
+
+    const item =
+        bookings.find(
+            x => x.id === id
+        );
+
+
+    if (!item || !item.phone) {
+
+        alert("Nomor WhatsApp tidak tersedia.");
+
+        return;
+
+    }
+
+
+    let phone =
+        item.phone.replace(/\D/g, "");
+
+
+    if (phone.startsWith("0")) {
+
+        phone =
+            "62" + phone.substring(1);
+
+    }
+
+
+    const message =
+`Halo ${item.customer_name},
+
+Kami dari GadgetCare.
+
+Update service HP Anda:
+
+Kode Booking: ${item.booking_code}
+Device: ${item.device}
+Kerusakan: ${item.damage}
+Status: ${item.status}
+Total Harga: Rp ${Number(item.total_price || 0).toLocaleString("id-ID")}
+
+Terima kasih.`;
+
+
+    window.open(
+        "https://wa.me/" +
+        phone +
+        "?text=" +
+        encodeURIComponent(message),
+        "_blank"
+    );
+
+}
+
+
+/* =========================
+   GOOGLE MAPS
+========================= */
+
+function openMaps(id) {
+
+    const item =
+        bookings.find(
+            x => x.id === id
+        );
+
+
+    if (!item) return;
+
+
+    if (
+        item.latitude !== null &&
+        item.longitude !== null &&
+        item.latitude !== undefined &&
+        item.longitude !== undefined
+    ) {
+
+        window.open(
+            `https://www.google.com/maps?q=${item.latitude},${item.longitude}`,
+            "_blank"
+        );
+
+        return;
+
+    }
+
+
+    if (item.address) {
+
+        window.open(
+            "https://www.google.com/maps/search/?api=1&query=" +
+            encodeURIComponent(item.address),
+            "_blank"
+        );
+
+        return;
+
+    }
+
+
+    alert("Lokasi tidak tersedia.");
+
+}
+
+
+/* =========================
+   NOTA
+========================= */
+
+function openNota(code) {
+
+    if (!code) {
+
+        alert("Kode booking tidak tersedia.");
+
+        return;
+
+    }
+
+
+    window.open(
+        "./nota.html?code=" +
+        encodeURIComponent(code),
+        "_blank"
+    );
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value) {
+
+    if (value === null ||
+        value === undefined) {
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   CLOSE MODAL CLICK OUTSIDE
+========================= */
+
+window.addEventListener(
+    "click",
+    function(event) {
+
+        const priceModal =
+            document.getElementById("priceModal");
+
+        const statusModal =
+            document.getElementById("statusModal");
+
+
+        if (event.target === priceModal) {
+
+            closePriceModal();
+
+        }
+
+
+        if (event.target === statusModal) {
+
+            closeStatusModal();
+
+        }
+
+    }
+);
+
+
+/* =========================
+   START
+========================= */
+
+checkSession();
 
 </script>
 
