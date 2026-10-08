@@ -932,9 +932,9 @@ if (error) {
 
         alertBox.style.display = "block";
 
-        alertBox.textContent =
-          "Booking gagal. Silakan coba lagi.";
-
+        alertBox.innerHTML =
+  `Booking gagal.<br>
+   <small>${error.message || "Terjadi kesalahan."}</small>`;
       } finally {
 
         submitButton.disabled = false;
