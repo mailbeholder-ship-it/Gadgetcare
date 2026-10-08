@@ -994,39 +994,7 @@ ${locationHTML}
                     data-id="${item.id}"
                 >
                     💾 Simpan Harga
-                </button>
-savePriceButton.addEventListener(
-    "click",
-    async function () {
-
-        await updatePrice(
-            item.id,
-            priceInput.value
-        );
-
-    }
-);
-const printButton =
-    card.querySelector(".print-receipt");
-
-printButton.addEventListener(
-    "click",
-    function () {
-
-        const code =
-            this.dataset.code;
-
-        const notaURL =
-            "nota.html?kode=" +
-            encodeURIComponent(code);
-
-        window.open(
-            notaURL,
-            "_blank"
-        );
-
-    }
-);
+                    
                 <div
                     class="save-message"
                     id="message-${item.id}"
