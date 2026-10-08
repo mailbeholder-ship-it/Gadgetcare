@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
 
   <meta charset="UTF-8">
@@ -411,11 +411,9 @@
         autocomplete="current-password"
       >
 
-
-      <button onclick="login()">
-        LOGIN
-      </button>
-
+<button id="loginButton" type="button">
+  LOGIN
+</button>
 
       <div
         id="loginMessage"
@@ -1285,8 +1283,11 @@ async function updatePrice(id) {
 /* =====================================
    START
 ===================================== */
+document
+  .getElementById("loginButton")
+  .addEventListener("click", login);
 
-checkSession();
+  checkSession();
 
 
 </script>
