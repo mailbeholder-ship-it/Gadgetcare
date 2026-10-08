@@ -1,1298 +1,1235 @@
 <!DOCTYPE html>
 <html lang="id">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <head>
-
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    Admin - Home Service Cell
-  </title>
-
-  <!-- SUPABASE -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-  <style>
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-
-    body {
-      background: #0b1117;
-      color: white;
-      padding: 20px;
-    }
-
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-    }
-
-
-    h1 {
-      margin-bottom: 5px;
-    }
-
-
-    .subtitle {
-      color: #8c9aa8;
-      margin-bottom: 25px;
-    }
-
-
-    .login-box {
-      background: #111a22;
-      border: 1px solid #24313d;
-      border-radius: 15px;
-      padding: 25px;
-      max-width: 500px;
-      margin: 40px auto;
-    }
-
-
-    input,
-    button,
-    select {
-
-      width: 100%;
-
-      padding: 13px;
-
-      margin-top: 10px;
-
-      border-radius: 8px;
-
-      border: 1px solid #334454;
-
-      background: #18232d;
-
-      color: white;
-
-      font-size: 15px;
-
-    }
-
-
-    button {
-
-      background: #00c8ff;
-
-      color: #001018;
-
-      border: none;
-
-      font-weight: bold;
-
-      cursor: pointer;
-
-    }
-
-
-    button:hover {
-      opacity: .9;
-    }
-
-
-    .logout {
-
-      width: auto;
-
-      background: #ef4444;
-
-      color: white;
-
-      float: right;
-
-      padding: 10px 18px;
-
-    }
-
-
-    .stats {
-
-      display: grid;
-
-      grid-template-columns:
-        repeat(3, 1fr);
-
-      gap: 15px;
-
-      margin: 20px 0;
-
-    }
-
-
-    .stat {
-
-      background: #16212b;
-
-      border: 1px solid #293947;
-
-      border-radius: 12px;
-
-      padding: 20px;
-
-    }
-
-
-    .stat-number {
-
-      font-size: 30px;
-
-      font-weight: bold;
-
-      margin-top: 8px;
-
-      color: #00c8ff;
-
-    }
-
-
-    .booking {
-
-      background: #16212b;
-
-      border: 1px solid #293947;
-
-      border-radius: 12px;
-
-      padding: 18px;
-
-      margin-top: 15px;
-
-    }
-
-
-    .booking-code {
-
-      color: #00c8ff;
-
-      font-size: 19px;
-
-      font-weight: bold;
-
-    }
-
-
-    .info {
-
-      margin-top: 12px;
-
-      line-height: 1.8;
-
-      color: #d5dde5;
-
-    }
-
-
-    .divider {
-
-      height: 1px;
-
-      background: #293947;
-
-      margin: 15px 0;
-
-    }
-
-
-    .location-box {
-
-      margin-top: 12px;
-
-      padding: 12px;
-
-      background: #101920;
-
-      border-radius: 10px;
-
-      border: 1px solid #293947;
-
-    }
-
-
-    .coordinates {
-
-      color: #8fdcff;
-
-      font-size: 14px;
-
-      margin-bottom: 8px;
-
-    }
-
-
-    .map-button {
-
-      display: inline-block;
-
-      margin-top: 5px;
-
-      padding: 10px 14px;
-
-      background: #00c8ff;
-
-      color: #001018;
-
-      text-decoration: none;
-
-      border-radius: 8px;
-
-      font-weight: bold;
-
-    }
-
-
-    .price-box {
-
-      margin-top: 15px;
-
-      padding: 15px;
-
-      background: #101920;
-
-      border: 1px solid #293947;
-
-      border-radius: 10px;
-
-    }
-
-
-    .price-input {
-
-      font-size: 17px;
-
-      margin-top: 8px;
-
-    }
-
-
-    .price-button {
-
-      background: #22c55e;
-
-      color: white;
-
-      margin-top: 8px;
-
-    }
-
-
-    .current-price {
-
-      color: #22c55e;
-
-      font-size: 20px;
-
-      font-weight: bold;
-
-      margin-top: 5px;
-
-    }
-
-
-    .status {
-
-      margin-top: 15px;
-
-    }
-
-
-    .refresh {
-
-      background: #263746;
-
-      color: white;
-
-      margin-bottom: 15px;
-
-    }
-
-
-    .hidden {
-      display: none;
-    }
-
-
-    .message {
-
-      margin-top: 12px;
-
-      color: #ff8585;
-
-    }
-
-
-    .success-message {
-
-      color: #22c55e;
-
-    }
-
-
-    @media(max-width:700px) {
-
-      body {
-        padding: 12px;
-      }
-
-
-      .stats {
-
-        grid-template-columns: 1fr;
-
-      }
-
-
-      .logout {
-
-        float: none;
-
-        width: 100%;
-
-        margin-bottom: 20px;
-
-      }
-
-    }
-
-  </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin - Home Service Cell</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #081018;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1150px;
+            margin: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* LOGIN */
+
+        .login-wrapper {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            background: #111b25;
+            border: 1px solid #263746;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,.3);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #91a0ae;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 13px;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        input,
+        select {
+            background: #17232e;
+            border: 1px solid #334555;
+            color: white;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #00c8ff;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            background: #00c8ff;
+            color: #001018;
+        }
+
+        button:hover {
+            opacity: .9;
+        }
+
+        .login-message {
+            margin-top: 15px;
+            text-align: center;
+            color: #ff8585;
+            min-height: 20px;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: #111b25;
+            border: 1px solid #263746;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 25px;
+        }
+
+        .header p {
+            color: #91a0ae;
+            margin-top: 5px;
+        }
+
+        .logout-btn {
+            width: auto;
+            background: #ef4444;
+            color: white;
+            padding: 10px 18px;
+        }
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: #111b25;
+            border: 1px solid #263746;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .stat-title {
+            color: #9baab8;
+            font-size: 14px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00c8ff;
+            margin-top: 8px;
+        }
+
+        /* TOOLBAR */
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .toolbar h2 {
+            font-size: 20px;
+        }
+
+        .refresh-btn {
+            width: auto;
+            background: #263746;
+            color: white;
+            padding: 10px 18px;
+        }
+
+        /* BOOKING */
+
+        .booking {
+            background: #111b25;
+            border: 1px solid #263746;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .booking-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .booking-code {
+            color: #00c8ff;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .booking-date {
+            color: #71808e;
+            font-size: 13px;
+        }
+
+        .info {
+            line-height: 1.8;
+            color: #d8e0e7;
+        }
+
+        .info b {
+            color: white;
+        }
+
+        .location-box {
+            background: #0b151e;
+            border: 1px solid #263746;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .maps-btn {
+            display: inline-block;
+            margin-top: 10px;
+            width: auto;
+            padding: 9px 15px;
+            background: #22c55e;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #263746;
+        }
+
+        .control label {
+            display: block;
+            font-size: 13px;
+            color: #91a0ae;
+            margin-bottom: 7px;
+        }
+
+        .control input,
+        .control select {
+            margin-bottom: 0;
+        }
+
+        .save-price {
+            margin-top: 10px;
+            background: #00c8ff;
+            color: #001018;
+        }
+
+        .save-message {
+            font-size: 13px;
+            color: #5ee7a5;
+            margin-top: 8px;
+        }
+
+        .empty {
+            background: #111b25;
+            border: 1px solid #263746;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            color: #91a0ae;
+        }
+
+        .loading {
+            text-align: center;
+            color: #91a0ae;
+            padding: 30px;
+        }
+
+        .error {
+            background: #3a1515;
+            border: 1px solid #7f1d1d;
+            color: #ffb4b4;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .header-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .logout-btn {
+                width: 100%;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            .booking-top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .login-box {
+                padding: 22px;
+            }
+        }
+    </style>
 </head>
-
 
 <body>
 
-
 <div class="container">
 
+    <!-- ================= LOGIN ================= -->
 
-  <!-- ================================= -->
-  <!-- LOGIN -->
-  <!-- ================================= -->
+    <section id="loginSection" class="login-wrapper">
 
-  <div id="loginSection">
+        <div class="login-box">
 
-    <div class="login-box">
+            <div class="logo">📱</div>
 
-      <h1>
-        🔐 Admin Login
-      </h1>
+            <h1>Admin Login</h1>
 
-      <p class="subtitle">
-        Home Service Cell
-      </p>
+            <p class="subtitle">
+                Home Service Cell
+            </p>
 
+            <input
+                type="email"
+                id="email"
+                placeholder="Email admin"
+                autocomplete="email"
+            >
 
-      <input
-        type="email"
-        id="email"
-        placeholder="Email admin"
-        autocomplete="username"
-      >
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                autocomplete="current-password"
+            >
 
+            <button
+                type="button"
+                id="loginButton"
+            >
+                LOGIN
+            </button>
 
-      <input
-        type="password"
-        id="password"
-        placeholder="Password"
-        autocomplete="current-password"
-      >
+            <div
+                id="loginMessage"
+                class="login-message"
+            ></div>
 
-<button id="loginButton" type="button">
-  LOGIN
-</button>
-
-      <div
-        id="loginMessage"
-        class="message"
-      ></div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ================================= -->
-  <!-- DASHBOARD -->
-  <!-- ================================= -->
-
-  <div
-    id="dashboardSection"
-    class="hidden"
-  >
-
-
-    <button
-      class="logout"
-      onclick="logout()"
-    >
-      Logout
-    </button>
-
-
-    <h1>
-      📱 Home Service Cell
-    </h1>
-
-
-    <p class="subtitle">
-      Admin Dashboard
-    </p>
-
-
-    <!-- STATISTIK -->
-
-    <div class="stats">
-
-
-      <div class="stat">
-
-        📋 Total Booking
-
-        <div
-          class="stat-number"
-          id="totalBooking"
-        >
-          0
         </div>
 
-      </div>
+    </section>
 
 
-      <div class="stat">
+    <!-- ================= DASHBOARD ================= -->
 
-        🔧 Sedang Diproses
+    <section id="dashboardSection" class="hidden">
 
-        <div
-          class="stat-number"
-          id="processingBooking"
-        >
-          0
+        <div class="header">
+
+            <div class="header-row">
+
+                <div>
+                    <h1>📱 Home Service Cell</h1>
+
+                    <p>
+                        Dashboard Admin
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    id="logoutButton"
+                    class="logout-btn"
+                >
+                    🚪 Logout
+                </button>
+
+            </div>
+
         </div>
 
-      </div>
+
+        <!-- ================= STATISTIK ================= -->
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div class="stat-title">
+                    📋 Total Booking
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="totalBooking"
+                >
+                    0
+                </div>
+
+            </div>
 
 
-      <div class="stat">
+            <div class="stat">
 
-        ✅ Selesai
+                <div class="stat-title">
+                    🔧 Sedang Diproses
+                </div>
 
-        <div
-          class="stat-number"
-          id="completedBooking"
-        >
-          0
+                <div
+                    class="stat-number"
+                    id="processingBooking"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-title">
+                    ✅ Selesai
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="completedBooking"
+                >
+                    0
+                </div>
+
+            </div>
+
         </div>
 
-      </div>
+
+        <!-- ================= TOOLBAR ================= -->
+
+        <div class="toolbar">
+
+            <h2>
+                📋 Daftar Booking
+            </h2>
+
+            <button
+                type="button"
+                id="refreshButton"
+                class="refresh-btn"
+            >
+                🔄 Refresh
+            </button>
+
+        </div>
 
 
-    </div>
+        <!-- ================= BOOKING LIST ================= -->
 
+        <div id="bookingList">
+            <div class="loading">
+                Memuat booking...
+            </div>
+        </div>
 
-    <!-- REFRESH -->
-
-    <button
-      class="refresh"
-      onclick="loadBookings()"
-    >
-      🔄 Refresh Booking
-    </button>
-
-
-    <!-- LIST -->
-
-    <div id="bookingList">
-
-      <div class="booking">
-        Memuat booking...
-      </div>
-
-    </div>
-
-
-  </div>
-
+    </section>
 
 </div>
 
 
 <script>
 
-
-/* =====================================
+/* =====================================================
    SUPABASE
-===================================== */
+===================================================== */
 
 const SUPABASE_URL =
-  "https://sqpolxwdyypbxylgvihi.supabase.co";
-
+    "https://sqpolxwdyypbxylgvihi.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
-
+    "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 
 const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
-/* =====================================
-   FORMAT RUPIAH
-===================================== */
+/* =====================================================
+   ELEMENT
+===================================================== */
 
-function formatRupiah(value) {
+const loginSection =
+    document.getElementById("loginSection");
 
-  const number =
-    Number(value || 0);
+const dashboardSection =
+    document.getElementById("dashboardSection");
 
-  return number.toLocaleString(
-    "id-ID",
-    {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0
-    }
-  );
+const emailInput =
+    document.getElementById("email");
 
-}
+const passwordInput =
+    document.getElementById("password");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginMessage =
+    document.getElementById("loginMessage");
+
+const logoutButton =
+    document.getElementById("logoutButton");
+
+const refreshButton =
+    document.getElementById("refreshButton");
+
+const bookingList =
+    document.getElementById("bookingList");
 
 
-/* =====================================
+/* =====================================================
    LOGIN
-===================================== */
+===================================================== */
 
 async function login() {
 
-  const email =
-    document
-      .getElementById("email")
-      .value
-      .trim();
+    const email =
+        emailInput.value.trim();
 
+    const password =
+        passwordInput.value;
 
-  const password =
-    document
-      .getElementById("password")
-      .value;
+    if (!email || !password) {
 
+        loginMessage.textContent =
+            "Email dan password wajib diisi.";
 
-  const message =
-    document
-      .getElementById("loginMessage");
+        return;
+    }
 
+    loginButton.disabled = true;
 
-  if (!email || !password) {
+    loginButton.textContent =
+        "MEMPROSES...";
 
-    message.textContent =
-      "Email dan password wajib diisi.";
+    loginMessage.textContent =
+        "";
 
-    return;
-  }
-
-
-  message.textContent =
-    "Memproses login...";
-
-
-  const { error } =
-    await supabaseClient.auth
-      .signInWithPassword({
-
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.signInWithPassword({
         email: email,
-
         password: password
+    });
 
-      });
+    loginButton.disabled = false;
 
+    loginButton.textContent =
+        "LOGIN";
 
-  if (error) {
+    if (error) {
 
-    console.error(error);
+        loginMessage.textContent =
+            "Login gagal: " + error.message;
 
-    message.textContent =
-      "Login gagal: " +
-      error.message;
-
-    return;
-  }
-
-
-  message.textContent = "";
-
-
-  showDashboard();
-
-}
-
-
-/* =====================================
-   SESSION
-===================================== */
-
-async function checkSession() {
-
-  const { data } =
-    await supabaseClient.auth
-      .getSession();
-
-
-  if (data.session) {
+        return;
+    }
 
     showDashboard();
-
-  }
-
 }
 
 
-/* =====================================
+/* =====================================================
    SHOW DASHBOARD
-===================================== */
+===================================================== */
 
 function showDashboard() {
 
-  document
-    .getElementById("loginSection")
-    .classList
-    .add("hidden");
+    loginSection.classList.add("hidden");
 
+    dashboardSection.classList.remove("hidden");
 
-  document
-    .getElementById("dashboardSection")
-    .classList
-    .remove("hidden");
-
-
-  loadBookings();
-
+    loadBookings();
 }
 
 
-/* =====================================
+/* =====================================================
    LOGOUT
-===================================== */
+===================================================== */
 
 async function logout() {
 
-  await supabaseClient.auth.signOut();
+    await supabaseClient.auth.signOut();
 
-  location.reload();
+    dashboardSection.classList.add("hidden");
 
+    loginSection.classList.remove("hidden");
+
+    emailInput.value = "";
+
+    passwordInput.value = "";
+
+    loginMessage.textContent = "";
 }
 
 
-/* =====================================
-   LOAD BOOKING
-===================================== */
+/* =====================================================
+   FORMAT RUPIAH
+===================================================== */
+
+function formatRupiah(number) {
+
+    const value =
+        Number(number) || 0;
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style: "currency",
+            currency: "IDR",
+            maximumFractionDigits: 0
+        }
+    ).format(value);
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(value) {
+
+    if (value === null || value === undefined) {
+        return "";
+    }
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =====================================================
+   LOAD BOOKINGS
+===================================================== */
 
 async function loadBookings() {
 
-  const list =
-    document
-      .getElementById("bookingList");
-
-
-  list.innerHTML =
-    `<div class="booking">
-      ⏳ Memuat booking...
-    </div>`;
-
-
-  const { data, error } =
-    await supabaseClient
-      .from("bookings")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending: false
-        }
-      );
-
-
-  if (error) {
-
-    console.error(error);
-
-
-    list.innerHTML =
-      `<div class="booking">
-
-        ❌ Gagal mengambil booking.
-
-        <br><br>
-
-        ${error.message}
-
-      </div>`;
-
-    return;
-  }
-
-
-  /* =====================================
-     STATISTIK
-  ===================================== */
-
-  document
-    .getElementById("totalBooking")
-    .textContent =
-      data.length;
-
-
-  document
-    .getElementById("processingBooking")
-    .textContent =
-      data.filter(item =>
-
-        item.status !== "Menunggu" &&
-        item.status !== "Selesai"
-
-      ).length;
-
-
-  document
-    .getElementById("completedBooking")
-    .textContent =
-      data.filter(item =>
-
-        item.status === "Selesai"
-
-      ).length;
-
-
-  /* =====================================
-     EMPTY
-  ===================================== */
-
-  if (!data.length) {
-
-    list.innerHTML =
-      `<div class="booking">
-
-        Belum ada booking masuk.
-
-      </div>`;
-
-    return;
-  }
-
-
-  list.innerHTML = "";
-
-
-  /* =====================================
-     LOOP BOOKING
-  ===================================== */
-
-  data.forEach(item => {
-
-
-    const date =
-      new Date(
-        item.created_at
-      ).toLocaleString(
-        "id-ID"
-      );
-
-
-    const booking =
-      document.createElement(
-        "div"
-      );
-
-
-    booking.className =
-      "booking";
-
-
-    /* =================================
-       LOKASI
-    ================================= */
-
-    let locationHTML = "";
-
-
-    if (
-
-      item.latitude !== null &&
-      item.latitude !== undefined &&
-
-      item.longitude !== null &&
-      item.longitude !== undefined
-
-    ) {
-
-
-      const latitude =
-        Number(
-          item.latitude
-        ).toFixed(6);
-
-
-      const longitude =
-        Number(
-          item.longitude
-        ).toFixed(6);
-
-
-      locationHTML = `
-
-        <div class="location-box">
-
-          <div class="coordinates">
-
-            📌 <b>Koordinat</b>
-
-            <br>
-
-            ${latitude},
-            ${longitude}
-
-          </div>
-
-
-          <a
-
-            class="map-button"
-
-            href="https://www.google.com/maps?q=${item.latitude},${item.longitude}"
-
-            target="_blank"
-
-            rel="noopener noreferrer"
-
-          >
-
-            🗺️ Lihat Lokasi di Google Maps
-
-          </a>
-
-        </div>
-
-      `;
-
-    } else {
-
-
-      locationHTML = `
-
-        <div class="location-box">
-
-          📌
-
-          <span class="message">
-
-            Koordinat belum tersedia
-
-          </span>
-
-        </div>
-
-      `;
-
+    bookingList.innerHTML =
+        '<div class="loading">Memuat booking...</div>';
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("bookings")
+        .select("*")
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
+    if (error) {
+
+        bookingList.innerHTML =
+            `
+            <div class="error">
+                Gagal mengambil data booking.<br><br>
+                ${escapeHTML(error.message)}
+            </div>
+            `;
+
+        return;
     }
 
+    updateStatistics(data);
 
-    /* =================================
-       HARGA
-    ================================= */
+    if (!data || data.length === 0) {
 
-    const currentPrice =
-      Number(
-        item.total_price || 0
-      );
+        bookingList.innerHTML =
+            `
+            <div class="empty">
+                📭 Belum ada booking masuk.
+            </div>
+            `;
 
+        return;
+    }
 
-    /* =================================
-       BOOKING HTML
-    ================================= */
+    bookingList.innerHTML = "";
 
-    booking.innerHTML = `
+    data.forEach(item => {
 
+        createBookingCard(item);
 
-      <div class="booking-code">
-
-        🎫 ${item.booking_code}
-
-      </div>
-
-
-      <div class="info">
+    });
+}
 
 
-        👤 <b>Nama:</b>
+/* =====================================================
+   STATISTICS
+===================================================== */
 
-        ${item.customer_name}
+function updateStatistics(data) {
 
-        <br>
+    const total =
+        data.length;
 
+    const processing =
+        data.filter(item =>
+            item.status !== "Menunggu" &&
+            item.status !== "Selesai"
+        ).length;
 
-        📱 <b>No. HP:</b>
+    const completed =
+        data.filter(item =>
+            item.status === "Selesai"
+        ).length;
 
-        ${item.phone}
+    document.getElementById(
+        "totalBooking"
+    ).textContent = total;
 
-        <br>
+    document.getElementById(
+        "processingBooking"
+    ).textContent = processing;
 
-
-        📱 <b>Perangkat:</b>
-
-        ${item.device}
-
-        <br>
-
-
-        🔧 <b>Kerusakan:</b>
-
-        ${item.damage}
-
-        <br>
-
-
-        📝 <b>Keterangan:</b>
-
-        ${item.description || "-"}
-
-        <br>
+    document.getElementById(
+        "completedBooking"
+    ).textContent = completed;
+}
 
 
-        📍 <b>Alamat:</b>
+/* =====================================================
+   CREATE BOOKING CARD
+===================================================== */
 
-        ${item.address}
+function createBookingCard(item) {
+
+    const card =
+        document.createElement("div");
+
+    card.className =
+        "booking";
+
+    const createdDate =
+        new Date(
+            item.created_at
+        ).toLocaleString(
+            "id-ID"
+        );
+
+    const latitude =
+        item.latitude;
+
+    const longitude =
+        item.longitude;
+
+    let locationHTML =
+        `
+        <div class="location-box">
+
+            📍 <b>Lokasi pelanggan</b>
+            <br><br>
+
+            Latitude:
+            ${escapeHTML(latitude ?? "-")}
+            <br>
+
+            Longitude:
+            ${escapeHTML(longitude ?? "-")}
+        `;
+
+    if (
+        latitude !== null &&
+        longitude !== null &&
+        latitude !== undefined &&
+        longitude !== undefined
+    ) {
+
+        const mapsURL =
+            `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+        locationHTML +=
+            `
+            <br>
+
+            <a
+                href="${mapsURL}"
+                target="_blank"
+                rel="noopener"
+                class="maps-btn"
+            >
+                🗺️ Buka Google Maps
+            </a>
+            `;
+    }
+
+    locationHTML +=
+        `</div>`;
+
+
+    card.innerHTML =
+        `
+        <div class="booking-top">
+
+            <div class="booking-code">
+                ${escapeHTML(item.booking_code)}
+            </div>
+
+            <div class="booking-date">
+                ${escapeHTML(createdDate)}
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            👤 <b>Nama:</b>
+            ${escapeHTML(item.customer_name)}
+            <br>
+
+            📱 <b>No. HP:</b>
+            ${escapeHTML(item.phone)}
+            <br>
+
+            📱 <b>Perangkat:</b>
+            ${escapeHTML(item.device)}
+            <br>
+
+            🔧 <b>Kerusakan:</b>
+            ${escapeHTML(item.damage)}
+            <br>
+
+            📝 <b>Keterangan:</b>
+            ${escapeHTML(item.description || "-")}
+            <br>
+
+            🏠 <b>Alamat:</b>
+            ${escapeHTML(item.address)}
+
+        </div>
 
 
         ${locationHTML}
 
 
-        <div class="divider"></div>
+        <div class="controls">
+
+            <div class="control">
+
+                <label>
+                    Status Service
+                </label>
+
+                <select
+                    class="status-select"
+                    data-id="${item.id}"
+                >
+
+                    <option
+                        value="Menunggu"
+                        ${item.status === "Menunggu" ? "selected" : ""}
+                    >
+                        Menunggu
+                    </option>
+
+                    <option
+                        value="Dikonfirmasi"
+                        ${item.status === "Dikonfirmasi" ? "selected" : ""}
+                    >
+                        Dikonfirmasi
+                    </option>
+
+                    <option
+                        value="Teknisi Berangkat"
+                        ${item.status === "Teknisi Berangkat" ? "selected" : ""}
+                    >
+                        Teknisi Berangkat
+                    </option>
+
+                    <option
+                        value="Sedang Diperbaiki"
+                        ${item.status === "Sedang Diperbaiki" ? "selected" : ""}
+                    >
+                        Sedang Diperbaiki
+                    </option>
+
+                    <option
+                        value="Selesai"
+                        ${item.status === "Selesai" ? "selected" : ""}
+                    >
+                        Selesai
+                    </option>
+
+                </select>
+
+            </div>
 
 
-        <!-- HARGA -->
+            <div class="control">
 
-        <div class="price-box">
+                <label>
+                    💰 Total Biaya Servis
+                </label>
 
-          💰 <b>Total Harga</b>
+                <input
+                    type="number"
+                    min="0"
+                    class="price-input"
+                    data-id="${item.id}"
+                    value="${Number(item.total_price) || 0}"
+                    placeholder="Contoh: 150000"
+                >
 
+                <button
+                    type="button"
+                    class="save-price"
+                    data-id="${item.id}"
+                >
+                    💾 Simpan Harga
+                </button>
 
-          <div class="current-price">
+                <div
+                    class="save-message"
+                    id="message-${item.id}"
+                ></div>
 
-            ${formatRupiah(currentPrice)}
-
-          </div>
-
-
-          <input
-
-            class="price-input"
-
-            type="number"
-
-            min="0"
-
-            id="price-${item.id}"
-
-            value="${currentPrice}"
-
-            placeholder="Masukkan total harga"
-
-          >
-
-
-          <button
-
-            class="price-button"
-
-            onclick="updatePrice('${item.id}')"
-
-          >
-
-            💾 Simpan Harga
-
-          </button>
+            </div>
 
         </div>
+        `;
 
 
-        <div class="divider"></div>
+    /* STATUS */
 
+    const statusSelect =
+        card.querySelector(
+            ".status-select"
+        );
 
-        🕐 <b>Masuk:</b>
+    statusSelect.addEventListener(
+        "change",
+        async function () {
 
-        ${date}
+            await updateStatus(
+                item.id,
+                this.value
+            );
 
-
-      </div>
-
-
-      <!-- STATUS -->
-
-      <div class="status">
-
-
-        <select
-
-          onchange="updateStatus(
-            '${item.id}',
-            this.value
-          )"
-
-        >
-
-
-          <option
-
-            value="Menunggu"
-
-            ${
-              item.status === "Menunggu"
-              ? "selected"
-              : ""
-            }
-
-          >
-
-            Menunggu
-
-          </option>
-
-
-          <option
-
-            value="Dikonfirmasi"
-
-            ${
-              item.status === "Dikonfirmasi"
-              ? "selected"
-              : ""
-            }
-
-          >
-
-            Dikonfirmasi
-
-          </option>
-
-
-          <option
-
-            value="Teknisi Berangkat"
-
-            ${
-              item.status === "Teknisi Berangkat"
-              ? "selected"
-              : ""
-            }
-
-          >
-
-            Teknisi Berangkat
-
-          </option>
-
-
-          <option
-
-            value="Sedang Diperbaiki"
-
-            ${
-              item.status === "Sedang Diperbaiki"
-              ? "selected"
-              : ""
-            }
-
-          >
-
-            Sedang Diperbaiki
-
-          </option>
-
-
-          <option
-
-            value="Selesai"
-
-            ${
-              item.status === "Selesai"
-              ? "selected"
-              : ""
-            }
-
-          >
-
-            Selesai
-
-          </option>
-
-
-        </select>
-
-
-      </div>
-
-
-    `;
-
-
-    list.appendChild(
-      booking
+        }
     );
 
-  });
 
+    /* PRICE */
+
+    const priceInput =
+        card.querySelector(
+            ".price-input"
+        );
+
+    const savePriceButton =
+        card.querySelector(
+            ".save-price"
+        );
+
+    savePriceButton.addEventListener(
+        "click",
+        async function () {
+
+            await updatePrice(
+                item.id,
+                priceInput.value
+            );
+
+        }
+    );
+
+
+    bookingList.appendChild(card);
 }
 
 
-/* =====================================
+/* =====================================================
    UPDATE STATUS
-===================================== */
+===================================================== */
 
 async function updateStatus(
-  id,
-  status
+    id,
+    status
 ) {
 
+    const {
+        error
+    } = await supabaseClient
+        .from("bookings")
+        .update({
+            status: status
+        })
+        .eq(
+            "id",
+            id
+        );
 
-  const { error } =
-    await supabaseClient
-      .from("bookings")
-      .update({
+    if (error) {
 
-        status: status
+        alert(
+            "Gagal mengubah status:\n" +
+            error.message
+        );
 
-      })
-      .eq(
-        "id",
-        id
-      );
+        return;
+    }
 
-
-  if (error) {
-
-    alert(
-      "❌ Gagal mengubah status:\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  await loadBookings();
-
+    loadBookings();
 }
 
 
-/* =====================================
+/* =====================================================
    UPDATE PRICE
-===================================== */
+===================================================== */
 
-async function updatePrice(id) {
+async function updatePrice(
+    id,
+    price
+) {
+
+    const totalPrice =
+        Number(price);
+
+    if (
+        !Number.isFinite(totalPrice) ||
+        totalPrice < 0
+    ) {
+
+        alert(
+            "Harga tidak valid."
+        );
+
+        return;
+    }
+
+    const button =
+        document.querySelector(
+            `.save-price[data-id="${id}"]`
+        );
+
+    const message =
+        document.getElementById(
+            `message-${id}`
+        );
+
+    button.disabled = true;
+
+    button.textContent =
+        "Menyimpan...";
 
 
-  const input =
-    document.getElementById(
-      "price-" + id
+    const {
+        error
+    } = await supabaseClient
+        .from("bookings")
+        .update({
+            total_price: totalPrice
+        })
+        .eq(
+            "id",
+            id
+        );
+
+
+    button.disabled = false;
+
+    button.textContent =
+        "💾 Simpan Harga";
+
+
+    if (error) {
+
+        message.style.color =
+            "#ff8585";
+
+        message.textContent =
+            "Gagal: " +
+            error.message;
+
+        return;
+    }
+
+
+    message.style.color =
+        "#5ee7a5";
+
+    message.textContent =
+        "✓ Harga berhasil disimpan";
+
+    setTimeout(
+        () => {
+            loadBookings();
+        },
+        700
     );
-
-
-  if (!input) {
-
-    alert(
-      "Input harga tidak ditemukan."
-    );
-
-    return;
-  }
-
-
-  const price =
-    Number(
-      input.value
-    );
-
-
-  if (
-    !Number.isFinite(price) ||
-    price < 0
-  ) {
-
-    alert(
-      "❌ Masukkan harga yang valid."
-    );
-
-    return;
-  }
-
-
-  const { error } =
-    await supabaseClient
-      .from("bookings")
-      .update({
-
-        total_price:
-          Math.round(price)
-
-      })
-      .eq(
-        "id",
-        id
-      );
-
-
-  if (error) {
-
-    console.error(error);
-
-
-    alert(
-      "❌ Gagal menyimpan harga:\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  alert(
-    "✅ Total harga berhasil disimpan:\n" +
-    formatRupiah(price)
-  );
-
-
-  await loadBookings();
-
 }
 
 
-/* =====================================
+/* =====================================================
+   CHECK SESSION
+===================================================== */
+
+async function checkSession() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.getSession();
+
+    if (
+        !error &&
+        data &&
+        data.session
+    ) {
+
+        showDashboard();
+
+    } else {
+
+        loginSection.classList.remove(
+            "hidden"
+        );
+
+        dashboardSection.classList.add(
+            "hidden"
+        );
+    }
+}
+
+
+/* =====================================================
+   EVENT LISTENERS
+===================================================== */
+
+loginButton.addEventListener(
+    "click",
+    login
+);
+
+logoutButton.addEventListener(
+    "click",
+    logout
+);
+
+refreshButton.addEventListener(
+    "click",
+    loadBookings
+);
+
+
+/* ENTER UNTUK LOGIN */
+
+passwordInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            login();
+        }
+
+    }
+);
+
+
+/* =====================================================
    START
-===================================== */
-document
-  .getElementById("loginButton")
-  .addEventListener("click", login);
+===================================================== */
 
-  checkSession();
-
+checkSession();
 
 </script>
 
-
 </body>
-
 </html>
