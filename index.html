@@ -1229,6 +1229,356 @@ document.getElementById("statusForm")
       }
 
     });
+  <!-- ================= PEMBAYARAN GADGETCARE ================= -->
+<section id="pembayaran" class="payment-section">
+  <div class="payment-container">
+
+    <div class="payment-header">
+      <span class="payment-icon">💳</span>
+      <div>
+        <h2>Pembayaran</h2>
+        <p>Silakan pilih metode pembayaran yang tersedia.</p>
+      </div>
+    </div>
+
+    <!-- Total Pembayaran -->
+    <div class="payment-total">
+      <span>Total yang harus dibayar</span>
+      <strong id="paymentTotal">Rp0</strong>
+    </div>
+
+    <!-- Pilihan Metode -->
+    <div class="payment-methods">
+
+      <button class="payment-method active" onclick="selectPayment('gopay', this)">
+        🟢
+        <span>GoPay</span>
+      </button>
+
+      <button class="payment-method" onclick="selectPayment('dana', this)">
+        🔵
+        <span>DANA</span>
+      </button>
+
+      <button class="payment-method" onclick="selectPayment('shopeepay', this)">
+        🟠
+        <span>ShopeePay</span>
+      </button>
+
+      <button class="payment-method" onclick="selectPayment('seabank', this)">
+        🟢
+        <span>SeaBank</span>
+      </button>
+
+      <button class="payment-method" onclick="selectPayment('superbank', this)">
+        🔴
+        <span>Superbank</span>
+      </button>
+
+    </div>
+
+    <!-- Detail Pembayaran -->
+    <div class="payment-detail" id="paymentDetail">
+
+      <div class="payment-logo" id="paymentLogo">
+        🟢
+      </div>
+
+      <h3 id="paymentName">GoPay</h3>
+
+      <p class="payment-label">Nomor Pembayaran</p>
+
+      <div class="payment-number">
+        <strong id="paymentNumber">085846009748</strong>
+        <button onclick="copyPaymentNumber()">📋 Salin</button>
+      </div>
+
+      <p class="payment-owner">
+        Atas Nama<br>
+        <strong id="paymentOwner">Abdul Azis</strong>
+      </p>
+
+      <div class="payment-warning">
+        ⚠️ Pastikan nama penerima adalah <strong>Abdul Azis</strong>
+        sebelum melakukan pembayaran.
+      </div>
+
+      <button class="payment-confirm" onclick="confirmPayment()">
+        ✅ Saya Sudah Bayar
+      </button>
+
+    </div>
+
+    <div id="paymentMessage" class="payment-message"></div>
+
+  </div>
+</section>
+
+  <style>
+.payment-section {
+  padding: 50px 20px;
+  background: #111;
+  color: white;
+}
+
+.payment-container {
+  max-width: 700px;
+  margin: auto;
+}
+
+.payment-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.payment-icon {
+  font-size: 35px;
+}
+
+.payment-header h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.payment-header p {
+  margin: 5px 0 0;
+  color: #aaa;
+}
+
+.payment-total {
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-total span {
+  color: #aaa;
+}
+
+.payment-total strong {
+  color: #ff5722;
+  font-size: 22px;
+}
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.payment-method {
+  background: #1c1c1c;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: .2s;
+}
+
+.payment-method:hover,
+.payment-method.active {
+  border-color: #ff5722;
+  background: #241914;
+}
+
+.payment-detail {
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 25px;
+  text-align: center;
+}
+
+.payment-logo {
+  font-size: 40px;
+  margin-bottom: 5px;
+}
+
+.payment-detail h3 {
+  margin: 5px 0 20px;
+  font-size: 24px;
+}
+
+.payment-label {
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.payment-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #111;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.payment-number strong {
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+.payment-number button {
+  background: #ff5722;
+  color: white;
+  border: 0;
+  border-radius: 7px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.payment-owner {
+  color: #aaa;
+  margin: 20px 0;
+}
+
+.payment-owner strong {
+  color: white;
+  font-size: 18px;
+}
+
+.payment-warning {
+  background: #2a211d;
+  border-radius: 10px;
+  padding: 12px;
+  color: #ddd;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.payment-confirm {
+  width: 100%;
+  background: #ff5722;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.payment-confirm:hover {
+  opacity: .9;
+}
+
+.payment-message {
+  margin-top: 15px;
+  text-align: center;
+  color: #ff5722;
+  font-weight: bold;
+}
+
+@media (max-width: 500px) {
+  .payment-methods {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-number {
+    flex-direction: column;
+  }
+}
+</style>
+  <script>
+const paymentData = {
+  gopay: {
+    name: "GoPay",
+    number: "085846009748",
+    owner: "Abdul Azis",
+    logo: "🟢"
+  },
+
+  dana: {
+    name: "DANA",
+    number: "087892005428",
+    owner: "Abdul Azis",
+    logo: "🔵"
+  },
+
+  shopeepay: {
+    name: "ShopeePay",
+    number: "085846009748",
+    owner: "Abdul Azis",
+    logo: "🟠"
+  },
+
+  seabank: {
+    name: "SeaBank",
+    number: "083897538357",
+    owner: "Abdul Azis",
+    logo: "🟢"
+  },
+
+  superbank: {
+    name: "Superbank",
+    number: "000075305250",
+    owner: "Abdul Azis",
+    logo: "🔴"
+  }
+};
+
+let selectedPayment = "gopay";
+
+function selectPayment(type, button) {
+
+  selectedPayment = type;
+
+  const data = paymentData[type];
+
+  document.querySelectorAll(".payment-method")
+    .forEach(btn => btn.classList.remove("active"));
+
+  button.classList.add("active");
+
+  document.getElementById("paymentLogo").textContent = data.logo;
+  document.getElementById("paymentName").textContent = data.name;
+  document.getElementById("paymentNumber").textContent = data.number;
+  document.getElementById("paymentOwner").textContent = data.owner;
+
+  document.getElementById("paymentMessage").textContent = "";
+}
+
+function copyPaymentNumber() {
+
+  const number = document.getElementById("paymentNumber").textContent;
+
+  navigator.clipboard.writeText(number)
+    .then(() => {
+
+      document.getElementById("paymentMessage").textContent =
+        "✅ Nomor pembayaran berhasil disalin.";
+
+      setTimeout(() => {
+        document.getElementById("paymentMessage").textContent = "";
+      }, 2500);
+
+    })
+    .catch(() => {
+      alert("Nomor: " + number);
+    });
+}
+
+function confirmPayment() {
+
+  const data = paymentData[selectedPayment];
+
+  document.getElementById("paymentMessage").innerHTML =
+    `✅ Pembayaran melalui <strong>${data.name}</strong> telah dipilih.<br>
+     Silakan kirim bukti pembayaran kepada admin GadgetCare.`;
+}
+</script>
+  <strong id="paymentTotal">Rp0</strong>
 </script>
 
 </body>
