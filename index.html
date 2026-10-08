@@ -1,1505 +1,2339 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Home Service Cell | Servis HP ke Rumah</title>
+  <title>ServiceHome - Service HP Panggilan</title>
+  <meta name="description" content="Jasa service handphone panggilan langsung ke rumah.">
 
-<!-- Leaflet -->
-<link
+  <!-- Leaflet -->
+  <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+    integrity="sha256-p4NxAoJBhIINfQ3w8F9H2J9K1KQ5F0E6rK5T6mK9w="
+    crossorigin=""
+  >
 
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: #080b12;
-    color: #fff;
-    line-height: 1.6;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.container {
-    width: 92%;
-    max-width: 1100px;
-    margin: auto;
-}
-
-/* NAVBAR */
-
-header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    background: rgba(8,11,18,.96);
-    border-bottom: 1px solid #202938;
-}
-
-.navbar {
-    min-height: 70px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.logo {
-    font-size: 19px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-}
-
-.logo-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: #19d5ff;
-    color: #061018;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 8px;
-}
-
-.nav-links {
-    display: flex;
-    gap: 8px;
-}
-
-.nav-button {
-    background: #19d5ff;
-    color: #061018;
-    padding: 9px 14px;
-    border-radius: 9px;
-    font-size: 13px;
-    font-weight: bold;
-}
-
-/* HERO */
-
-.hero {
-    padding: 90px 0;
-    background:
-        radial-gradient(
-            circle at 80% 20%,
-            #123b50,
-            transparent 35%
-        );
-}
-
-.tag {
-    color: #19d5ff;
-    font-size: 13px;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.hero h1 {
-    font-size: clamp(40px,8vw,70px);
-    line-height: 1.05;
-    margin: 15px 0;
-}
-
-.hero h1 span {
-    color: #19d5ff;
-}
-
-.hero p {
-    color: #aab5c2;
-    max-width: 650px;
-    font-size: 18px;
-}
-
-.buttons {
-    margin-top: 30px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.button {
-    display: inline-block;
-    padding: 14px 22px;
-    border-radius: 12px;
-    background: #19d5ff;
-    color: #061018;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-}
-
-.button-outline {
-    background: transparent;
-    color: white;
-    border: 1px solid #344052;
-}
-
-/* SECTION */
-
-section {
-    padding: 70px 0;
-}
-
-.section-title {
-    margin-bottom: 30px;
-}
-
-.section-title small {
-    color: #19d5ff;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.section-title h2 {
-    font-size: 34px;
-    margin-top: 5px;
-}
-
-.section-title p {
-    color: #9ca8b5;
-}
-
-/* SERVICES */
-
-.services {
-    display: grid;
-    grid-template-columns:
-        repeat(auto-fit,minmax(220px,1fr));
-    gap: 15px;
-}
-
-.service {
-    background: #0e141e;
-    border: 1px solid #202b39;
-    padding: 22px;
-    border-radius: 16px;
-    transition: .3s;
-}
-
-.service:hover {
-    transform: translateY(-4px);
-    border-color: #19d5ff;
-}
-
-.service-icon {
-    font-size: 30px;
-    margin-bottom: 10px;
-}
-
-.service h3 {
-    margin-bottom: 8px;
-}
-
-.service p {
-    color: #929eac;
-    font-size: 14px;
-}
-
-/* PRICE */
-
-.price-section {
-    background: #0b1018;
-}
-
-.prices {
-    display: grid;
-    gap: 10px;
-}
-
-.price {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 17px;
-    background: #101720;
-    border: 1px solid #222e3c;
-    border-radius: 12px;
-}
-
-.price strong {
-    color: #19d5ff;
-}
-
-.note {
-    color: #778391;
-    margin-top: 15px;
-    font-size: 13px;
-}
-
-/* BOOKING */
-
-.booking-box {
-    max-width: 800px;
-    background: #0e141e;
-    border: 1px solid #202b39;
-    padding: 25px;
-    border-radius: 18px;
-}
-
-.form-group {
-    margin-bottom: 17px;
-}
-
-label {
-    display: block;
-    margin-bottom: 7px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-input,
-select,
-textarea {
-    width: 100%;
-    padding: 13px;
-    background: #080d14;
-    color: white;
-    border: 1px solid #293646;
-    border-radius: 10px;
-    outline: none;
-    font-size: 15px;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: #19d5ff;
-}
-
-textarea {
-    resize: vertical;
-}
-
-.submit {
-    width: 100%;
-    font-size: 16px;
-}
-
-/* MAP */
-
-#map {
-    width: 100%;
-    height: 350px;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid #293646;
-}
-
-.location-status {
-    color: #19d5ff;
-    font-size: 13px;
-    margin-top: 8px;
-}
-
-/* STATUS */
-
-.status-result {
-    display: none;
-    margin-top: 20px;
-    padding: 20px;
-    background: #101720;
-    border: 1px solid #222e3c;
-    border-radius: 12px;
-}
-
-.status-result p {
-    margin-bottom: 8px;
-}
-
-.total-price {
-    margin-top: 15px;
-    padding: 15px;
-    background: #0b1921;
-    border: 1px solid #19d5ff;
-    border-radius: 10px;
-}
-
-.total-price-label {
-    font-size: 13px;
-    color: #9ca8b5;
-}
-
-.total-price-value {
-    color: #19d5ff;
-    font-size: 25px;
-    font-weight: bold;
-    margin-top: 3px;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 8px;
-    background: #172631;
-    color: #19d5ff;
-    font-weight: bold;
-}
-
-/* FOOTER */
-
-footer {
-    padding: 30px 0;
-    border-top: 1px solid #202938;
-    color: #7f8a97;
-    text-align: center;
-    font-size: 14px;
-}
-
-footer a {
-    color: #19d5ff;
-}
-
-/* MOBILE */
-
-@media(max-width:600px) {
-
-    .hero {
-        padding: 65px 0;
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .hero h1 {
-        font-size: 42px;
+    html {
+      scroll-behavior: smooth;
     }
 
-    .section-title h2 {
-        font-size: 28px;
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0b0f14;
+      color: #ffffff;
+      line-height: 1.6;
     }
 
-    .navbar {
-        min-height: 62px;
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    /* =========================
+       NAVBAR
+    ========================= */
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: rgba(11, 15, 20, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #202833;
+    }
+
+    .nav-inner {
+      min-height: 65px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
     }
 
     .logo {
-        font-size: 15px;
+      font-size: 21px;
+      font-weight: 800;
+      color: #25d366;
     }
 
-    .logo-icon {
-        width: 34px;
-        height: 34px;
+    .nav-menu {
+      display: flex;
+      gap: 20px;
+      align-items: center;
     }
 
-    .nav-button {
-        padding: 8px 10px;
-        font-size: 11px;
+    .nav-menu a {
+      color: #d9e0e7;
+      font-size: 14px;
+    }
+
+    .nav-menu a:hover {
+      color: #25d366;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      padding: 80px 0 70px;
+      background:
+        radial-gradient(circle at top right, rgba(37, 211, 102, 0.12), transparent 35%),
+        #0b0f14;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 45px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(38px, 7vw, 65px);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: #25d366;
+    }
+
+    .hero p {
+      color: #aeb8c4;
+      font-size: 17px;
+      max-width: 620px;
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: #25d366;
+      color: #07120b;
+    }
+
+    .button-secondary {
+      background: #161d25;
+      color: #ffffff;
+      border: 1px solid #2a3541;
+    }
+
+    .hero-card {
+      background: #121820;
+      border: 1px solid #27313d;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+    }
+
+    .hero-card-icon {
+      font-size: 55px;
+      margin-bottom: 15px;
+    }
+
+    .hero-card h3 {
+      margin-bottom: 10px;
+    }
+
+    .hero-card p {
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    section {
+      padding: 70px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-title h2 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .section-title p {
+      color: #8995a2;
+    }
+
+    /* =========================
+       SERVICES
+    ========================= */
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .service-card {
+      background: #121820;
+      border: 1px solid #27313d;
+      border-radius: 16px;
+      padding: 23px;
+    }
+
+    .service-icon {
+      font-size: 35px;
+      margin-bottom: 12px;
+    }
+
+    .service-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .service-card p {
+      color: #929eac;
+      font-size: 14px;
+    }
+
+    /* =========================
+       PRICE
+    ========================= */
+
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .price-card {
+      background: #121820;
+      border: 1px solid #27313d;
+      border-radius: 16px;
+      padding: 22px;
+    }
+
+    .price-card h3 {
+      margin-bottom: 10px;
     }
 
     .price {
-        flex-direction: column;
-        gap: 5px;
+      color: #25d366;
+      font-size: 23px;
+      font-weight: 800;
+      margin-bottom: 8px;
     }
-}
-</style>
+
+    .price-card p {
+      color: #929eac;
+      font-size: 13px;
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-section {
+      background: #0e141b;
+    }
+
+    .form-wrapper {
+      max-width: 750px;
+      margin: auto;
+      background: #121820;
+      border: 1px solid #27313d;
+      border-radius: 18px;
+      padding: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 9px;
+      border: 1px solid #2a3541;
+      background: #0b1016;
+      color: #ffffff;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #25d366;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .submit {
+      width: 100%;
+      background: #25d366;
+      color: #07120b;
+      margin-top: 8px;
+    }
+
+    /* =========================
+       MAP
+    ========================= */
+
+    #map {
+      width: 100%;
+      height: 360px;
+      border-radius: 13px;
+      overflow: hidden;
+      border: 1px solid #2a3541;
+      margin-top: 10px;
+    }
+
+    .gps-button {
+      width: 100%;
+      margin-bottom: 10px;
+      background: #1b2732;
+      color: #ffffff;
+      border: 1px solid #25d366;
+    }
+
+    .gps-button:hover {
+      background: #22313e;
+    }
+
+    .gps-button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+      transform: none;
+    }
+
+    .location-status {
+      margin-top: 10px;
+      padding: 11px 13px;
+      background: #0b1016;
+      border: 1px solid #27313d;
+      border-radius: 9px;
+      color: #aeb8c4;
+      font-size: 13px;
+    }
+
+    .location-status.success {
+      color: #25d366;
+      border-color: rgba(37, 211, 102, 0.35);
+    }
+
+    .location-status.error {
+      color: #ff7676;
+      border-color: rgba(255, 118, 118, 0.35);
+    }
+
+    .map-help {
+      color: #929eac;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status-box {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .status-result {
+      display: none;
+      margin-top: 20px;
+      background: #0b1016;
+      border: 1px solid #27313d;
+      border-radius: 13px;
+      padding: 20px;
+    }
+
+    .status-result.show {
+      display: block;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1d2630;
+      font-size: 14px;
+    }
+
+    .status-row:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      color: #8995a2;
+    }
+
+    .status-value {
+      text-align: right;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #26313c;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      padding: 35px 0;
+      border-top: 1px solid #202833;
+      text-align: center;
+      color: #707c89;
+      font-size: 13px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 800px) {
+
+      .nav-menu {
+        display: none;
+      }
+
+      .hero {
+        padding: 60px 0;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid,
+      .price-grid {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 55px 0;
+      }
+
+      .form-wrapper {
+        padding: 18px;
+      }
+
+      #map {
+        height: 330px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- =========================================
-     NAVBAR
-========================================= -->
+  <!-- =========================
+       NAVBAR
+  ========================= -->
 
-<header>
+  <nav>
+    <div class="container nav-inner">
 
-<div class="container navbar">
+      <a href="#" class="logo">
+        📱 ServiceHome
+      </a>
 
-    <div class="logo">
+      <div class="nav-menu">
+        <a href="#layanan">Layanan</a>
+        <a href="#harga">Harga</a>
+        <a href="#status">Cek Service</a>
+        <a href="#booking">Booking</a>
+      </div>
 
-        <div class="logo-icon">
-            H
+    </div>
+  </nav>
+
+
+  <!-- =========================
+       HERO
+  ========================= -->
+
+  <header class="hero">
+
+    <div class="container hero-grid">
+
+      <div>
+
+        <h1>
+          Service HP<br>
+          <span>Datang ke Rumah</span>
+        </h1>
+
+        <p>
+          Tidak perlu repot datang ke konter.
+          Teknisi kami siap datang langsung ke lokasi kamu
+          untuk membantu memperbaiki handphone.
+        </p>
+
+        <div class="hero-buttons">
+
+          <a href="#booking" class="button button-primary">
+            🔧 Booking Service
+          </a>
+
+          <a href="#status" class="button button-secondary">
+            🔎 Cek Status
+          </a>
+
         </div>
 
-        Home Service Cell
+      </div>
+
+
+      <div class="hero-card">
+
+        <div class="hero-card-icon">
+          📍
+        </div>
+
+        <h3>
+          Teknisi Datang ke Lokasi
+        </h3>
+
+        <p>
+          Masukkan alamat dan lokasi rumah kamu.
+          Sistem akan menggunakan GPS HP untuk membantu
+          menentukan lokasi service dengan lebih akurat.
+        </p>
+
+      </div>
 
     </div>
 
-    <div class="nav-links">
-
-        <a
-            href="#status"
-            class="nav-button"
-        >
-            🔍 Status
-        </a>
-
-        <a
-            href="#booking"
-            class="nav-button"
-        >
-            Pesan
-        </a>
-
-    </div>
-
-</div>
-
-</header>
+  </header>
 
 
-<!-- =========================================
-     HERO
-========================================= -->
+  <!-- =========================
+       SERVICES
+  ========================= -->
 
-<section class="hero">
+  <section id="layanan">
 
-<div class="container">
+    <div class="container">
 
-    <div class="tag">
-        📱 SERVIS HP • HOME SERVICE
-    </div>
-
-    <h1>
-        HP Bermasalah?
-        <br>
-        <span>Teknisi Datang.</span>
-    </h1>
-
-    <p>
-        Layanan servis handphone ke rumah.
-        Pesan teknisi dengan mudah dan pantau
-        perkembangan servis melalui website.
-    </p>
-
-    <div class="buttons">
-
-        <a
-            href="#booking"
-            class="button"
-        >
-            Pesan Teknisi
-        </a>
-
-        <a
-            href="#services"
-            class="button button-outline"
-        >
-            Lihat Layanan
-        </a>
-
-    </div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================
-     SERVICES
-========================================= -->
-
-<section id="services">
-
-<div class="container">
-
-    <div class="section-title">
-
-        <small>LAYANAN</small>
+      <div class="section-title">
 
         <h2>
-            Solusi untuk HP kamu
+          Layanan Kami
         </h2>
 
         <p>
-            Beberapa layanan servis yang tersedia.
+          Solusi untuk berbagai kerusakan handphone
         </p>
 
+      </div>
+
+
+      <div class="services-grid">
+
+        <div class="service-card">
+
+          <div class="service-icon">
+            📱
+          </div>
+
+          <h3>
+            Ganti LCD
+          </h3>
+
+          <p>
+            Perbaikan layar pecah, retak,
+            blank, bergaris atau touchscreen bermasalah.
+          </p>
+
+        </div>
+
+
+        <div class="service-card">
+
+          <div class="service-icon">
+            🔋
+          </div>
+
+          <h3>
+            Ganti Baterai
+          </h3>
+
+          <p>
+            Mengatasi baterai cepat habis,
+            drop, kembung atau sulit mengisi daya.
+          </p>
+
+        </div>
+
+
+        <div class="service-card">
+
+          <div class="service-icon">
+            🔌
+          </div>
+
+          <h3>
+            Masalah Charging
+          </h3>
+
+          <p>
+            Perbaikan konektor charger,
+            tidak bisa mengisi dan masalah charging.
+          </p>
+
+        </div>
+
+
+        <div class="service-card">
+
+          <div class="service-icon">
+            💧
+          </div>
+
+          <h3>
+            HP Kemasukan Air
+          </h3>
+
+          <p>
+            Penanganan awal dan pemeriksaan
+            handphone yang terkena air.
+          </p>
+
+        </div>
+
+
+        <div class="service-card">
+
+          <div class="service-icon">
+            ⚡
+          </div>
+
+          <h3>
+            Mati Total
+          </h3>
+
+          <p>
+            Pemeriksaan handphone mati total
+            dan masalah pada komponen.
+          </p>
+
+        </div>
+
+
+        <div class="service-card">
+
+          <div class="service-icon">
+            🛠️
+          </div>
+
+          <h3>
+            Kerusakan Lainnya
+          </h3>
+
+          <p>
+            Konsultasikan kerusakan handphone
+            lainnya dengan teknisi kami.
+          </p>
+
+        </div>
+
+      </div>
+
     </div>
 
-
-    <div class="services">
-
-        <div class="service">
-            <div class="service-icon">📱</div>
-
-            <h3>Ganti LCD</h3>
-
-            <p>
-                Layar pecah, retak, blank,
-                bergaris atau touchscreen bermasalah.
-            </p>
-        </div>
+  </section>
 
 
-        <div class="service">
-            <div class="service-icon">🔋</div>
+  <!-- =========================
+       PRICE
+  ========================= -->
 
-            <h3>Ganti Baterai</h3>
+  <section id="harga">
 
-            <p>
-                Baterai cepat habis, drop,
-                menggembung atau tidak menyimpan daya.
-            </p>
-        </div>
+    <div class="container">
 
-
-        <div class="service">
-            <div class="service-icon">🔌</div>
-
-            <h3>Charging</h3>
-
-            <p>
-                HP tidak mengisi,
-                konektor longgar atau charging lambat.
-            </p>
-        </div>
-
-
-        <div class="service">
-            <div class="service-icon">🔊</div>
-
-            <h3>Speaker & Mic</h3>
-
-            <p>
-                Suara kecil, speaker mati
-                atau microphone bermasalah.
-            </p>
-        </div>
-
-
-        <div class="service">
-            <div class="service-icon">💧</div>
-
-            <h3>HP Kena Air</h3>
-
-            <p>
-                Pemeriksaan dan penanganan
-                HP yang terkena air.
-            </p>
-        </div>
-
-
-        <div class="service">
-            <div class="service-icon">⚙️</div>
-
-            <h3>Software</h3>
-
-            <p>
-                Bootloop, error sistem,
-                reset dan masalah software.
-            </p>
-        </div>
-
-    </div>
-
-</div>
-
-</section>
-
-
-<!-- =========================================
-     PRICE
-========================================= -->
-
-<section class="price-section">
-
-<div class="container">
-
-    <div class="section-title">
-
-        <small>HARGA</small>
+      <div class="section-title">
 
         <h2>
-            Estimasi Biaya Servis
-        </h2>
-
-    </div>
-
-
-    <div class="prices">
-
-        <div class="price">
-            <span>Ganti LCD</span>
-            <strong>Mulai Rp150.000</strong>
-        </div>
-
-        <div class="price">
-            <span>Ganti Baterai</span>
-            <strong>Mulai Rp100.000</strong>
-        </div>
-
-        <div class="price">
-            <span>Perbaikan Charging</span>
-            <strong>Mulai Rp75.000</strong>
-        </div>
-
-        <div class="price">
-            <span>Speaker / Mic</span>
-            <strong>Mulai Rp75.000</strong>
-        </div>
-
-        <div class="price">
-            <span>Software / Reset</span>
-            <strong>Mulai Rp50.000</strong>
-        </div>
-
-    </div>
-
-    <p class="note">
-        * Harga merupakan estimasi awal.
-        Harga final ditentukan setelah pengecekan teknisi.
-    </p>
-
-</div>
-
-</section>
-
-
-<!-- =========================================
-     STATUS
-========================================= -->
-
-<section id="status">
-
-<div class="container">
-
-    <div class="section-title">
-
-        <small>STATUS SERVIS</small>
-
-        <h2>
-            Cek Status Servis
+          Estimasi Harga
         </h2>
 
         <p>
-            Masukkan kode booking untuk melihat
-            perkembangan servis HP kamu.
+          Harga dapat berubah setelah dilakukan pemeriksaan.
         </p>
+
+      </div>
+
+
+      <div class="price-grid">
+
+        <div class="price-card">
+
+          <h3>
+            🔋 Baterai
+          </h3>
+
+          <div class="price">
+            Mulai Rp100.000
+          </div>
+
+          <p>
+            Tergantung tipe dan jenis handphone.
+          </p>
+
+        </div>
+
+
+        <div class="price-card">
+
+          <h3>
+            📱 LCD
+          </h3>
+
+          <div class="price">
+            Mulai Rp200.000
+          </div>
+
+          <p>
+            Harga menyesuaikan tipe handphone.
+          </p>
+
+        </div>
+
+
+        <div class="price-card">
+
+          <h3>
+            🔌 Charging
+          </h3>
+
+          <div class="price">
+            Mulai Rp100.000
+          </div>
+
+          <p>
+            Pemeriksaan dilakukan terlebih dahulu.
+          </p>
+
+        </div>
+
+      </div>
 
     </div>
 
+  </section>
 
-    <div class="booking-box">
 
-        <form id="statusForm">
+  <!-- =========================
+       STATUS SERVICE
+  ========================= -->
 
-            <div class="form-group">
+  <section id="status" class="form-section">
 
-                <label>
-                    Kode Booking
-                </label>
+    <div class="container">
 
-                <input
-                    type="text"
-                    id="bookingCode"
-                    placeholder="Contoh: HSC-ABC123"
-                    required
-                >
+      <div class="section-title">
 
-            </div>
+        <h2>
+          🔎 Cek Status Service
+        </h2>
 
-            <button
-                type="submit"
-                class="button submit"
+        <p>
+          Masukkan kode booking untuk melihat perkembangan service.
+        </p>
+
+      </div>
+
+
+      <div class="status-box">
+
+        <div class="form-wrapper">
+
+          <div class="form-group">
+
+            <label for="bookingCode">
+              Kode Booking
+            </label>
+
+            <input
+              type="text"
+              id="bookingCode"
+              placeholder="Contoh: SH-ABC123"
+              autocomplete="off"
             >
-                🔍 Cek Status
-            </button>
 
-        </form>
+          </div>
 
 
-        <div
+          <button
+            type="button"
+            id="checkStatusButton"
+            class="button button-primary submit"
+          >
+            🔎 Cek Status Service
+          </button>
+
+
+          <div
             id="statusResult"
             class="status-result"
-        ></div>
+          ></div>
+
+        </div>
+
+      </div>
 
     </div>
 
-</div>
-
-</section>
+  </section>
 
 
-<!-- =========================================
-     BOOKING
-========================================= -->
+  <!-- =========================
+       BOOKING
+  ========================= -->
 
-<section id="booking">
+  <section id="booking">
 
-<div class="container">
+    <div class="container">
 
-    <div class="section-title">
-
-        <small>BOOKING</small>
+      <div class="section-title">
 
         <h2>
-            Pesan Teknisi
+          🔧 Booking Service
         </h2>
 
         <p>
-            Isi data berikut untuk membuat booking.
+          Isi data berikut agar teknisi dapat menghubungi kamu.
         </p>
 
-    </div>
+      </div>
 
 
-    <div class="booking-box">
+      <div class="form-wrapper">
 
         <form id="bookingForm">
 
+          <!-- Nama -->
 
-            <!-- NAMA -->
+          <div class="form-group">
 
-            <div class="form-group">
-
-                <label>
-                    Nama
-                </label>
-
-                <input
-                    type="text"
-                    id="name"
-                    placeholder="Nama lengkap"
-                    required
-                >
-
-            </div>
-
-
-            <!-- PHONE -->
-
-            <div class="form-group">
-
-                <label>
-                    Nomor WhatsApp
-                </label>
-
-                <input
-                    type="tel"
-                    id="phone"
-                    placeholder="08xxxxxxxxxx"
-                    required
-                >
-
-            </div>
-
-
-            <!-- DEVICE -->
-
-            <div class="form-group">
-
-                <label>
-                    Merek & Model HP
-                </label>
-
-                <input
-                    type="text"
-                    id="device"
-                    placeholder="Contoh: Redmi Note 13 Pro"
-                    required
-                >
-
-            </div>
-
-
-            <!-- DAMAGE -->
-
-            <div class="form-group">
-
-                <label>
-                    Jenis Kerusakan
-                </label>
-
-                <select
-                    id="damage"
-                    required
-                >
-
-                    <option value="">
-                        Pilih kerusakan
-                    </option>
-
-                    <option>
-                        LCD / Layar
-                    </option>
-
-                    <option>
-                        Baterai
-                    </option>
-
-                    <option>
-                        Charging
-                    </option>
-
-                    <option>
-                        Speaker / Mic
-                    </option>
-
-                    <option>
-                        Kena Air
-                    </option>
-
-                    <option>
-                        Software
-                    </option>
-
-                    <option>
-                        Lainnya
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- DESCRIPTION -->
-
-            <div class="form-group">
-
-                <label>
-                    Jelaskan Kerusakan
-                </label>
-
-                <textarea
-                    id="description"
-                    rows="4"
-                    placeholder="Ceritakan masalah HP kamu..."
-                ></textarea>
-
-            </div>
-
-
-            <!-- ADDRESS -->
-
-            <div class="form-group">
-
-                <label>
-                    Alamat Lengkap
-                </label>
-
-                <textarea
-                    id="address"
-                    rows="3"
-                    placeholder="Alamat rumah untuk teknisi"
-                    required
-                ></textarea>
-
-            </div>
-
-
-            <!-- MAP -->
-
-            <div class="form-group">
-
-                <label>
-                    📍 Lokasi Rumah
-                </label>
-
-                <p style="
-                    color:#929eac;
-                    font-size:13px;
-                    margin-bottom:10px;
-                ">
-                    Klik lokasi rumah kamu pada peta.
-                </p>
-
-                <div id="map"></div>
-
-                <div
-                    id="locationStatus"
-                    class="location-status"
-                >
-                    📍 Belum memilih lokasi
-                </div>
-
-            </div>
-
+            <label for="customerName">
+              Nama
+            </label>
 
             <input
-                type="hidden"
-                id="latitude"
+              type="text"
+              id="customerName"
+              placeholder="Nama lengkap"
+              required
             >
 
+          </div>
+
+
+          <!-- Nomor HP -->
+
+          <div class="form-group">
+
+            <label for="phone">
+              Nomor WhatsApp
+            </label>
+
             <input
-                type="hidden"
-                id="longitude"
+              type="tel"
+              id="phone"
+              placeholder="08xxxxxxxxxx"
+              required
             >
+
+          </div>
+
+
+          <!-- Device -->
+
+          <div class="form-group">
+
+            <label for="device">
+              Tipe Handphone
+            </label>
+
+            <input
+              type="text"
+              id="device"
+              placeholder="Contoh: Redmi Note 13 Pro 5G"
+              required
+            >
+
+          </div>
+
+
+          <!-- Kerusakan -->
+
+          <div class="form-group">
+
+            <label for="damage">
+              Kerusakan
+            </label>
+
+            <select
+              id="damage"
+              required
+            >
+
+              <option value="">
+                Pilih kerusakan
+              </option>
+
+              <option value="LCD / Layar">
+                LCD / Layar
+              </option>
+
+              <option value="Baterai">
+                Baterai
+              </option>
+
+              <option value="Charging">
+                Charging
+              </option>
+
+              <option value="Mati Total">
+                Mati Total
+              </option>
+
+              <option value="Kemasukan Air">
+                Kemasukan Air
+              </option>
+
+              <option value="Software">
+                Software
+              </option>
+
+              <option value="Lainnya">
+                Lainnya
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Deskripsi -->
+
+          <div class="form-group">
+
+            <label for="description">
+              Keterangan Kerusakan
+            </label>
+
+            <textarea
+              id="description"
+              placeholder="Jelaskan kondisi handphone..."
+            ></textarea>
+
+          </div>
+
+
+          <!-- Alamat -->
+
+          <div class="form-group">
+
+            <label for="address">
+              Alamat Lengkap
+            </label>
+
+            <textarea
+              id="address"
+              placeholder="Masukkan alamat lengkap lokasi service..."
+              required
+            ></textarea>
+
+          </div>
+
+
+          <!-- =========================
+               GPS MAP
+          ========================= -->
+
+          <div class="form-group">
+
+            <label>
+              📍 Lokasi Rumah
+            </label>
+
+            <p class="map-help">
+              GPS HP akan digunakan otomatis untuk menentukan lokasi.
+              Kamu juga bisa klik langsung pada peta untuk mengubah lokasi.
+            </p>
 
 
             <button
-                type="submit"
-                class="button submit"
+              type="button"
+              id="gpsButton"
+              class="button gps-button"
             >
-                💬 Kirim Pesanan via WhatsApp
+              📍 Gunakan GPS Saya
             </button>
+
+
+            <div id="map"></div>
+
+
+            <div
+              id="locationStatus"
+              class="location-status"
+            >
+              📡 Mencari lokasi GPS...
+            </div>
+
+          </div>
+
+
+          <!-- Hidden koordinat -->
+
+          <input
+            type="hidden"
+            id="latitude"
+          >
+
+          <input
+            type="hidden"
+            id="longitude"
+          >
+
+
+          <!-- Submit -->
+
+          <button
+            type="submit"
+            class="button submit"
+          >
+            💬 Kirim Pesanan via WhatsApp
+          </button>
 
         </form>
 
+      </div>
+
     </div>
 
-</div>
-
-</section>
+  </section>
 
 
-<!-- =========================================
-     FOOTER
-========================================= -->
+  <!-- =========================
+       FOOTER
+  ========================= -->
 
-<footer>
+  <footer>
 
-<div class="container">
+    <div class="container">
 
-    <p>
-        © 2026 Home Service Cell
-    </p>
+      © 2026 ServiceHome.
+      Service HP Panggilan.
 
-    <p>
-        WhatsApp:
-        <a
-            href="https://wa.me/6285846009748"
-            target="_blank"
-        >
-            085846009748
-        </a>
-    </p>
+    </div>
 
-</div>
-
-</footer>
+  </footer>
 
 
-<!-- =========================================
-     LEAFLET
-========================================= -->
+  <!-- =========================
+       LEAFLET JS
+  ========================= -->
 
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
-
-
-<!-- =========================================
-     SUPABASE
-========================================= -->
-
-<script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-</script>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
 
 
-<script>
+  <!-- =========================
+       SUPABASE
+  ========================= -->
 
-/* =========================================
-   SUPABASE
-========================================= */
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-const SUPABASE_URL =
-    "https://sqpolxwdyypbxylgvihi.supabase.co";
 
-const SUPABASE_KEY =
-    "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+  <script>
 
-const supabaseClient =
-    window.supabase.createClient(
+    /* =====================================================
+       SUPABASE CONFIG
+    ===================================================== */
+
+    const SUPABASE_URL =
+      "https://sqpolxwdyypbxylgvihi.supabase.co";
+
+    const SUPABASE_ANON_KEY =
+      "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+
+    const supabaseClient =
+      window.supabase.createClient(
         SUPABASE_URL,
-        SUPABASE_KEY
-    );
+        SUPABASE_ANON_KEY
+      );
 
 
-/* =========================================
-   KODE BOOKING
-========================================= */
+    /* =====================================================
+       WHATSAPP
+    ===================================================== */
 
-function generateBookingCode() {
+    const WHATSAPP_NUMBER =
+      "6285846009748";
 
-    const chars =
-        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-    let code = "";
+    /* =====================================================
+       MAP VARIABLES
+    ===================================================== */
 
-    for (let i = 0; i < 6; i++) {
+    let serviceMap = null;
 
-        code += chars[
+    let serviceMarker = null;
+
+    let serviceAccuracyCircle = null;
+
+
+    /* =====================================================
+       GENERATE BOOKING CODE
+    ===================================================== */
+
+    function generateBookingCode() {
+
+      const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+      let random =
+        "";
+
+      for (let i = 0; i < 6; i++) {
+
+        random +=
+          chars.charAt(
             Math.floor(
-                Math.random() * chars.length
+              Math.random() * chars.length
             )
-        ];
+          );
 
+      }
+
+      return "SH-" + random;
     }
 
-    return "HSC-" + code;
-}
+
+    /* =====================================================
+       SET LOCATION
+    ===================================================== */
+
+    function setCustomerLocation(
+      lat,
+      lng,
+      accuracy = null,
+      source = "manual"
+    ) {
+
+      lat = Number(lat);
+
+      lng = Number(lng);
 
 
-/* =========================================
-   MAP
-========================================= */
-
-let serviceMap = null;
-let serviceMarker = null;
-
-function initMap() {
-
-    const mapElement =
-        document.getElementById("map");
-
-    if (!mapElement) return;
-
-    if (typeof L === "undefined") {
-
-        mapElement.innerHTML =
-            "❌ Peta gagal dimuat.";
+      if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng)
+      ) {
 
         return;
-    }
+
+      }
 
 
-    serviceMap =
-        L.map("map").setView(
-            [-6.914744,107.609810],
-            13
+      /*
+       * Simpan koordinat ke input hidden
+       */
+
+      document.getElementById("latitude").value =
+        lat.toFixed(8);
+
+      document.getElementById("longitude").value =
+        lng.toFixed(8);
+
+
+      /*
+       * Marker
+       */
+
+      if (!serviceMarker) {
+
+        serviceMarker =
+          L.marker(
+            [lat, lng]
+          ).addTo(serviceMap);
+
+      } else {
+
+        serviceMarker.setLatLng(
+          [lat, lng]
+        );
+
+      }
+
+
+      /*
+       * Popup
+       */
+
+      serviceMarker
+        .bindPopup(
+          "📍 Lokasi Service"
+        )
+        .openPopup();
+
+
+      /*
+       * Pindahkan kamera
+       */
+
+      serviceMap.setView(
+        [lat, lng],
+        17
+      );
+
+
+      /*
+       * Akurasi GPS
+       */
+
+      if (
+        accuracy &&
+        Number.isFinite(Number(accuracy))
+      ) {
+
+        if (!serviceAccuracyCircle) {
+
+          serviceAccuracyCircle =
+            L.circle(
+              [lat, lng],
+              {
+                radius: Number(accuracy),
+                weight: 1
+              }
+            ).addTo(serviceMap);
+
+        } else {
+
+          serviceAccuracyCircle.setLatLng(
+            [lat, lng]
+          );
+
+          serviceAccuracyCircle.setRadius(
+            Number(accuracy)
+          );
+
+        }
+
+      } else {
+
+        if (serviceAccuracyCircle) {
+
+          serviceMap.removeLayer(
+            serviceAccuracyCircle
+          );
+
+          serviceAccuracyCircle = null;
+
+        }
+
+      }
+
+
+      /*
+       * Status lokasi
+       */
+
+      const locationStatus =
+        document.getElementById(
+          "locationStatus"
         );
 
 
-    L.tileLayer(
+      locationStatus.classList.remove(
+        "error"
+      );
+
+      locationStatus.classList.add(
+        "success"
+      );
+
+
+      if (
+        source === "GPS" &&
+        accuracy
+      ) {
+
+        locationStatus.textContent =
+          "✅ GPS ditemukan • Akurasi ±" +
+          Math.round(Number(accuracy)) +
+          " meter";
+
+      } else {
+
+        locationStatus.textContent =
+          "📍 Lokasi dipilih: " +
+          lat.toFixed(6) +
+          ", " +
+          lng.toFixed(6);
+
+      }
+
+    }
+
+
+    /* =====================================================
+       GPS
+    ===================================================== */
+
+    function getCustomerGPS() {
+
+      const gpsButton =
+        document.getElementById(
+          "gpsButton"
+        );
+
+      const locationStatus =
+        document.getElementById(
+          "locationStatus"
+        );
+
+
+      /*
+       * Browser tidak mendukung GPS
+       */
+
+      if (
+        !navigator.geolocation
+      ) {
+
+        locationStatus.classList.remove(
+          "success"
+        );
+
+        locationStatus.classList.add(
+          "error"
+        );
+
+        locationStatus.textContent =
+          "❌ Browser ini tidak mendukung GPS.";
+
+        return;
+
+      }
+
+
+      /*
+       * Tombol loading
+       */
+
+      gpsButton.disabled = true;
+
+      gpsButton.textContent =
+        "📡 Mencari lokasi GPS...";
+
+
+      locationStatus.classList.remove(
+        "success",
+        "error"
+      );
+
+      locationStatus.textContent =
+        "📡 Sedang mencari lokasi HP kamu...";
+
+
+      /*
+       * Ambil GPS
+       */
+
+      navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+          const latitude =
+            position.coords.latitude;
+
+          const longitude =
+            position.coords.longitude;
+
+          const accuracy =
+            position.coords.accuracy;
+
+
+          setCustomerLocation(
+            latitude,
+            longitude,
+            accuracy,
+            "GPS"
+          );
+
+
+          /*
+           * Kembalikan tombol
+           */
+
+          gpsButton.disabled = false;
+
+          gpsButton.textContent =
+            "📍 Perbarui Lokasi GPS";
+
+        },
+
+
+        function(error) {
+
+          gpsButton.disabled = false;
+
+          gpsButton.textContent =
+            "📍 Gunakan GPS Saya";
+
+
+          locationStatus.classList.remove(
+            "success"
+          );
+
+          locationStatus.classList.add(
+            "error"
+          );
+
+
+          let message =
+            "❌ Lokasi GPS tidak berhasil ditemukan.";
+
+
+          if (error.code === 1) {
+
+            message =
+              "❌ Izin lokasi ditolak. Silakan izinkan akses lokasi untuk browser.";
+
+          }
+
+          else if (error.code === 2) {
+
+            message =
+              "❌ Lokasi tidak tersedia. Pastikan GPS/lokasi HP aktif.";
+
+          }
+
+          else if (error.code === 3) {
+
+            message =
+              "❌ Waktu pencarian GPS habis. Silakan coba lagi.";
+
+          }
+
+
+          locationStatus.textContent =
+            message;
+
+        },
+
+
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0
+        }
+
+      );
+
+    }
+
+
+    /* =====================================================
+       INITIALIZE MAP
+    ===================================================== */
+
+    function initMap() {
+
+      const mapElement =
+        document.getElementById(
+          "map"
+        );
+
+
+      if (!mapElement) {
+
+        return;
+
+      }
+
+
+      /*
+       * Leaflet gagal dimuat
+       */
+
+      if (
+        typeof L === "undefined"
+      ) {
+
+        mapElement.innerHTML =
+          "❌ Peta gagal dimuat.";
+
+        return;
+
+      }
+
+
+      /*
+       * Posisi awal Bandung
+       */
+
+      serviceMap =
+        L.map(
+          "map"
+        ).setView(
+          [-6.914744, 107.609810],
+          13
+        );
+
+
+      /*
+       * OpenStreetMap
+       */
+
+      L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
-            maxZoom: 19,
-            attribution:
-                "&copy; OpenStreetMap contributors"
+          maxZoom: 19,
+          attribution:
+            "&copy; OpenStreetMap contributors"
         }
-    ).addTo(serviceMap);
+      ).addTo(
+        serviceMap
+      );
 
 
-    serviceMap.on(
+      /*
+       * Klik manual pada peta
+       */
+
+      serviceMap.on(
         "click",
         function(e) {
 
-            const lat =
-                e.latlng.lat;
+          const lat =
+            e.latlng.lat;
 
-            const lng =
-                e.latlng.lng;
-
-
-            if (serviceMarker) {
-
-                serviceMarker.setLatLng([
-                    lat,
-                    lng
-                ]);
-
-            } else {
-
-                serviceMarker =
-                    L.marker([
-                        lat,
-                        lng
-                    ])
-                    .addTo(serviceMap);
-
-            }
+          const lng =
+            e.latlng.lng;
 
 
-            document.getElementById(
-                "latitude"
-            ).value = lat;
-
-            document.getElementById(
-                "longitude"
-            ).value = lng;
-
-
-            document.getElementById(
-                "locationStatus"
-            ).textContent =
-                "📍 Lokasi dipilih: " +
-                lat.toFixed(6) +
-                ", " +
-                lng.toFixed(6);
+          setCustomerLocation(
+            lat,
+            lng,
+            null,
+            "manual"
+          );
 
         }
-    );
+      );
 
 
-    setTimeout(
+      /*
+       * Tombol GPS
+       */
+
+      const gpsButton =
+        document.getElementById(
+          "gpsButton"
+        );
+
+
+      if (gpsButton) {
+
+        gpsButton.addEventListener(
+          "click",
+          getCustomerGPS
+        );
+
+      }
+
+
+      /*
+       * Perbaiki ukuran peta
+       */
+
+      setTimeout(
         function() {
 
-            serviceMap.invalidateSize();
+          serviceMap.invalidateSize();
+
+          /*
+           * Otomatis mencari GPS
+           */
+
+          getCustomerGPS();
 
         },
-        500
-    );
-}
-
-
-/* =========================================
-   FORMAT RUPIAH
-========================================= */
-
-function formatRupiah(value) {
-
-    const number =
-        Number(value || 0);
-
-    if (number <= 0) {
-
-        return "Belum ditentukan";
+        700
+      );
 
     }
 
-    return number.toLocaleString(
-        "id-ID",
-        {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0
-        }
-    );
-}
+
+    /* =====================================================
+       CEK STATUS SERVICE
+    ===================================================== */
+
+    async function checkServiceStatus() {
+
+      const input =
+        document.getElementById(
+          "bookingCode"
+        );
+
+      const result =
+        document.getElementById(
+          "statusResult"
+        );
+
+      const button =
+        document.getElementById(
+          "checkStatusButton"
+        );
 
 
-/* =========================================
-   CEK STATUS
-========================================= */
-
-document
-.getElementById("statusForm")
-.addEventListener(
-    "submit",
-    async function(e) {
-
-        e.preventDefault();
+      const code =
+        input.value
+          .trim()
+          .toUpperCase();
 
 
-        const code =
-            document
-            .getElementById("bookingCode")
-            .value
-            .trim()
-            .toUpperCase();
+      if (!code) {
+
+        alert(
+          "Masukkan kode booking terlebih dahulu."
+        );
+
+        return;
+
+      }
 
 
-        const result =
-            document.getElementById(
-                "statusResult"
-            );
+      button.disabled = true;
+
+      button.textContent =
+        "⏳ Mengecek...";
 
 
-        result.style.display =
-            "block";
+      result.classList.remove(
+        "show"
+      );
 
-        result.innerHTML =
-            "🔄 Memeriksa booking...";
 
+      try {
 
         const {
-            data,
-            error
+          data,
+          error
         } =
-        await supabaseClient.rpc(
+          await supabaseClient.rpc(
             "check_booking",
             {
-                p_booking_code: code
+              p_booking_code: code
             }
-        );
+          );
 
 
         if (error) {
 
-            console.error(error);
+          throw error;
 
-            result.innerHTML =
-                "<p>❌ Gagal memeriksa booking.</p>" +
-                "<p>" +
-                error.message +
-                "</p>";
-
-            return;
         }
 
 
         if (
-            !data ||
-            data.length === 0
+          !data ||
+          data.length === 0
         ) {
 
-            result.innerHTML =
-                "<p>❌ Kode booking tidak ditemukan.</p>";
+          alert(
+            "Kode booking tidak ditemukan."
+          );
 
-            return;
+          return;
+
         }
 
 
         const booking =
-            data[0];
+          Array.isArray(data)
+            ? data[0]
+            : data;
 
 
-        const totalHarga =
-            formatRupiah(
-                booking.total_price
-            );
+        const estimatedPrice =
+          Number(
+            booking.estimated_price || 0
+          );
+
+        const totalPrice =
+          Number(
+            booking.total_price || 0
+          );
 
 
         result.innerHTML = `
 
-            <p>
-                <strong>🎫 Kode Booking</strong><br>
-                ${booking.booking_code}
-            </p>
+          <div class="status-row">
 
-            <p>
-                <strong>👤 Nama</strong><br>
-                ${booking.customer_name}
-            </p>
+            <span class="status-label">
+              Kode Booking
+            </span>
 
-            <p>
-                <strong>📱 Perangkat</strong><br>
-                ${booking.device}
-            </p>
+            <strong class="status-value">
+              ${escapeHTML(
+                booking.booking_code || "-"
+              )}
+            </strong>
 
-            <p>
-                <strong>🔧 Kerusakan</strong><br>
-                ${booking.damage}
-            </p>
+          </div>
 
-            <p>
-                <strong>🔄 Status</strong><br>
-                <span class="status-badge">
-                    ${booking.status}
-                </span>
-            </p>
 
-            <div class="total-price">
+          <div class="status-row">
 
-                <div class="total-price-label">
-                    💰 TOTAL BIAYA SERVIS
-                </div>
+            <span class="status-label">
+              Nama
+            </span>
 
-                <div class="total-price-value">
-                    ${totalHarga}
-                </div>
+            <span class="status-value">
+              ${escapeHTML(
+                booking.customer_name || "-"
+              )}
+            </span>
 
-            </div>
+          </div>
+
+
+          <div class="status-row">
+
+            <span class="status-label">
+              Handphone
+            </span>
+
+            <span class="status-value">
+              ${escapeHTML(
+                booking.device || "-"
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="status-row">
+
+            <span class="status-label">
+              Kerusakan
+            </span>
+
+            <span class="status-value">
+              ${escapeHTML(
+                booking.damage || "-"
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="status-row">
+
+            <span class="status-label">
+              Status
+            </span>
+
+            <span class="status-value">
+
+              <span class="status-badge">
+                ${escapeHTML(
+                  booking.status || "Menunggu"
+                )}
+              </span>
+
+            </span>
+
+          </div>
+
+
+          <div class="status-row">
+
+            <span class="status-label">
+              Estimasi
+            </span>
+
+            <span class="status-value">
+              ${formatRupiah(
+                estimatedPrice
+              )}
+            </span>
+
+          </div>
+
+
+          <div class="status-row">
+
+            <span class="status-label">
+              Total
+            </span>
+
+            <strong class="status-value">
+              ${formatRupiah(
+                totalPrice
+              )}
+            </strong>
+
+          </div>
 
         `;
 
+
+        result.classList.add(
+          "show"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          error
+        );
+
+        alert(
+          "Terjadi kesalahan saat mengecek status service."
+        );
+
+      } finally {
+
+        button.disabled = false;
+
+        button.textContent =
+          "🔎 Cek Status Service";
+
+      }
+
     }
-);
 
 
-/* =========================================
-   BOOKING
-========================================= */
+    /* =====================================================
+       FORMAT RUPIAH
+    ===================================================== */
 
-document
-.getElementById("bookingForm")
-.addEventListener(
-    "submit",
-    async function(e) {
+    function formatRupiah(
+      value
+    ) {
 
-        e.preventDefault();
+      const number =
+        Number(value || 0);
 
 
-        const name =
+      if (number <= 0) {
+
+        return "Belum ditentukan";
+
+      }
+
+
+      return new Intl.NumberFormat(
+        "id-ID",
+        {
+          style: "currency",
+          currency: "IDR",
+          maximumFractionDigits: 0
+        }
+      ).format(
+        number
+      );
+
+    }
+
+
+    /* =====================================================
+       SECURITY - ESCAPE HTML
+    ===================================================== */
+
+    function escapeHTML(
+      value
+    ) {
+
+      return String(
+        value ?? ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
+
+    }
+
+
+    /* =====================================================
+       BOOKING SUBMIT
+    ===================================================== */
+
+    document
+      .getElementById(
+        "bookingForm"
+      )
+      .addEventListener(
+        "submit",
+        async function(e) {
+
+          e.preventDefault();
+
+
+          const name =
             document
-            .getElementById("name")
-            .value
-            .trim();
+              .getElementById(
+                "customerName"
+              )
+              .value
+              .trim();
 
 
-        const phone =
+          const phone =
             document
-            .getElementById("phone")
-            .value
-            .trim();
+              .getElementById(
+                "phone"
+              )
+              .value
+              .trim();
 
 
-        const device =
+          const device =
             document
-            .getElementById("device")
-            .value
-            .trim();
+              .getElementById(
+                "device"
+              )
+              .value
+              .trim();
 
 
-        const damage =
+          const damage =
             document
-            .getElementById("damage")
-            .value;
+              .getElementById(
+                "damage"
+              )
+              .value
+              .trim();
 
 
-        const description =
+          const description =
             document
-            .getElementById("description")
-            .value
-            .trim();
+              .getElementById(
+                "description"
+              )
+              .value
+              .trim();
 
 
-        const address =
+          const address =
             document
-            .getElementById("address")
-            .value
-            .trim();
+              .getElementById(
+                "address"
+              )
+              .value
+              .trim();
 
 
-        const latitude =
+          const latitude =
             document
-            .getElementById("latitude")
-            .value;
+              .getElementById(
+                "latitude"
+              )
+              .value;
 
 
-        const longitude =
+          const longitude =
             document
-            .getElementById("longitude")
-            .value;
+              .getElementById(
+                "longitude"
+              )
+              .value;
 
 
-        /* VALIDASI */
+          /*
+           * Validasi data
+           */
 
-        if (!latitude || !longitude) {
+          if (
+            !name ||
+            !phone ||
+            !device ||
+            !damage ||
+            !address
+          ) {
 
             alert(
-                "📍 Silakan pilih lokasi rumah pada peta terlebih dahulu."
+              "Mohon lengkapi semua data wajib."
             );
 
+            return;
+
+          }
+
+
+          /*
+           * Validasi lokasi
+           */
+
+          if (
+            !latitude ||
+            !longitude
+          ) {
+
+            alert(
+              "📍 Lokasi belum ditemukan. Silakan tunggu GPS atau pilih lokasi pada peta."
+            );
+
+
             document
-            .getElementById("map")
-            .scrollIntoView({
-                behavior:"smooth",
-                block:"center"
-            });
+              .getElementById(
+                "map"
+              )
+              .scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+              });
+
 
             return;
-        }
+
+          }
 
 
-        const bookingCode =
+          const lat =
+            Number(latitude);
+
+          const lng =
+            Number(longitude);
+
+
+          if (
+            !Number.isFinite(lat) ||
+            !Number.isFinite(lng)
+          ) {
+
+            alert(
+              "Lokasi GPS tidak valid. Silakan pilih ulang lokasi."
+            );
+
+            return;
+
+          }
+
+
+          /*
+           * Generate booking code
+           */
+
+          const bookingCode =
             generateBookingCode();
 
 
-        /* SIMPAN */
+          /*
+           * Tombol submit
+           */
 
-        const {
-            data,
-            error
-        } =
-        await supabaseClient.rpc(
-            "create_booking",
-            {
-
-                p_booking_code:
-                    bookingCode,
-
-                p_customer_name:
-                    name,
-
-                p_phone:
-                    phone,
-
-                p_device:
-                    device,
-
-                p_damage:
-                    damage,
-
-                p_description:
-                    description,
-
-                p_address:
-                    address,
-
-                p_latitude:
-                    Number(latitude),
-
-                p_longitude:
-                    Number(longitude)
-
-            }
-        );
-
-
-        if (error) {
-
-            console.error(error);
-
-            alert(
-                "❌ Booking gagal disimpan.\n\n" +
-                error.message
+          const submitButton =
+            document.querySelector(
+              "#bookingForm button[type='submit']"
             );
 
-            return;
+
+          submitButton.disabled = true;
+
+          submitButton.textContent =
+            "⏳ Menyimpan booking...";
+
+
+          try {
+
+            /*
+             * Simpan ke Supabase
+             */
+
+            const {
+              data,
+              error
+            } =
+              await supabaseClient.rpc(
+                "create_booking",
+                {
+
+                  p_booking_code:
+                    bookingCode,
+
+                  p_customer_name:
+                    name,
+
+                  p_phone:
+                    phone,
+
+                  p_device:
+                    device,
+
+                  p_damage:
+                    damage,
+
+                  p_description:
+                    description,
+
+                  p_address:
+                    address,
+
+                  p_latitude:
+                    lat,
+
+                  p_longitude:
+                    lng
+
+                }
+              );
+
+
+            if (error) {
+
+              throw error;
+
+            }
+
+
+            /*
+             * Google Maps
+             */
+
+            const googleMapsUrl =
+              "https://www.google.com/maps?q=" +
+              encodeURIComponent(
+                lat + "," + lng
+              );
+
+
+            /*
+             * Pesan WhatsApp
+             */
+
+            const message =
+
+              "Halo ServiceHome, saya ingin booking service HP.%0A%0A" +
+
+              "Kode Booking: " +
+              bookingCode +
+              "%0A" +
+
+              "Nama: " +
+              encodeURIComponent(name) +
+              "%0A" +
+
+              "No. HP: " +
+              encodeURIComponent(phone) +
+              "%0A" +
+
+              "HP: " +
+              encodeURIComponent(device) +
+              "%0A" +
+
+              "Kerusakan: " +
+              encodeURIComponent(damage) +
+              "%0A" +
+
+              "Keterangan: " +
+              encodeURIComponent(
+                description || "-"
+              ) +
+              "%0A" +
+
+              "Alamat: " +
+              encodeURIComponent(address) +
+              "%0A%0A" +
+
+              "Lokasi GPS:%0A" +
+              googleMapsUrl;
+
+
+            /*
+             * WhatsApp
+             */
+
+            const whatsapp =
+              "https://wa.me/" +
+              WHATSAPP_NUMBER +
+              "?text=" +
+              message;
+
+
+            alert(
+              "✅ Booking berhasil dibuat!\n\nKode Booking: " +
+              bookingCode +
+              "\n\nAnda akan diarahkan ke WhatsApp."
+            );
+
+
+            window.location.href =
+              whatsapp;
+
+
+          } catch (error) {
+
+            console.error(
+              "Booking error:",
+              error
+            );
+
+
+            alert(
+              "❌ Booking gagal disimpan.\n\n" +
+              (
+                error?.message ||
+                "Silakan coba lagi."
+              )
+            );
+
+
+          } finally {
+
+            submitButton.disabled = false;
+
+            submitButton.textContent =
+              "💬 Kirim Pesanan via WhatsApp";
+
+          }
+
         }
+      );
 
 
-        /* WHATSAPP */
+    /* =====================================================
+       EVENT CHECK STATUS
+    ===================================================== */
 
-        const message =
-`Halo Home Service Cell 👋
-
-Saya ingin melakukan servis HP.
-
-🎫 Kode Booking:
-${bookingCode}
-
-👤 Nama:
-${name}
-
-📱 WhatsApp:
-${phone}
-
-📱 HP:
-${device}
-
-🔧 Kerusakan:
-${damage}
-
-📝 Keterangan:
-${description || "-"}
-
-📍 Alamat:
-${address}
-
-🗺️ Lokasi:
-https://www.google.com/maps?q=${latitude},${longitude}
-
-Mohon informasi estimasi biaya dan jadwal teknisi.
-
-Terima kasih.`;
+    document
+      .getElementById(
+        "checkStatusButton"
+      )
+      .addEventListener(
+        "click",
+        checkServiceStatus
+      );
 
 
-        const whatsapp =
-            "https://wa.me/6285846009748?text=" +
-            encodeURIComponent(message);
+    /*
+     * Enter pada input kode booking
+     */
+
+    document
+      .getElementById(
+        "bookingCode"
+      )
+      .addEventListener(
+        "keydown",
+        function(e) {
+
+          if (
+            e.key === "Enter"
+          ) {
+
+            e.preventDefault();
+
+            checkServiceStatus();
+
+          }
+
+        }
+      );
 
 
-        alert(
-            "✅ Booking berhasil!\n\n" +
-            "Kode Booking: " +
-            bookingCode
-        );
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
 
-
-        window.location.href =
-            whatsapp;
-
-    }
-);
-
-
-/* =========================================
-   START
-========================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
+    window.addEventListener(
+      "load",
+      function() {
 
         initMap();
 
-    }
-);
+      }
+    );
 
-</script>
+  </script>
 
 </body>
 </html>
