@@ -791,147 +791,328 @@
     getGPS();
   }, 800);
 
-  /* ==========================
-     BOOKING
-  ========================== */
+/* ==========================
+   BOOKING
+========================== */
 
-  document.getElementById("bookingForm")
-    .addEventListener("submit", async function(e) {
+document.getElementById("bookingForm")
+  .addEventListener("submit", async function(e) {
 
-      e.preventDefault();
+    e.preventDefault();
 
-      const alertBox =
-        document.getElementById("bookingAlert");
+    const alertBox =
+      document.getElementById("bookingAlert");
 
-      alertBox.className = "alert";
-      alertBox.style.display = "none";
+    alertBox.className = "alert";
+    alertBox.style.display = "none";
 
-      const name =
-        document.getElementById("customerName").value.trim();
+    const name =
+      document.getElementById("customerName").value.trim();
 
-      const phone =
-        document.getElementById("phone").value.trim();
+    const phone =
+      document.getElementById("phone").value.trim();
 
-      const device =
-        document.getElementById("device").value.trim();
+    const device =
+      document.getElementById("device").value.trim();
 
-      const damage =
-        document.getElementById("damage").value;
+    const damage =
+      document.getElementById("damage").value;
 
-      const description =
-        document.getElementById("description").value.trim();
+    const description =
+      document.getElementById("description").value.trim();
 
-      const address =
-        document.getElementById("address").value.trim();
+    const address =
+      document.getElementById("address").value.trim();
 
-      const latitude =
-        document.getElementById("latitude").value;
+    const latitude =
+      document.getElementById("latitude").value;
 
-      const longitude =
-        document.getElementById("longitude").value;
+    const longitude =
+      document.getElementById("longitude").value;
 
-      const submitButton =
-        this.querySelector("button[type=submit]");
+    const submitButton =
+      this.querySelector("button[type=submit]");
 
-      submitButton.disabled = true;
-      submitButton.textContent = "Mengirim...";
+    submitButton.disabled = true;
+    submitButton.textContent = "Mengirim...";
 
-      try {
+    try {
 
-        // Membuat kode booking otomatis
-const bookingCode =
-  "GC-" + Date.now().toString().slice(-6);
+      /* Membuat kode booking */
+      const bookingCode =
+        "GC-" + Date.now().toString().slice(-6);
 
-const { error } = await supabaseClient
-  .from("bookings")
-  .insert({
-    booking_code: bookingCode,
-    customer_name: name,
-    phone: phone,
-    device: device,
-    damage: damage,
-    description: description,
-    address: address,
-    latitude: latitude ? Number(latitude) : null,
-    longitude: longitude ? Number(longitude) : null,
-    status: "Menunggu",
-    estimated_price: 0,
-    total_price: 0
-  });
+      /* Simpan booking ke Supabase */
+      const { error } =
+        await supabaseClient
+          .from("bookings")
+          .insert({
+            booking_code: bookingCode,
+            customer_name: name,
+            phone: phone,
+            device: device,
+            damage: damage,
+            description: description,
+            address: address,
+            latitude: latitude
+              ? Number(latitude)
+              : null,
+            longitude: longitude
+              ? Number(longitude)
+              : null,
+            status: "Menunggu",
+            estimated_price: 0,
+            total_price: 0
+          });
 
-if (error) {
-  console.error("SUPABASE ERROR:", error);
-  throw error;
-}
-    .select()
-    .single();
+      if (error) {
 
-if (error) {
-  console.error("SUPABASE ERROR:", error);
-  throw error;
-}
+        console.error(
+          "SUPABASE ERROR:",
+          error
+        );
 
-        alertBox.className =
-          "alert success";
-
-        alertBox.style.display = "block";
-
-        alertBox.innerHTML =
-          `Booking berhasil!<br>
-           Kode booking Anda:
-           <strong>${bookingCode}</strong>`;
-
-        const mapsUrl =
-          latitude && longitude
-            ? `https://www.google.com/maps?q=${latitude},${longitude}`
-            : "";
-
-        const message =
-          `Halo GadgetCare,%0A%0A` +
-          `Saya ingin melakukan booking service.%0A%0A` +
-          `Kode Booking: ${bookingCode}%0A` +
-          `Nama: ${name}%0A` +
-          `No. WhatsApp: ${phone}%0A` +
-          `Gadget: ${device}%0A` +
-          `Kerusakan: ${damage}%0A` +
-          `Keterangan: ${description}%0A` +
-          `Alamat: ${address}%0A` +
-          (mapsUrl
-            ? `Lokasi: ${mapsUrl}%0A`
-            : "");
-
-        setTimeout(() => {
-
-          window.open(
-            `https://wa.me/6285846009748?text=${message}`,
-            "_blank"
-          );
-
-        }, 1000);
-
-        this.reset();
-        resetMap();
-
-      } catch (error) {
-
-        console.error(error);
-
-        alertBox.className =
-          "alert error";
-
-        alertBox.style.display = "block";
-
-        alertBox.innerHTML =
-  `Booking gagal.<br>
-   <small>${error.message || "Terjadi kesalahan."}</small>`;
-      } finally {
-
-        submitButton.disabled = false;
-        submitButton.textContent = "Kirim Booking";
-
+        throw error;
       }
 
-    });
+      /* Booking berhasil */
+
+      alertBox.className =
+        "alert success";
+
+      alertBox.style.display =
+        "block";
+
+      alertBox.innerHTML =
+        `Booking berhasil!<br>
+        Kode booking Anda:
+        <strong>${bookingCode}</strong>`;
+
+      /* Lokasi Google Maps */
+
+      const mapsUrl =
+        latitude && longitude
+          ? `https://www.google.com/maps?q=${latitude},${longitude}`
+          : "";
+
+      /* Pesan WhatsApp */
+
+      const message =
+        `Halo GadgetCare,%0A%0A` +
+        `Saya ingin melakukan booking service.%0A%0A` +
+        `Kode Booking: ${bookingCode}%0A` +
+        `Nama: ${name}%0A` +
+        `No. WhatsApp: ${phone}%0A` +
+        `Gadget: ${device}%0A` +
+        `Kerusakan: ${damage}%0A` +
+        `Keterangan: ${description}%0A` +
+        `Alamat: ${address}%0A` +
+        (
+          mapsUrl
+            ? `Lokasi: ${mapsUrl}%0A`
+            : ""
+        );
+
+      /* Buka WhatsApp */
+
+      setTimeout(() => {
+
+        window.open(
+          `https://wa.me/6285846009748?text=${message}`,
+          "_blank"
+        );
+
+      }, 1000);
+
+      /* Reset form */
+
+      this.reset();
+
+      resetMap();
+
+    } catch (error) {
+
+      console.error(
+        "BOOKING ERROR:",
+        error
+      );
+
+      alertBox.className =
+        "alert error";
+
+      alertBox.style.display =
+        "block";
+
+      alertBox.innerHTML =
+        `Booking gagal.<br>
+        <small>
+          ${error.message || "Terjadi kesalahan."}
+        </small>`;
+
+    } finally {
+
+      submitButton.disabled = false;
+
+      submitButton.textContent =
+        "Kirim Booking";
+
+    }
+
+  });
+
+
+/* ==========================
+   CHECK STATUS
+========================== */
+
+document.getElementById("statusForm")
+  .addEventListener("submit", async function(e) {
+
+    e.preventDefault();
+
+    const code =
+      document.getElementById("bookingCode")
+        .value
+        .trim()
+        .toUpperCase();
+
+    const result =
+      document.getElementById("statusResult");
+
+    result.style.display = "block";
+
+    result.innerHTML =
+      "Memeriksa data...";
+
+    try {
+
+      const {
+        data,
+        error
+      } = await supabaseClient.rpc(
+        "check_booking",
+        {
+          p_booking_code: code
+        }
+      );
+
+      if (error) {
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+
+        result.innerHTML =
+          `<div style="color:#ff8a80;">
+            Booking dengan kode
+            <strong>${code}</strong>
+            tidak ditemukan.
+          </div>`;
+
+        return;
+      }
+
+      const booking =
+        Array.isArray(data)
+          ? data[0]
+          : data;
+
+      result.innerHTML = `
+
+        <div class="status-row">
+          <span class="status-label">
+            Kode Booking
+          </span>
+
+          <span class="status-value">
+            ${booking.booking_code || "-"}
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">
+            Customer
+          </span>
+
+          <span class="status-value">
+            ${booking.customer_name || "-"}
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">
+            Gadget
+          </span>
+
+          <span class="status-value">
+            ${booking.device || "-"}
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">
+            Kerusakan
+          </span>
+
+          <span class="status-value">
+            ${booking.damage || "-"}
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">
+            Status
+          </span>
+
+          <span class="status-value">
+            <span class="status-badge">
+              ${booking.status || "Menunggu"}
+            </span>
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">
+            Estimasi Harga
+          </span>
+
+          <span class="status-value">
+            Rp ${Number(
+              booking.estimated_price || 0
+            ).toLocaleString("id-ID")}
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span class="status-label">
+            Total Harga
+          </span>
+
+          <span class="status-value">
+            Rp ${Number(
+              booking.total_price || 0
+            ).toLocaleString("id-ID")}
+          </span>
+        </div>
+
+      `;
+
+    } catch (error) {
+
+      console.error(
+        "STATUS ERROR:",
+        error
+      );
+
+      result.innerHTML =
+        `<div style="color:#ff8a80;">
+          Gagal memeriksa status.<br>
+          <small>${error.message}</small>
+        </div>`;
+
+    }
+
+  });
 
   /* ==========================
      CHECK STATUS
