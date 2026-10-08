@@ -849,31 +849,29 @@
 
         // Membuat kode booking otomatis
 const bookingCode =
-  "GC-" +
-  Date.now().toString().slice(-6);
+  "GC-" + Date.now().toString().slice(-6);
 
-// Simpan booking ke Supabase
-const { data, error } =
-  await supabaseClient
-    .from("bookings")
-    .insert({
-      booking_code: bookingCode,
-      customer_name: name,
-      phone: phone,
-      device: device,
-      damage: damage,
-      description: description,
-      address: address,
-      latitude: latitude
-        ? Number(latitude)
-        : null,
-      longitude: longitude
-        ? Number(longitude)
-        : null,
-      status: "Menunggu",
-      estimated_price: 0,
-      total_price: 0
-    })
+const { error } = await supabaseClient
+  .from("bookings")
+  .insert({
+    booking_code: bookingCode,
+    customer_name: name,
+    phone: phone,
+    device: device,
+    damage: damage,
+    description: description,
+    address: address,
+    latitude: latitude ? Number(latitude) : null,
+    longitude: longitude ? Number(longitude) : null,
+    status: "Menunggu",
+    estimated_price: 0,
+    total_price: 0
+  });
+
+if (error) {
+  console.error("SUPABASE ERROR:", error);
+  throw error;
+}
     .select()
     .single();
 
