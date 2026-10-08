@@ -1,1333 +1,357 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Home Service Cell | Servis HP</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #080b12;
-            color: white;
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .container {
-            width: 92%;
-            max-width: 1100px;
-!            margin: auto;
-        }
-
-        /* NAVBAR */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(8, 11, 18, 0.95);
-            border-bottom: 1px solid #202938;
-        }
-
-        .navbar {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .logo span {
-            display: inline-flex;
-            width: 38px;
-            height: 38px;
-            background: #19d5ff;
-            color: #ini071018;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            margin-right: 8px;
-        }
-
-        .nav-button {
-            background: #19d5ff;
-            color: #061018;
-            padding: 10px 16px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        /* HERO */
-        .hero {
-            padding: 90px 0;
-            background:
-                radial-gradient(circle at 80% 20%, #123b50, transparent 35%);
-        }
-
-        .tag {
-            color: #19d5ff;
-            font-size: 13px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .hero h1 {
-            font-size: clamp(40px, 8vw, 70px);
-            line-height: 1.05;
-            margin: 15px 0;
-        }
-
-        .hero h1 span {
-            color: #19d5ff;
-        }
-
-        .hero p {
-            color: #aab5c2;
-            max-width: 650px;
-            font-size: 18px;
-        }
-
-        .buttons {
-            margin-top: 30px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 14px 22px;
-            border-radius: 12px;
-            background: #19d5ff;
-            color: #061018;
-            font-weight: bold;
-        }
-
-        .button-outline {
-            background: transparent;
-            color: white;
-            border: 1px solid #344052;
-        }
-
-        /* SECTION */
-        section {
-            padding: 70px 0;
-        }
-
-        .section-title {
-            margin-bottom: 30px;
-        }
-
-        .section-title small {
-            color: #19d5ff;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        .section-title h2 {
-            font-size: 34px;
-            margin-top: 5px;
-        }
-
-        .section-title p {
-            color: #9ca8b5;
-        }
-
-        /* SERVICES */
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-        }
-
-        .service {
-            background: #0e141e;
-            border: 1px solid #202b39;
-            padding: 22px;
-            border-radius: 16px;
-            transition: 0.3s;
-        }
-
-        .service:hover {
-            transform: translateY(-5px);
-            border-color: #19d5ff;
-        }
-
-        .service-icon {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-
-        .service h3 {
-            margin-bottom: 8px;
-        }
-
-        .service p {
-            color: #929eac;
-            font-size: 14px;
-        }
-
-        /* PRICE */
-        .price-section {
-            background: #0b1018;
-        }
-
-        .prices {
-            display: grid;
-            gap: 10px;
-        }
-
-        .price {
-            display: flex;
-            justify-content: space-between;
-            padding: 17px;
-            background: #101720;
-            border: 1px solid #222e3c;
-            border-radius: 12px;
-        }
-
-        .price strong {
-            color: #19d5ff;
-        }
-
-        .note {
-            color: #778391;
-            margin-top: 15px;
-            font-size: 13px;
-        }
-
-        /* BOOKING */
-        .booking-box {
-            max-width: 750px;
-            background: #0e141e;
-            border: 1px solid #202b39;
-            padding: 25px;
-            border-radius: 18px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 13px;
-            background: #080d14;
-            color: white;
-            border: 1px solid #293646;
-            border-radius: 10px;
-            outline: none;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: #19d5ff;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        .submit {
-            width: 100%;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        /* FOOTER */
-        footer {
-            padding: 30px 0;
-            border-top: 1px solid #202938;
-            color: #7f8a97;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        footer a {
-            color: #19d5ff;
-        }
-
-        @media(max-width:600px) {
-            .hero {
-                padding: 65px 0;
-            }
-
-            .hero h1 {
-                font-size: 42px;
-            }
-
-            .section-title h2 {
-                font-size: 28px;
-            }
-
-            .navbar {
-                height: 62px;
-            }
-
-            .nav-button {
-                padding: 8px 12px;
-                font-size: 13px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<header>
-    <div class="container navbar">
-
-        <div class="logo">
-            <span>H</span>
-            Home Service Cell
-        </div>
-
-        <div style="display:flex;gap:8px;align-items:center;">
-    <a href="#status" class="nav-button">
-        🔍 Cek Status
-    </a>
-
-    <a href="#booking" class="nav-button">
-        Pesan Teknisi
-    </a>
-</div>
-
-    </div>
-</header>
-
-
-<!-- HERO -->
-
-<section class="hero">
-
-    <div class="container">
-
-        <div class="tag">
-            📱 SERVIS HP • HOME SERVICE
-        </div>
-
-        <h1>
-            HP Bermasalah?<br>
-            <span>Teknisi Datang.</span>
-        </h1>
-
-        <p>
-            Layanan servis handphone ke rumah.
-            Konsultasikan kerusakan HP dan pesan teknisi
-            dengan mudah melalui WhatsApp.
-        </p>
-
-        <div class="buttons">
-
-            <a href="#booking" class="button">
-                Pesan Sekarang
-            </a>
-
-            <a href="#services" class="button button-outline">
-                Lihat Layanan
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- SERVICES -->
-
-<section id="services">
-
-    <div class="container">
-
-        <div class="section-title">
-
-            <small>LAYANAN</small>
-
-            <h2>
-                Solusi untuk HP kamu
-            </h2>
-
-            <p>
-                Beberapa layanan yang tersedia.
-            </p>
-
-        </div>
-
-
-        <div class="services">
-
-            <div class="service">
-
-                <div class="service-icon">
-                    📱
-                </div>
-
-                <h3>
-                    Ganti LCD
-                </h3>
-
-                <p>
-                    Layar pecah, retak, blank,
-                    bergaris atau touchscreen bermasalah.
-                </p>
-
-            </div>
-
-
-            <div class="service">
-
-                <div class="service-icon">
-                    🔋
-                </div>
-
-                <h3>
-                    Ganti Baterai
-                </h3>
-
-                <p>
-                    Baterai cepat habis, drop,
-                    menggembung atau tidak menyimpan daya.
-                </p>
-
-            </div>
-
-
-            <div class="service">
-
-                <div class="service-icon">
-                    🔌
-                </div>
-
-                <h3>
-                    Charging
-                </h3>
-
-                <p>
-                    HP tidak mengisi,
-                    konektor longgar atau charging lambat.
-                </p>
-
-            </div>
-
-
-            <div class="service">
-
-                <div class="service-icon">
-                    🔊
-                </div>
-
-                <h3>
-                    Speaker & Mic
-                </h3>
-
-                <p>
-                    Suara kecil, speaker mati
-                    atau microphone tidak berfungsi.
-                </p>
-
-            </div>
-
-
-            <div class="service">
-
-                <div class="service-icon">
-                    💧
-                </div>
-
-                <h3>
-                    HP Kena Air
-                </h3>
-
-                <p>
-                    Pemeriksaan dan penanganan
-                    HP yang terkena air.
-                </p>
-
-            </div>
-
-
-            <div class="service">
-
-                <div class="service-icon">
-                    ⚙️
-                </div>
-
-                <h3>
-                    Software
-                </h3>
-
-                <p>
-                    Bootloop, error sistem,
-                    reset dan masalah software lainnya.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- PRICE -->
-
-<section class="price-section">
-
-    <div class="container">
-
-        <div class="section-title">
-
-            <small>HARGA</small>
-
-            <h2>
-                Estimasi Biaya Servis
-            </h2>
-
-        </div>
-
-
-        <div class="prices">
-
-            <div class="price">
-                <span>Ganti LCD</span>
-                <strong>Mulai Rp150.000</strong>
-            </div>
-
-            <div class="price">
-                <span>Ganti Baterai</span>
-                <strong>Mulai Rp100.000</strong>
-            </div>
-
-            <div class="price">
-                <span>Perbaikan Charging</span>
-                <strong>Mulai Rp75.000</strong>
-            </div>
-
-            <div class="price">
-                <span>Speaker / Mic</span>
-                <strong>Mulai Rp75.000</strong>
-            </div>
-
-            <div class="price">
-                <span>Software / Reset</span>
-                <strong>Mulai Rp50.000</strong>
-            </div>
-
-        </div>
-
-        <p class="note">
-            * Harga merupakan estimasi awal.
-            Harga final ditentukan setelah pengecekan teknisi.
-        </p>
-
-    </div>
-
-</section>
-
-<!-- STATUS SERVIS -->
-
-<section id="status">
-
-    <div class="container">
-
-        <div class="section-title">
-
-            <small>STATUS SERVIS</small>
-
-            <h2>
-                Cek Status Servis
-            </h2>
-
-            <p>
-                Masukkan kode booking untuk melihat perkembangan servis HP kamu.
-            </p>
-
-        </div>
-
-        <div class="booking-box">
-
-            <form id="statusForm">
-
-                <div class="form-group">
-
-                    <label>
-                        Kode Booking
-                    </label>
-
-                    <input
-                        type="text"
-                        id="bookingCode"
-                        placeholder="Contoh: HSC-ABC123"
-                        required
-                    >
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="button submit"
-                >
-                    🔍 Cek Status
-                </button>
-
-            </form>
-
-            <div
-                id="statusResult"
-                style="
-                    display:none;
-                    margin-top:20px;
-                    padding:18px;
-                    background:#101720;
-                    border:1px solid #222e3c;
-                    border-radius:12px;
-                "
-            ></div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- BOOKING -->
-
-<section id="booking">
-
-    <div class="container">
-
-        <div class="section-title">
-
-            <small>BOOKING</small>
-
-            <h2>
-                Pesan Teknisi
-            </h2>
-
-            <p>
-                Isi data berikut dan lanjutkan melalui WhatsApp.
-            </p>
-
-        </div>
-
-
-        <div class="booking-box">
-
-            <form id="bookingForm">
-
-                <div class="form-group">
-
-                    <label>
-                        Nama
-                    </label>
-
-                    <input
-                        type="text"
-                        id="name"
-                        placeholder="Nama lengkap"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Nomor WhatsApp
-                    </label>
-
-                    <input
-                        type="tel"
-                        id="phone"
-                        placeholder="08xxxxxxxxxx"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Merek & Model HP
-                    </label>
-
-                    <input
-                        type="text"
-                        id="device"
-                        placeholder="Contoh: Redmi Note 13 Pro"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Jenis Kerusakan
-                    </label>
-
-                    <select id="damage" required>
-
-                        <option value="">
-                            Pilih kerusakan
-                        </option>
-
-                        <option>
-                            LCD / Layar
-                        </option>
-
-                        <option>
-                            Baterai
-                        </option>
-
-                        <option>
-                            Charging
-                        </option>
-
-                        <option>
-                            Speaker / Mic
-                        </option>
-
-                        <option>
-                            Kena Air
-                        </option>
-
-                        <option>
-                            Software
-                        </option>
-
-                        <option>
-                            Lainnya
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Jelaskan Kerusakan
-                    </label>
-
-                    <textarea
-                        id="description"
-                        rows="4"
-                        placeholder="Ceritakan masalah HP kamu..."
-                    ></textarea>
-
-                </div>
-
-<div class="form-group">
-
-    <label>
-        Alamat
-    </label>
-
-    <textarea
-        id="address"
-        rows="3"
-        placeholder="Alamat lengkap untuk teknisi"
-        required
-    ></textarea>
-
-</div>
-
-<div class="form-group">
-
-    <label>
-        📍 Pilih Lokasi di Peta
-    </label>
-
-    <p style="color:#929eac;font-size:13px;margin-bottom:10px;">
-        Geser peta dan tekan lokasi rumah kamu.
-    </p>
-
-    <div id="map"
-        style="
-            width:100%;
-            height:350px;
-            border-radius:14px;
-            overflow:hidden;
-            border:1px solid #293646;
-        ">
-    </div>
-
-</div>
-
-<input type="hidden" id="latitude">
-<input type="hidden" id="longitude">
-
-<p id="locationStatus"
-   style="
-       color:#19d5ff;
-       font-size:13px;
-       margin-top:-8px;
-       margin-bottom:16px;
-   ">
-   📍 Belum memilih lokasi
-</p>
-                <button
-                    type="submit"
-                    class="button submit"
-                >
-                    💬 Kirim Pesanan via WhatsApp
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<footer>
-
-    <div class="container">
-
-        <p>
-            © 2026 Home Service Cell
-        </p>
-
-        <p>
-            WhatsApp:
-            <a href="https://wa.me/6285846009748">
-                085846009748
-            </a>
-        </p>
-
-    </div>
-
-</footer>
-<script>
-    <!-- LEAFLET -->
-<link rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-const SUPABASE_URL =
-    "https://sqpolxwdyypbxylgvihi.supabase.co";
-
-const SUPABASE_KEY =
-    "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
-
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-
-/* =========================
-   GENERATE KODE BOOKING
-========================= */
-
-function generateBookingCode() {
-
-    const chars =
-        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-
-    let code = "";
-
-    for (let i = 0; i < 6; i++) {
-
-        code += chars[
-            Math.floor(
-                Math.random() * chars.length
-            )
-        ];
-
-    }
-
-    return "HSC-" + code;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Home Service Cell | Servis HP ke Rumah</title>
+
+<!-- Leaflet -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background: #080b12;
+    color: #fff;
+    line-height: 1.6;
+}
 
-/* =========================
-   PETA
-========================= */
+a {
+    text-decoration: none;
+    color: inherit;
+}
 
-let serviceMap = null;
-let serviceMarker = null;
+.container {
+    width: 92%;
+    max-width: 1100px;
+    margin: auto;
+}
 
-function initServiceMap() {
+/* NAVBAR */
 
-    const mapElement =
-        document.getElementById("map");
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(8,11,18,.96);
+    border-bottom: 1px solid #202938;
+}
 
-    if (!mapElement) return;
+.navbar {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
 
-    if (typeof L === "undefined") {
+.logo {
+    font-size: 19px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
 
-        console.error("Leaflet gagal dimuat.");
+.logo-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #19d5ff;
+    color: #061018;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
 
-        return;
-    }
+.nav-links {
+    display: flex;
+    gap: 8px;
+}
 
-    serviceMap =
-        L.map("map").setView(
-            [-6.914744, 107.609810],
-            13
+.nav-button {
+    background: #19d5ff;
+    color: #061018;
+    padding: 9px 14px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* HERO */
+
+.hero {
+    padding: 90px 0;
+    background:
+        radial-gradient(
+            circle at 80% 20%,
+            #123b50,
+            transparent 35%
         );
-
-    L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-            maxZoom: 19,
-            attribution:
-                "&copy; OpenStreetMap contributors"
-        }
-    ).addTo(serviceMap);
-
-
-    serviceMap.on(
-        "click",
-        function(e) {
-
-            const lat =
-                e.latlng.lat;
-
-            const lng =
-                e.latlng.lng;
-
-
-            if (serviceMarker) {
-
-                serviceMarker.setLatLng([
-                    lat,
-                    lng
-                ]);
-
-            } else {
-
-                serviceMarker =
-                    L.marker([
-                        lat,
-                        lng
-                    ]).addTo(serviceMap);
-
-            }
-
-
-            document.getElementById(
-                "latitude"
-            ).value = lat;
-
-            document.getElementById(
-                "longitude"
-            ).value = lng;
-
-            document.getElementById(
-                "locationStatus"
-            ).innerHTML =
-                "📍 Lokasi dipilih: " +
-                lat.toFixed(6) +
-                ", " +
-                lng.toFixed(6);
-
-        }
-    );
-
-
-    setTimeout(function() {
-
-        serviceMap.invalidateSize();
-
-    }, 500);
 }
 
-
-/* =========================
-   CEK STATUS + TOTAL BIAYA
-========================= */
-
-document
-    .getElementById("statusForm")
-    .addEventListener(
-        "submit",
-        async function(e) {
-
-            e.preventDefault();
-
-
-            const code =
-                document
-                    .getElementById("bookingCode")
-                    .value
-                    .trim()
-                    .toUpperCase();
-
-
-            const result =
-                document.getElementById(
-                    "statusResult"
-                );
-
-
-            result.style.display = "block";
-
-            result.innerHTML =
-                "🔄 Memeriksa status...";
-
-
-            const {
-                data,
-                error
-            } =
-                await supabaseClient.rpc(
-                    "check_booking",
-                    {
-                        p_booking_code: code
-                    }
-                );
-
-
-            if (error) {
-
-                console.error(
-                    "STATUS ERROR:",
-                    error
-                );
-
-                result.innerHTML =
-                    "<p>❌ Terjadi kesalahan.</p>" +
-                    "<p>" +
-                    error.message +
-                    "</p>";
-
-                return;
-            }
-
-
-            if (!data || data.length === 0) {
-
-                result.innerHTML =
-                    "<p>❌ Kode booking tidak ditemukan.</p>";
-
-                return;
-            }
-
-
-            const booking = data[0];
-
-
-            /* =========================
-               AMBIL TOTAL PRICE
-            ========================= */
-
-            const harga =
-                Number(
-                    booking.total_price || 0
-                );
-
-
-            const hargaRupiah =
-                harga > 0
-
-                ? harga.toLocaleString(
-                    "id-ID",
-                    {
-                        style: "currency",
-                        currency: "IDR",
-                        minimumFractionDigits: 0
-                    }
-                )
-
-                : "Belum ditentukan";
-
-
-            /* =========================
-               TAMPILKAN
-            ========================= */
-
-            result.innerHTML =
-
-                "<p><strong>🎫 Kode:</strong> " +
-                booking.booking_code +
-                "</p>" +
-
-                "<p><strong>👤 Nama:</strong> " +
-                booking.customer_name +
-                "</p>" +
-
-                "<p><strong>📱 HP:</strong> " +
-                booking.device +
-                "</p>" +
-
-                "<p><strong>🔧 Kerusakan:</strong> " +
-                booking.damage +
-                "</p>" +
-
-                "<p><strong>🔄 Status:</strong> " +
-                booking.status +
-                "</p>" +
-
-                "<p><strong>💰 Total Biaya:</strong> " +
-                hargaRupiah +
-                "</p>";
-
-        }
-    );
-
-
-/* =========================
-   BOOKING TEKNISI
-========================= */
-
-document
-    .getElementById("bookingForm")
-    .addEventListener(
-        "submit",
-        async function(e) {
-
-            e.preventDefault();
-
-
-            const name =
-                document
-                    .getElementById("name")
-                    .value
-                    .trim();
-
-
-            const phone =
-                document
-                    .getElementById("phone")
-                    .value
-                    .trim();
-
-
-            const device =
-                document
-                    .getElementById("device")
-                    .value
-                    .trim();
-
-
-            const damage =
-                document
-                    .getElementById("damage")
-                    .value;
-
-
-            const description =
-                document
-                    .getElementById("description")
-                    .value
-                    .trim();
-
-
-            const address =
-                document
-                    .getElementById("address")
-                    .value
-                    .trim();
-
-
-            const latitude =
-                document
-                    .getElementById("latitude")
-                    .value;
-
-
-            const longitude =
-                document
-                    .getElementById("longitude")
-                    .value;
-
-
-            if (!latitude || !longitude) {
-
-                alert(
-                    "📍 Silakan pilih lokasi rumah pada peta terlebih dahulu."
-                );
-
-                document
-                    .getElementById("map")
-                    .scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    });
-
-                return;
-            }
-
-
-            const bookingCode =
-                generateBookingCode();
-
-
-            /* =========================
-               SIMPAN BOOKING
-            ========================= */
-
-            const {
-                error
-            } =
-                await supabaseClient.rpc(
-                    "create_booking",
-                    {
-
-                        p_booking_code:
-                            bookingCode,
-
-                        p_customer_name:
-                            name,
-
-                        p_phone:
-                            phone,
-
-                        p_device:
-                            device,
-
-                        p_damage:
-                            damage,
-
-                        p_description:
-                            description,
-
-                        p_address:
-                            address,
-
-                        p_latitude:
-                            Number(latitude),
-
-                        p_longitude:
-                            Number(longitude)
-
-                    }
-                );
-
-
-            if (error) {
-
-                console.error(
-                    "SUPABASE ERROR:",
-                    error
-                );
-
-                alert(
-                    "❌ Pesanan gagal disimpan.\n\n" +
-                    error.message
-                );
-
-                return;
-            }
-
-
-            /* =========================
-               WHATSAPP
-            ========================= */
-
-            const message =
-`Halo Home Service Cell 👋
-
-Saya ingin melakukan servis HP.
-
-🎫 Kode Booking:
-${bookingCode}
-
-👤 Nama:
-${name}
-
-📱 No. WhatsApp:
-${phone}
-
-📱 HP:
-${device}
-
-🔧 Kerusakan:
-${damage}
-
-📝 Keterangan:
-${description || "-"}
-
-📍 Alamat:
-${address}
-
-🗺️ Lokasi:
-https://www.google.com/maps?q=${latitude},${longitude}
-
-Mohon informasi estimasi biaya dan jadwal teknisi.
-
-Terima kasih.`;
-
-
-            const whatsapp =
-                "https://wa.me/6285846009748?text=" +
-                encodeURIComponent(message);
-
-
-            alert(
-                "✅ Pesanan berhasil disimpan!\n\n" +
-                "Kode Booking: " +
-                bookingCode
-            );
-
-
-            window.location.href =
-                whatsapp;
-
-        }
-    );
-
-
-/* =========================
-   JALANKAN PETA
-========================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        initServiceMap();
-
-    }
-);
-
-</script>
-
-</body>
-</html>
-    
+.tag {
+    color: #19d5ff;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.hero h1 {
+    font-size: clamp(40px,8vw,70px);
+    line-height: 1.05;
+    margin: 15px 0;
+}
+
+.hero h1 span {
+    color: #19d5ff;
+}
+
+.hero p {
+    color: #aab5c2;
+    max-width: 650px;
+    font-size: 18px;
+}
+
+.buttons {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.button {
+    display: inline-block;
+    padding: 14px 22px;
+    border-radius: 12px;
+    background: #19d5ff;
+    color: #061018;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.button-outline {
+    background: transparent;
+    color: white;
+    border: 1px solid #344052;
+}
+
+/* SECTION */
+
+section {
+    padding: 70px 0;
+}
+
+.section-title {
+    margin-bottom: 30px;
+}
+
+.section-title small {
+    color: #19d5ff;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.section-title h2 {
+    font-size: 34px;
+    margin-top: 5px;
+}
+
+.section-title p {
+    color: #9ca8b5;
+}
+
+/* SERVICES */
+
+.services {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+    gap: 15px;
+}
+
+.service {
+    background: #0e141e;
+    border: 1px solid #202b39;
+    padding: 22px;
+    border-radius: 16px;
+    transition: .3s;
+}
+
+.service:hover {
+    transform: translateY(-4px);
+    border-color: #19d5ff;
+}
+
+.service-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.service h3 {
+    margin-bottom: 8px;
+}
+
+.service p {
+    color: #929eac;
+    font-size: 14px;
+}
+
+/* PRICE */
+
+.price-section {
+    background: #0b1018;
+}
+
+.prices {
+    display: grid;
+    gap: 10px;
+}
+
+.price {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 17px;
+    background: #101720;
+    border: 1px solid #222e3c;
+    border-radius: 12px;
+}
+
+.price strong {
+    color: #19d5ff;
+}
+
+.note {
+    color: #778391;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+/* BOOKING */
+
+.booking-box {
+    max-width: 800px;
+    background: #0e141e;
+    border: 1px solid #202b39;
+    padding: 25px;
+    border-radius: 18px;
+}
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px;
+    background: #080d14;
+    color: white;
+    border: 1px solid #293646;
+    border-radius: 10px;
+    outline: none;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #19d5ff;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.submit {
+    width: 100%;
+    font-size: 16px;
+}
+
+/* MAP */
+
+#map {
+    width: 100%;
+    height: 350px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #293646;
+}
+
+.location-status {
+    color: #19d5ff;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* STATUS */
+
+.status-result {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    background: #101720;
+    border: 1px solid #222e3c;
+    border-radius: 12px;
+}
+
+.status-result p {
+    margin-bottom: 8px;
+}
+
+.total-price {
+    margin-top: 15px;
+    padding: 15px;
+    background: #0b1921;
+    border: 1px solid #19d5ff;
+    border-radius: 10px;
+}
+
+.total-price-label {
+    font-size: 13px;
+    color: #9ca8b5;
+}
+
+.total-price-value {
+    color: #19d5ff;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 3px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #172631;
+    color: #19d5ff;
+    font-weight: bold;
+}
+
+/* FOOTER */
+
+footer {
+    padding: 30px 0;
+    border-top: 1px solid #202938;
+    color: #7f8a97;
+    text-align: center;
