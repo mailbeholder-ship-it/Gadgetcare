@@ -3,319 +3,410 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>GadgetCare - Admin</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#0d0f13;
+  color:#fff;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #0f1115;
-  color: #fff;
+.header{
+  height:70px;
+  background:#15181e;
+  border-bottom:1px solid #292d35;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 25px;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
-.header {
-  background: #171a21;
-  border-bottom: 1px solid #292d36;
-  padding: 18px 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.brand{
+  text-decoration:none;
+  font-size:25px;
+  font-weight:800;
 }
 
-.brand {
-  text-decoration: none;
-  font-size: 25px;
-  font-weight: 800;
+.gadget{color:#fff}
+.care{color:#FF5722}
+
+.logout{
+  border:0;
+  background:#e53935;
+  color:#fff;
+  padding:10px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
 }
 
-.gadget {
-  color: #fff;
+.container{
+  max-width:1450px;
+  margin:auto;
+  padding:25px;
 }
 
-.care {
-  color: #FF5722;
+.page-title{
+  margin:0 0 5px;
+  font-size:28px;
 }
 
-.logout {
-  border: none;
-  background: #ff3d3d;
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
+.page-subtitle{
+  color:#888;
+  margin-bottom:25px;
 }
 
-.container {
-  max-width: 1400px;
-  margin: auto;
-  padding: 25px;
+.login-box{
+  max-width:420px;
+  margin:80px auto;
+  background:#15181e;
+  border:1px solid #292d35;
+  border-radius:16px;
+  padding:30px;
 }
 
-h1 {
-  margin-top: 0;
+.login-box h2{
+  text-align:center;
+  margin-top:0;
 }
 
-.login-box {
-  max-width: 420px;
-  margin: 80px auto;
-  background: #171a21;
-  padding: 30px;
-  border-radius: 15px;
-  border: 1px solid #292d36;
-}
-
-.login-box h2 {
-  text-align: center;
+label{
+  display:block;
+  color:#bbb;
+  font-size:14px;
+  margin-bottom:6px;
 }
 
 input,
 select,
-textarea {
-  width: 100%;
-  padding: 12px;
-  margin-top: 7px;
-  margin-bottom: 15px;
-  border: 1px solid #353a45;
-  border-radius: 8px;
-  background: #0f1115;
-  color: white;
+textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid #353a44;
+  border-radius:8px;
+  background:#0d0f13;
+  color:#fff;
+  outline:none;
+  font-family:inherit;
 }
 
-button {
-  font-family: inherit;
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:#FF5722;
 }
 
-.primary {
-  width: 100%;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  background: #FF5722;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
+textarea{
+  resize:vertical;
+  min-height:120px;
 }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
-  margin: 20px 0;
+.form-group{
+  margin-bottom:16px;
 }
 
-.stat {
-  background: #171a21;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #292d36;
+.primary{
+  width:100%;
+  border:0;
+  padding:13px;
+  border-radius:8px;
+  background:#FF5722;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-.stat small {
-  color: #999;
+.primary:hover{
+  background:#f4511e;
 }
 
-.stat strong {
-  display: block;
-  font-size: 27px;
-  margin-top: 7px;
+.message{
+  text-align:center;
+  margin-top:12px;
+  color:#ff7777;
 }
 
-.toolbar {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
 }
 
-.toolbar input,
-.toolbar select {
-  margin: 0;
+.stat{
+  background:#15181e;
+  border:1px solid #292d35;
+  border-radius:12px;
+  padding:20px;
 }
 
-.table-wrapper {
-  overflow-x: auto;
-  background: #171a21;
-  border-radius: 12px;
-  border: 1px solid #292d36;
+.stat-title{
+  color:#888;
+  font-size:13px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1200px;
+.stat-number{
+  display:block;
+  font-size:28px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.toolbar input{
+  flex:1;
+}
+
+.toolbar select{
+  width:200px;
+}
+
+.refresh{
+  border:0;
+  background:#343942;
+  color:#fff;
+  padding:12px 16px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.table-wrapper{
+  overflow-x:auto;
+  background:#15181e;
+  border:1px solid #292d35;
+  border-radius:12px;
+}
+
+table{
+  width:100%;
+  min-width:1250px;
+  border-collapse:collapse;
 }
 
 th,
-td {
-  padding: 13px;
-  border-bottom: 1px solid #292d36;
-  text-align: left;
-  vertical-align: top;
+td{
+  padding:13px;
+  border-bottom:1px solid #292d35;
+  text-align:left;
+  vertical-align:top;
 }
 
-th {
-  background: #20242c;
-  color: #ff7b55;
+th{
+  background:#20242b;
+  color:#ff7043;
+  font-size:13px;
 }
 
-tr:hover {
-  background: #1d2027;
+td{
+  font-size:13px;
 }
 
-.code {
-  color: #FF5722;
-  font-weight: bold;
+tr:hover{
+  background:#1b1e24;
 }
 
-.damage {
-  font-weight: bold;
+.code{
+  color:#FF5722;
+  font-weight:bold;
+  white-space:nowrap;
 }
 
-.description {
-  max-width: 220px;
-  color: #bbb;
-  white-space: normal;
+.description{
+  max-width:240px;
+  color:#bbb;
+  line-height:1.5;
 }
 
-.status {
-  display: inline-block;
-  padding: 6px 9px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: bold;
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+  white-space:nowrap;
 }
 
-.status-menunggu {
-  background: #4a3b16;
-  color: #ffc107;
+.status-menunggu{
+  color:#ffc107;
+  background:#493b14;
 }
 
-.status-proses {
-  background: #163d59;
-  color: #42a5f5;
+.status-diproses{
+  color:#42a5f5;
+  background:#153b56;
 }
 
-.status-selesai {
-  background: #16452c;
-  color: #4caf50;
+.status-selesai{
+  color:#4caf50;
+  background:#163d28;
 }
 
-.status-diambil {
-  background: #3a2552;
-  color: #ce93d8;
+.status-diambil{
+  color:#ce93d8;
+  background:#3c2551;
 }
 
-.status-batal {
-  background: #4c2020;
-  color: #ff7070;
+.status-batal{
+  color:#ff7070;
+  background:#4a2020;
 }
 
-.actions {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  min-width:210px;
 }
 
-.action {
-  border: none;
-  border-radius: 6px;
-  padding: 7px 9px;
-  color: white;
-  cursor: pointer;
-  font-size: 12px;
+.action{
+  border:0;
+  color:#fff;
+  padding:7px 9px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:bold;
 }
 
-.btn-price {
-  background: #FF5722;
+.detail-btn{background:#607d8b}
+.price-btn{background:#FF5722}
+.status-btn{background:#536dfe}
+.wa-btn{background:#25d366}
+.map-btn{background:#4285f4}
+.nota-btn{background:#8e44ad}
+
+.empty{
+  text-align:center;
+  color:#777;
+  padding:40px;
 }
 
-.btn-status {
-  background: #536dfe;
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.78);
+  z-index:1000;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
 }
 
-.btn-wa {
-  background: #25d366;
+.modal-box{
+  width:100%;
+  max-width:600px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:#15181e;
+  border:1px solid #343942;
+  border-radius:16px;
+  padding:25px;
 }
 
-.btn-map {
-  background: #4285f4;
+.modal-title{
+  margin-top:0;
+  margin-bottom:5px;
 }
 
-.btn-nota {
-  background: #8e44ad;
+.modal-code{
+  color:#FF5722;
+  font-weight:bold;
+  margin-bottom:20px;
 }
 
-.empty {
-  text-align: center;
-  padding: 40px;
-  color: #888;
+.detail-grid{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:10px;
+  margin-bottom:20px;
 }
 
-.modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.75);
-  z-index: 1000;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+.detail-label{
+  color:#888;
 }
 
-.modal-box {
-  width: 100%;
-  max-width: 450px;
-  background: #171a21;
-  border: 1px solid #30343d;
-  border-radius: 15px;
-  padding: 25px;
+.detail-value{
+  font-weight:600;
+  word-break:break-word;
 }
 
-.modal-actions {
-  display: flex;
-  gap: 10px;
+.modal-actions{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
 }
 
-.modal-actions button {
-  flex: 1;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: white;
+.modal-actions button{
+  flex:1;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-.cancel {
-  background: #343942;
+.cancel-btn{
+  background:#343942;
 }
 
-.save {
-  background: #FF5722;
+.save-btn{
+  background:#FF5722;
 }
 
-.message {
-  margin-top: 10px;
-  text-align: center;
-  color: #ff7070;
+.loading{
+  text-align:center;
+  color:#888;
+  padding:30px;
 }
 
-@media(max-width:800px) {
-  .stats {
-    grid-template-columns: repeat(2, 1fr);
+@media(max-width:900px){
+  .stats{
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .container {
-    padding: 15px;
+  .toolbar{
+    flex-direction:column;
   }
 
-  .toolbar {
-    flex-direction: column;
+  .toolbar select{
+    width:100%;
+  }
+}
+
+@media(max-width:600px){
+  .header{
+    padding:0 15px;
+  }
+
+  .container{
+    padding:15px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .login-box{
+    margin:40px 15px;
+  }
+
+  .detail-grid{
+    grid-template-columns:110px 1fr;
   }
 }
 </style>
@@ -324,6 +415,7 @@ tr:hover {
 <body>
 
 <header class="header">
+
   <a href="./index.html" class="brand">
     <span class="gadget">Gadget</span><span class="care">Care</span>
   </a>
@@ -331,92 +423,143 @@ tr:hover {
   <button class="logout" onclick="logout()">
     Keluar
   </button>
+
 </header>
 
-<div id="loginSection" class="login-box">
 
-  <h2>Admin GadgetCare</h2>
+<!-- LOGIN -->
 
-  <label>Email</label>
-  <input
-    type="email"
-    id="email"
-    placeholder="Email admin"
-  >
+<section id="loginSection">
 
-  <label>Password</label>
-  <input
-    type="password"
-    id="password"
-    placeholder="Password"
-  >
+  <div class="login-box">
 
-  <button class="primary" onclick="login()">
-    Login
-  </button>
+    <h2>Admin GadgetCare</h2>
 
-  <div id="loginMessage" class="message"></div>
+    <div class="form-group">
+      <label>Email</label>
+      <input
+        type="email"
+        id="email"
+        placeholder="Email admin"
+      >
+    </div>
 
-</div>
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="Password"
+      >
+    </div>
+
+    <button class="primary" onclick="login()">
+      Login Admin
+    </button>
+
+    <div id="loginMessage" class="message"></div>
+
+  </div>
+
+</section>
 
 
-<div id="adminSection" style="display:none;">
+<!-- ADMIN -->
+
+<section id="adminSection" style="display:none">
 
   <div class="container">
 
-    <h1>Dashboard Admin</h1>
+    <h1 class="page-title">
+      Dashboard Admin
+    </h1>
+
+    <div class="page-subtitle">
+      Kelola booking service GadgetCare
+    </div>
+
+
+    <!-- STATS -->
 
     <div class="stats">
 
       <div class="stat">
-        <small>Total Booking</small>
-        <strong id="totalBooking">0</strong>
+        <span class="stat-title">
+          Total Booking
+        </span>
+        <strong
+          class="stat-number"
+          id="totalBooking"
+        >0</strong>
       </div>
 
       <div class="stat">
-        <small>Menunggu</small>
-        <strong id="waitingBooking">0</strong>
+        <span class="stat-title">
+          Menunggu
+        </span>
+        <strong
+          class="stat-number"
+          id="waitingBooking"
+        >0</strong>
       </div>
 
       <div class="stat">
-        <small>Dalam Proses</small>
-        <strong id="processBooking">0</strong>
+        <span class="stat-title">
+          Diproses
+        </span>
+        <strong
+          class="stat-number"
+          id="processBooking"
+        >0</strong>
       </div>
 
       <div class="stat">
-        <small>Selesai</small>
-        <strong id="doneBooking">0</strong>
+        <span class="stat-title">
+          Selesai
+        </span>
+        <strong
+          class="stat-number"
+          id="doneBooking"
+        >0</strong>
       </div>
 
     </div>
 
 
+    <!-- TOOLBAR -->
+
     <div class="toolbar">
 
       <input
+        id="searchInput"
         type="text"
-        id="search"
-        placeholder="Cari kode, nama, HP, perangkat..."
+        placeholder="Cari kode, nama, nomor HP, perangkat..."
         oninput="filterBookings()"
       >
 
-      <select id="filterStatus" onchange="filterBookings()">
-
+      <select
+        id="statusFilter"
+        onchange="filterBookings()"
+      >
         <option value="">Semua Status</option>
         <option value="Menunggu">Menunggu</option>
         <option value="Diproses">Diproses</option>
         <option value="Selesai">Selesai</option>
         <option value="Sudah Diambil">Sudah Diambil</option>
         <option value="Dibatalkan">Dibatalkan</option>
-
       </select>
 
-      <button class="primary" style="width:auto" onclick="loadBookings()">
+      <button
+        class="refresh"
+        onclick="loadBookings()"
+      >
         🔄 Refresh
       </button>
 
     </div>
 
+
+    <!-- TABLE -->
 
     <div class="table-wrapper">
 
@@ -427,13 +570,13 @@ tr:hover {
           <tr>
             <th>Kode</th>
             <th>Pelanggan</th>
-            <th>HP</th>
+            <th>No. HP</th>
             <th>Perangkat</th>
             <th>Kerusakan</th>
-            <th>Keterangan</th>
+            <th>Keterangan Kerusakan</th>
             <th>Alamat</th>
             <th>Status</th>
-            <th>Harga</th>
+            <th>Total</th>
             <th>Tanggal</th>
             <th>Aksi</th>
           </tr>
@@ -443,7 +586,7 @@ tr:hover {
         <tbody id="bookingTable">
 
           <tr>
-            <td colspan="11" class="empty">
+            <td colspan="11" class="loading">
               Memuat data...
             </td>
           </tr>
@@ -456,74 +599,111 @@ tr:hover {
 
   </div>
 
-</div>
+</section>
 
 
-<!-- MODAL HARGA -->
+<!-- DETAIL / EDIT MODAL -->
 
-<div id="priceModal" class="modal">
+<div
+  id="detailModal"
+  class="modal"
+>
 
   <div class="modal-box">
 
-    <h2>Update Harga</h2>
+    <h2 class="modal-title">
+      Detail Service
+    </h2>
 
-    <p id="priceBookingCode"></p>
+    <div
+      id="detailBookingCode"
+      class="modal-code"
+    ></div>
 
-    <label>Harga Service</label>
 
-    <input
-      type="number"
-      id="priceInput"
-      placeholder="Contoh: 150000"
-    >
+    <div
+      id="detailData"
+      class="detail-grid"
+    ></div>
 
-    <div class="modal-actions">
 
-      <button class="cancel" onclick="closePriceModal()">
-        Batal
-      </button>
+    <div class="form-group">
 
-      <button class="save" onclick="savePrice()">
-        Simpan
-      </button>
+      <label>
+        Keterangan Kerusakan
+      </label>
+
+      <textarea
+        id="descriptionInput"
+        placeholder="Masukkan hasil pengecekan atau keterangan kerusakan..."
+      ></textarea>
 
     </div>
 
-  </div>
 
-</div>
+    <div class="form-group">
+
+      <label>
+        Harga Service
+      </label>
+
+      <input
+        type="number"
+        id="priceInput"
+        min="0"
+        placeholder="Contoh: 150000"
+      >
+
+    </div>
 
 
-<!-- MODAL STATUS -->
+    <div class="form-group">
 
-<div id="statusModal" class="modal">
+      <label>
+        Status Service
+      </label>
 
-  <div class="modal-box">
+      <select id="statusInput">
 
-    <h2>Update Status</h2>
+        <option value="Menunggu">
+          Menunggu
+        </option>
 
-    <p id="statusBookingCode"></p>
+        <option value="Diproses">
+          Diproses
+        </option>
 
-    <label>Status</label>
+        <option value="Selesai">
+          Selesai
+        </option>
 
-    <select id="statusInput">
+        <option value="Sudah Diambil">
+          Sudah Diambil
+        </option>
 
-      <option value="Menunggu">Menunggu</option>
-      <option value="Diproses">Diproses</option>
-      <option value="Selesai">Selesai</option>
-      <option value="Sudah Diambil">Sudah Diambil</option>
-      <option value="Dibatalkan">Dibatalkan</option>
+        <option value="Dibatalkan">
+          Dibatalkan
+        </option>
 
-    </select>
+      </select>
+
+    </div>
+
 
     <div class="modal-actions">
 
-      <button class="cancel" onclick="closeStatusModal()">
+      <button
+        class="cancel-btn"
+        onclick="closeDetailModal()"
+      >
         Batal
       </button>
 
-      <button class="save" onclick="saveStatus()">
-        Simpan
+      <button
+        class="save-btn"
+        onclick="saveDetail()"
+      >
+        💾 Simpan Perubahan
       </button>
 
     </div>
@@ -556,20 +736,23 @@ let selectedBooking = null;
    LOGIN
 ========================= */
 
-async function login() {
+async function login(){
 
   const email =
-    document.getElementById("email").value.trim();
+    document.getElementById("email")
+      .value
+      .trim();
 
   const password =
-    document.getElementById("password").value;
+    document.getElementById("password")
+      .value;
 
   const message =
     document.getElementById("loginMessage");
 
   message.textContent = "";
 
-  if (!email || !password) {
+  if(!email || !password){
 
     message.textContent =
       "Email dan password wajib diisi.";
@@ -577,13 +760,14 @@ async function login() {
     return;
   }
 
-  const { error } =
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+  const {error} =
+    await supabaseClient.auth
+      .signInWithPassword({
+        email,
+        password
+      });
 
-  if (error) {
+  if(error){
 
     console.error(error);
 
@@ -599,42 +783,43 @@ async function login() {
 
 
 /* =========================
-   CHECK SESSION
+   SESSION
 ========================= */
 
-async function checkSession() {
+async function checkSession(){
 
-  const { data } =
-    await supabaseClient.auth.getSession();
+  const {data} =
+    await supabaseClient.auth
+      .getSession();
 
-  if (data.session) {
+  if(data.session){
 
     showAdmin();
 
-  } else {
+  }else{
 
-    document.getElementById("loginSection")
-      .style.display = "block";
+    document.getElementById(
+      "loginSection"
+    ).style.display = "block";
 
-    document.getElementById("adminSection")
-      .style.display = "none";
+    document.getElementById(
+      "adminSection"
+    ).style.display = "none";
 
   }
 
 }
 
 
-/* =========================
-   SHOW ADMIN
-========================= */
+function showAdmin(){
 
-function showAdmin() {
+  document.getElementById(
+    "loginSection"
+  ).style.display = "none";
 
-  document.getElementById("loginSection")
-    .style.display = "none";
-
-  document.getElementById("adminSection")
-    .style.display = "block";
+  document.getElementById(
+    "adminSection"
+  ).style.display = "block";
 
   loadBookings();
 
@@ -645,7 +830,7 @@ function showAdmin() {
    LOGOUT
 ========================= */
 
-async function logout() {
+async function logout(){
 
   await supabaseClient.auth.signOut();
 
@@ -658,35 +843,42 @@ async function logout() {
    LOAD BOOKINGS
 ========================= */
 
-async function loadBookings() {
+async function loadBookings(){
 
   const tbody =
-    document.getElementById("bookingTable");
+    document.getElementById(
+      "bookingTable"
+    );
 
   tbody.innerHTML = `
     <tr>
-      <td colspan="11" class="empty">
-        Memuat data...
+      <td colspan="11" class="loading">
+        Memuat data booking...
       </td>
     </tr>
   `;
 
-  const { data, error } =
+
+  const {data,error} =
     await supabaseClient
       .from("bookings")
       .select("*")
-      .order("created_at", {
-        ascending: false
-      });
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
-  if (error) {
+
+  if(error){
 
     console.error(error);
 
     tbody.innerHTML = `
       <tr>
         <td colspan="11" class="empty">
-          Gagal mengambil data booking.<br>
+          Gagal mengambil data:
           ${escapeHtml(error.message)}
         </td>
       </tr>
@@ -695,240 +887,50 @@ async function loadBookings() {
     return;
   }
 
+
   bookings = data || [];
 
   updateStats();
 
-  renderBookings(bookings);
+  filterBookings();
 
 }
 
-<button
-  class="action btn-description"
-  onclick="openDescriptionModal('${escapeJs(b.id)}')"
->
-  📝 Keterangan
-</button>
-  .btn-description {
-  background: #009688;
-}
-  <!-- MODAL KETERANGAN KERUSAKAN -->
 
-<div id="descriptionModal" class="modal">
-
-  <div class="modal-box">
-
-    <h2>Keterangan Kerusakan</h2>
-
-    <p id="descriptionBookingCode"></p>
-
-    <label>
-      Keterangan Kerusakan
-    </label>
-
-    <textarea
-      id="descriptionInput"
-      rows="6"
-      placeholder="Contoh: LCD pecah bagian kanan, touchscreen masih berfungsi..."
-    ></textarea>
-
-    <div class="modal-actions">
-
-      <button
-        class="cancel"
-        onclick="closeDescriptionModal()"
-      >
-        Batal
-      </button>
-
-      <button
-        class="save"
-        onclick="saveDescription()"
-      >
-        Simpan
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-  let selectedDescriptionBooking = null;
-
-function openDescriptionModal(id) {
-
-  selectedDescriptionBooking =
-    bookings.find(b => b.id === id);
-
-  if (!selectedDescriptionBooking) {
-    alert("Data booking tidak ditemukan.");
-    return;
-  }
-
-  document.getElementById("descriptionBookingCode")
-    .textContent =
-      "Booking: " +
-      selectedDescriptionBooking.booking_code;
-
-  document.getElementById("descriptionInput")
-    .value =
-      selectedDescriptionBooking.description || "";
-
-  document.getElementById("descriptionModal")
-    .style.display = "flex";
-}
-
-
-function closeDescriptionModal() {
-
-  document.getElementById("descriptionModal")
-    .style.display = "none";
-
-  selectedDescriptionBooking = null;
-}
-
-
-async function saveDescription() {
-
-  if (!selectedDescriptionBooking) {
-    return;
-  }
-
-  const description =
-    document.getElementById("descriptionInput")
-      .value
-      .trim();
-
-  const { error } =
-    await supabaseClient
-      .from("bookings")
-      .update({
-        description: description
-      })
-      .eq(
-        "id",
-        selectedDescriptionBooking.id
-      );
-
-  if (error) {
-
-    console.error(error);
-
-    alert(
-      "Gagal menyimpan keterangan:\n" +
-      error.message
-    );
-
-    return;
-  }
-
-  alert("Keterangan kerusakan berhasil disimpan.");
-
-  closeDescriptionModal();
-
-  await loadBookings();
-  let selectedDescriptionBooking = null;
-
-function openDescriptionModal(id) {
-
-  selectedDescriptionBooking =
-    bookings.find(b => b.id === id);
-
-  if (!selectedDescriptionBooking) {
-    alert("Data booking tidak ditemukan.");
-    return;
-  }
-
-  document.getElementById("descriptionBookingCode")
-    .textContent =
-      "Booking: " +
-      selectedDescriptionBooking.booking_code;
-
-  document.getElementById("descriptionInput")
-    .value =
-      selectedDescriptionBooking.description || "";
-
-  document.getElementById("descriptionModal")
-    .style.display = "flex";
-}
-
-
-function closeDescriptionModal() {
-
-  document.getElementById("descriptionModal")
-    .style.display = "none";
-
-  selectedDescriptionBooking = null;
-}
-
-
-async function saveDescription() {
-
-  if (!selectedDescriptionBooking) {
-    return;
-  }
-
-  const description =
-    document.getElementById("descriptionInput")
-      .value
-      .trim();
-
-  const { error } =
-    await supabaseClient
-      .from("bookings")
-      .update({
-        description: description
-      })
-      .eq(
-        "id",
-        selectedDescriptionBooking.id
-      );
-
-  if (error) {
-
-    console.error(error);
-
-    alert(
-      "Gagal menyimpan keterangan:\n" +
-      error.message
-    );
-
-    return;
-  }
-
-  alert("Keterangan kerusakan berhasil disimpan.");
-
-  closeDescriptionModal();
-
-  await loadBookings();
-}
-}
 /* =========================
-   STATS
+   STATISTICS
 ========================= */
 
-function updateStats() {
+function updateStats(){
 
-  document.getElementById("totalBooking")
-    .textContent = bookings.length;
+  document.getElementById(
+    "totalBooking"
+  ).textContent =
+    bookings.length;
 
-  document.getElementById("waitingBooking")
-    .textContent =
-      bookings.filter(
-        b => b.status === "Menunggu"
-      ).length;
 
-  document.getElementById("processBooking")
-    .textContent =
-      bookings.filter(
-        b => b.status === "Diproses"
-      ).length;
+  document.getElementById(
+    "waitingBooking"
+  ).textContent =
+    bookings.filter(
+      b => b.status === "Menunggu"
+    ).length;
 
-  document.getElementById("doneBooking")
-    .textContent =
-      bookings.filter(
-        b => b.status === "Selesai"
-      ).length;
+
+  document.getElementById(
+    "processBooking"
+  ).textContent =
+    bookings.filter(
+      b => b.status === "Diproses"
+    ).length;
+
+
+  document.getElementById(
+    "doneBooking"
+  ).textContent =
+    bookings.filter(
+      b => b.status === "Selesai"
+    ).length;
 
 }
 
@@ -937,18 +939,22 @@ function updateStats() {
    FILTER
 ========================= */
 
-function filterBookings() {
+function filterBookings(){
 
   const search =
-    document.getElementById("search")
-      .value
+    document.getElementById(
+      "searchInput"
+    ).value
       .toLowerCase();
 
-  const status =
-    document.getElementById("filterStatus")
-      .value;
 
-  const filtered =
+  const status =
+    document.getElementById(
+      "statusFilter"
+    ).value;
+
+
+  const result =
     bookings.filter(b => {
 
       const text = `
@@ -961,17 +967,19 @@ function filterBookings() {
         ${b.address || ""}
       `.toLowerCase();
 
-      const matchSearch =
-        text.includes(search);
 
-      const matchStatus =
-        !status || b.status === status;
-
-      return matchSearch && matchStatus;
+      return (
+        text.includes(search) &&
+        (
+          !status ||
+          b.status === status
+        )
+      );
 
     });
 
-  renderBookings(filtered);
+
+  renderBookings(result);
 
 }
 
@@ -980,12 +988,15 @@ function filterBookings() {
    RENDER
 ========================= */
 
-function renderBookings(data) {
+function renderBookings(data){
 
   const tbody =
-    document.getElementById("bookingTable");
+    document.getElementById(
+      "bookingTable"
+    );
 
-  if (!data.length) {
+
+  if(!data.length){
 
     tbody.innerHTML = `
       <tr>
@@ -998,18 +1009,26 @@ function renderBookings(data) {
     return;
   }
 
+
   tbody.innerHTML =
     data.map(b => {
 
       const price =
-        Number(b.total_price || b.estimated_price || 0)
-          .toLocaleString("id-ID");
+        Number(
+          b.total_price ||
+          b.estimated_price ||
+          0
+        )
+        .toLocaleString("id-ID");
+
 
       const date =
         b.created_at
-          ? new Date(b.created_at)
-              .toLocaleString("id-ID")
+          ? new Date(
+              b.created_at
+            ).toLocaleString("id-ID")
           : "-";
+
 
       return `
 
@@ -1017,84 +1036,109 @@ function renderBookings(data) {
 
           <td>
             <span class="code">
-              ${escapeHtml(b.booking_code || "-")}
+              ${escapeHtml(
+                b.booking_code || "-"
+              )}
             </span>
           </td>
 
-          <td>
-            ${escapeHtml(b.customer_name || "-")}
-          </td>
 
           <td>
-            ${escapeHtml(b.phone || "-")}
+            ${escapeHtml(
+              b.customer_name || "-"
+            )}
           </td>
 
-          <td>
-            ${escapeHtml(b.device || "-")}
-          </td>
 
           <td>
-            <span class="damage">
-              ${escapeHtml(b.damage || "-")}
-            </span>
+            ${escapeHtml(
+              b.phone || "-"
+            )}
           </td>
+
+
+          <td>
+            ${escapeHtml(
+              b.device || "-"
+            )}
+          </td>
+
+
+          <td>
+            ${escapeHtml(
+              b.damage || "-"
+            )}
+          </td>
+
 
           <td>
             <div class="description">
-              ${escapeHtml(b.description || "-")}
+              ${escapeHtml(
+                b.description ||
+                "Belum ada keterangan"
+              )}
             </div>
           </td>
 
-          <td>
-            ${escapeHtml(b.address || "-")}
-          </td>
 
           <td>
-            ${statusBadge(b.status)}
+            ${escapeHtml(
+              b.address || "-"
+            )}
           </td>
+
+
+          <td>
+            ${statusBadge(
+              b.status
+            )}
+          </td>
+
 
           <td>
             Rp ${price}
           </td>
 
+
           <td>
             ${date}
           </td>
+
 
           <td>
 
             <div class="actions">
 
               <button
-                class="action btn-price"
-                onclick="openPriceModal('${b.id}')"
+                class="action detail-btn"
+                onclick="openDetail('${escapeJs(b.id)}')"
               >
-                💰 Harga
+                📝 Detail
               </button>
 
-              <button
-                class="action btn-status"
-                onclick="openStatusModal('${b.id}')"
-              >
-                🔄 Status
-              </button>
 
               <button
-                class="action btn-wa"
+                class="action wa-btn"
                 onclick="openWhatsApp('${escapeJs(b.phone)}')"
               >
                 💬 WA
               </button>
 
+
               <button
-                class="action btn-map"
-                onclick="openMap('${escapeJs(b.latitude)}','${escapeJs(b.longitude)}','${escapeJs(b.address)}')"
+                class="action map-btn"
+                onclick="openMap(
+                  '${escapeJs(b.latitude)}',
+                  '${escapeJs(b.longitude)}',
+                  '${escapeJs(b.address)}'
+                )"
               >
                 📍 Map
               </button>
 
+
               <button
-                class="action btn-nota"
+                class="action nota-btn"
                 onclick="openNota('${escapeJs(b.booking_code)}')"
               >
                 🧾 Nota
@@ -1117,23 +1161,30 @@ function renderBookings(data) {
    STATUS BADGE
 ========================= */
 
-function statusBadge(status) {
+function statusBadge(status){
 
-  const value = status || "Menunggu";
+  const value =
+    status || "Menunggu";
 
-  let cls = "status-menunggu";
+  let cls =
+    "status-menunggu";
 
-  if (value === "Diproses")
-    cls = "status-proses";
 
-  if (value === "Selesai")
+  if(value === "Diproses")
+    cls = "status-diproses";
+
+
+  if(value === "Selesai")
     cls = "status-selesai";
 
-  if (value === "Sudah Diambil")
+
+  if(value === "Sudah Diambil")
     cls = "status-diambil";
 
-  if (value === "Dibatalkan")
+
+  if(value === "Dibatalkan")
     cls = "status-batal";
+
 
   return `
     <span class="status ${cls}">
@@ -1145,158 +1196,270 @@ function statusBadge(status) {
 
 
 /* =========================
-   PRICE MODAL
+   DETAIL MODAL
 ========================= */
 
-function openPriceModal(id) {
+function openDetail(id){
 
   selectedBooking =
-    bookings.find(b => b.id === id);
-
-  if (!selectedBooking) return;
-
-  document.getElementById("priceBookingCode")
-    .textContent =
-      "Booking: " +
-      selectedBooking.booking_code;
-
-  document.getElementById("priceInput")
-    .value =
-      selectedBooking.total_price ||
-      selectedBooking.estimated_price ||
-      "";
-
-  document.getElementById("priceModal")
-    .style.display = "flex";
-
-}
-
-
-function closePriceModal() {
-
-  document.getElementById("priceModal")
-    .style.display = "none";
-
-  selectedBooking = null;
-
-}
-
-
-async function savePrice() {
-
-  if (!selectedBooking) return;
-
-  const price =
-    Number(
-      document.getElementById("priceInput").value
+    bookings.find(
+      b => b.id === id
     );
 
-  if (isNaN(price) || price < 0) {
 
-    alert("Harga tidak valid.");
-
-    return;
-  }
-
-  const { data, error } =
-    await supabaseClient.rpc(
-      "update_booking_price",
-      {
-        p_booking_id: selectedBooking.id,
-        p_price: price
-      }
-    );
-
-  if (error) {
-
-    console.error(error);
+  if(!selectedBooking){
 
     alert(
-      "Gagal mengubah harga:\n" +
-      error.message
+      "Data booking tidak ditemukan."
     );
 
     return;
   }
 
-  if (data === false) {
 
-    alert("Data booking tidak ditemukan.");
+  document.getElementById(
+    "detailBookingCode"
+  ).textContent =
+    selectedBooking.booking_code ||
+    "-";
 
-    return;
-  }
 
-  closePriceModal();
+  document.getElementById(
+    "detailData"
+  ).innerHTML = `
 
-  await loadBookings();
+    <div class="detail-label">
+      Nama Pelanggan
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(
+        selectedBooking.customer_name || "-"
+      )}
+    </div>
+
+
+    <div class="detail-label">
+      WhatsApp
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(
+        selectedBooking.phone || "-"
+      )}
+    </div>
+
+
+    <div class="detail-label">
+      Perangkat
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(
+        selectedBooking.device || "-"
+      )}
+    </div>
+
+
+    <div class="detail-label">
+      Kerusakan
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(
+        selectedBooking.damage || "-"
+      )}
+    </div>
+
+
+    <div class="detail-label">
+      Alamat
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(
+        selectedBooking.address || "-"
+      )}
+    </div>
+
+  `;
+
+
+  document.getElementById(
+    "descriptionInput"
+  ).value =
+    selectedBooking.description || "";
+
+
+  document.getElementById(
+    "priceInput"
+  ).value =
+    selectedBooking.total_price ||
+    selectedBooking.estimated_price ||
+    0;
+
+
+  document.getElementById(
+    "statusInput"
+  ).value =
+    selectedBooking.status ||
+    "Menunggu";
+
+
+  document.getElementById(
+    "detailModal"
+  ).style.display = "flex";
+
+}
+
+
+function closeDetailModal(){
+
+  document.getElementById(
+    "detailModal"
+  ).style.display = "none";
+
+  selectedBooking = null;
 
 }
 
 
 /* =========================
-   STATUS MODAL
+   SAVE DETAIL
 ========================= */
 
-function openStatusModal(id) {
+async function saveDetail(){
 
-  selectedBooking =
-    bookings.find(b => b.id === id);
+  if(!selectedBooking){
 
-  if (!selectedBooking) return;
-
-  document.getElementById("statusBookingCode")
-    .textContent =
-      "Booking: " +
-      selectedBooking.booking_code;
-
-  document.getElementById("statusInput")
-    .value =
-      selectedBooking.status || "Menunggu";
-
-  document.getElementById("statusModal")
-    .style.display = "flex";
-
-}
+    return;
+  }
 
 
-function closeStatusModal() {
-
-  document.getElementById("statusModal")
-    .style.display = "none";
-
-  selectedBooking = null;
-
-}
+  const description =
+    document.getElementById(
+      "descriptionInput"
+    ).value.trim();
 
 
-async function saveStatus() {
+  const price =
+    Number(
+      document.getElementById(
+        "priceInput"
+      ).value
+    );
 
-  if (!selectedBooking) return;
 
   const status =
-    document.getElementById("statusInput").value;
+    document.getElementById(
+      "statusInput"
+    ).value;
 
-  const { error } =
-    await supabaseClient
-      .from("bookings")
-      .update({
-        status: status
-      })
-      .eq("id", selectedBooking.id);
 
-  if (error) {
-
-    console.error(error);
+  if(isNaN(price) || price < 0){
 
     alert(
-      "Gagal mengubah status:\n" +
-      error.message
+      "Harga tidak valid."
     );
 
     return;
   }
 
-  closeStatusModal();
+
+  /* SIMPAN KETERANGAN */
+
+  const descriptionUpdate =
+    await supabaseClient
+      .from("bookings")
+      .update({
+        description:description
+      })
+      .eq(
+        "id",
+        selectedBooking.id
+      );
+
+
+  if(descriptionUpdate.error){
+
+    console.error(
+      descriptionUpdate.error
+    );
+
+    alert(
+      "Keterangan gagal disimpan:\n" +
+      descriptionUpdate.error.message
+    );
+
+    return;
+  }
+
+
+  /* SIMPAN STATUS */
+
+  const statusUpdate =
+    await supabaseClient
+      .from("bookings")
+      .update({
+        status:status
+      })
+      .eq(
+        "id",
+        selectedBooking.id
+      );
+
+
+  if(statusUpdate.error){
+
+    console.error(
+      statusUpdate.error
+    );
+
+    alert(
+      "Status gagal disimpan:\n" +
+      statusUpdate.error.message
+    );
+
+    return;
+  }
+
+
+  /* SIMPAN HARGA */
+
+  const priceUpdate =
+    await supabaseClient.rpc(
+      "update_booking_price",
+      {
+        p_booking_id:
+          selectedBooking.id,
+
+        p_price:
+          price
+      }
+    );
+
+
+  if(priceUpdate.error){
+
+    console.error(
+      priceUpdate.error
+    );
+
+    alert(
+      "Harga gagal disimpan:\n" +
+      priceUpdate.error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "Data service berhasil disimpan."
+  );
+
+
+  closeDetailModal();
 
   await loadBookings();
 
@@ -1307,28 +1470,35 @@ async function saveStatus() {
    WHATSAPP
 ========================= */
 
-function openWhatsApp(phone) {
+function openWhatsApp(phone){
 
-  if (!phone) {
+  if(!phone){
 
-    alert("Nomor WhatsApp tidak tersedia.");
+    alert(
+      "Nomor WhatsApp tidak tersedia."
+    );
 
     return;
   }
 
+
   let number =
     String(phone)
-      .replace(/\D/g, "");
+      .replace(/\D/g,"");
 
-  if (number.startsWith("0")) {
+
+  if(number.startsWith("0")){
 
     number =
-      "62" + number.substring(1);
+      "62" +
+      number.substring(1);
 
   }
 
+
   window.open(
-    "https://wa.me/" + number,
+    "https://wa.me/" +
+    number,
     "_blank"
   );
 
@@ -1339,29 +1509,46 @@ function openWhatsApp(phone) {
    MAP
 ========================= */
 
-function openMap(lat, lng, address) {
+function openMap(
+  latitude,
+  longitude,
+  address
+){
 
-  if (lat && lng && lat !== "null" && lng !== "null") {
+  if(
+    latitude &&
+    longitude &&
+    latitude !== "null" &&
+    longitude !== "null"
+  ){
 
     window.open(
-      `https://www.google.com/maps?q=${encodeURIComponent(lat)},${encodeURIComponent(lng)}`,
+      "https://www.google.com/maps?q=" +
+      encodeURIComponent(
+        latitude + "," + longitude
+      ),
       "_blank"
     );
 
     return;
   }
 
-  if (address) {
+
+  if(address){
 
     window.open(
-      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
+      "https://www.google.com/maps/search/?api=1&query=" +
+      encodeURIComponent(address),
       "_blank"
     );
 
     return;
   }
 
-  alert("Lokasi tidak tersedia.");
+
+  alert(
+    "Lokasi tidak tersedia."
+  );
 
 }
 
@@ -1370,47 +1557,54 @@ function openMap(lat, lng, address) {
    NOTA
 ========================= */
 
-function openNota(bookingCode) {
+function openNota(code){
 
-  if (!bookingCode) {
+  if(!code){
 
-    alert("Kode booking tidak ditemukan.");
+    alert(
+      "Kode booking tidak ditemukan."
+    );
 
     return;
   }
 
+
   const url =
     "./nota.html?code=" +
-    encodeURIComponent(bookingCode);
+    encodeURIComponent(code);
 
-  window.open(url, "_blank");
+
+  window.open(
+    url,
+    "_blank"
+  );
 
 }
 
 
 /* =========================
-   ESCAPE HTML
+   ESCAPE
 ========================= */
 
-function escapeHtml(value) {
+function escapeHtml(value){
 
   return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
-function escapeJs(value) {
+function escapeJs(value){
 
   return String(value ?? "")
-    .replace(/\\/g, "\\\\")
-    .replace(/'/g, "\\'")
-    .replace(/\n/g, "\\n")
-    .replace(/\r/g, "\\r");
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\n/g,"\\n")
+    .replace(/\r/g,"\\r");
 
 }
 
