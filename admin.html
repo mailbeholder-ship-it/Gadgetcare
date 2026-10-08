@@ -703,7 +703,206 @@ async function loadBookings() {
 
 }
 
+<button
+  class="action btn-description"
+  onclick="openDescriptionModal('${escapeJs(b.id)}')"
+>
+  📝 Keterangan
+</button>
+  .btn-description {
+  background: #009688;
+}
+  <!-- MODAL KETERANGAN KERUSAKAN -->
 
+<div id="descriptionModal" class="modal">
+
+  <div class="modal-box">
+
+    <h2>Keterangan Kerusakan</h2>
+
+    <p id="descriptionBookingCode"></p>
+
+    <label>
+      Keterangan Kerusakan
+    </label>
+
+    <textarea
+      id="descriptionInput"
+      rows="6"
+      placeholder="Contoh: LCD pecah bagian kanan, touchscreen masih berfungsi..."
+    ></textarea>
+
+    <div class="modal-actions">
+
+      <button
+        class="cancel"
+        onclick="closeDescriptionModal()"
+      >
+        Batal
+      </button>
+
+      <button
+        class="save"
+        onclick="saveDescription()"
+      >
+        Simpan
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+  let selectedDescriptionBooking = null;
+
+function openDescriptionModal(id) {
+
+  selectedDescriptionBooking =
+    bookings.find(b => b.id === id);
+
+  if (!selectedDescriptionBooking) {
+    alert("Data booking tidak ditemukan.");
+    return;
+  }
+
+  document.getElementById("descriptionBookingCode")
+    .textContent =
+      "Booking: " +
+      selectedDescriptionBooking.booking_code;
+
+  document.getElementById("descriptionInput")
+    .value =
+      selectedDescriptionBooking.description || "";
+
+  document.getElementById("descriptionModal")
+    .style.display = "flex";
+}
+
+
+function closeDescriptionModal() {
+
+  document.getElementById("descriptionModal")
+    .style.display = "none";
+
+  selectedDescriptionBooking = null;
+}
+
+
+async function saveDescription() {
+
+  if (!selectedDescriptionBooking) {
+    return;
+  }
+
+  const description =
+    document.getElementById("descriptionInput")
+      .value
+      .trim();
+
+  const { error } =
+    await supabaseClient
+      .from("bookings")
+      .update({
+        description: description
+      })
+      .eq(
+        "id",
+        selectedDescriptionBooking.id
+      );
+
+  if (error) {
+
+    console.error(error);
+
+    alert(
+      "Gagal menyimpan keterangan:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  alert("Keterangan kerusakan berhasil disimpan.");
+
+  closeDescriptionModal();
+
+  await loadBookings();
+  let selectedDescriptionBooking = null;
+
+function openDescriptionModal(id) {
+
+  selectedDescriptionBooking =
+    bookings.find(b => b.id === id);
+
+  if (!selectedDescriptionBooking) {
+    alert("Data booking tidak ditemukan.");
+    return;
+  }
+
+  document.getElementById("descriptionBookingCode")
+    .textContent =
+      "Booking: " +
+      selectedDescriptionBooking.booking_code;
+
+  document.getElementById("descriptionInput")
+    .value =
+      selectedDescriptionBooking.description || "";
+
+  document.getElementById("descriptionModal")
+    .style.display = "flex";
+}
+
+
+function closeDescriptionModal() {
+
+  document.getElementById("descriptionModal")
+    .style.display = "none";
+
+  selectedDescriptionBooking = null;
+}
+
+
+async function saveDescription() {
+
+  if (!selectedDescriptionBooking) {
+    return;
+  }
+
+  const description =
+    document.getElementById("descriptionInput")
+      .value
+      .trim();
+
+  const { error } =
+    await supabaseClient
+      .from("bookings")
+      .update({
+        description: description
+      })
+      .eq(
+        "id",
+        selectedDescriptionBooking.id
+      );
+
+  if (error) {
+
+    console.error(error);
+
+    alert(
+      "Gagal menyimpan keterangan:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  alert("Keterangan kerusakan berhasil disimpan.");
+
+  closeDescriptionModal();
+
+  await loadBookings();
+}
+}
 /* =========================
    STATS
 ========================= */
