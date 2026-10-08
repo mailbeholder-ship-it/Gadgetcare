@@ -16,237 +16,250 @@
 
 <style>
 
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-body {
-  margin: 0;
-  background: #e9e9e9;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #222;
+body{
+  margin:0;
+  background:#e8e8e8;
+  color:#222;
+  font-family:Arial,Helvetica,sans-serif;
 }
 
-.container {
-  max-width: 760px;
-  margin: 30px auto;
-  padding: 15px;
+.container{
+  max-width:780px;
+  margin:30px auto;
+  padding:15px;
 }
 
-.nota {
-  background: white;
-  padding: 35px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.12);
+.nota{
+  background:#fff;
+  border-radius:12px;
+  padding:35px;
+  box-shadow:0 5px 25px rgba(0,0,0,.12);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  align-items: flex-start;
-  border-bottom: 3px solid #FF5722;
-  padding-bottom: 20px;
+.header{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:3px solid #FF5722;
+  padding-bottom:20px;
 }
 
-.brand {
-  font-size: 30px;
-  font-weight: 800;
+.brand{
+  font-size:31px;
+  font-weight:800;
 }
 
-.gadget {
-  color: #222;
+.gadget{
+  color:#222;
 }
 
-.care {
-  color: #FF5722;
+.care{
+  color:#FF5722;
 }
 
-.subtitle {
-  color: #777;
-  margin-top: 5px;
+.subtitle{
+  color:#777;
+  margin-top:5px;
 }
 
-.invoice {
-  text-align: right;
+.invoice{
+  text-align:right;
 }
 
-.invoice-title {
-  font-size: 24px;
-  font-weight: bold;
+.invoice-title{
+  font-size:23px;
+  font-weight:bold;
 }
 
-.invoice-code {
-  color: #FF5722;
-  font-weight: bold;
-  margin-top: 5px;
+.invoice-code{
+  color:#FF5722;
+  font-weight:bold;
+  margin-top:7px;
 }
 
-.section {
-  margin-top: 25px;
+.section{
+  margin-top:25px;
 }
 
-.section-title {
-  font-size: 14px;
-  font-weight: bold;
-  color: #FF5722;
-  text-transform: uppercase;
-  margin-bottom: 10px;
+.section-title{
+  color:#FF5722;
+  font-size:13px;
+  font-weight:bold;
+  text-transform:uppercase;
+  margin-bottom:12px;
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 8px 15px;
+.info-grid{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:10px;
 }
 
-.label {
-  color: #777;
+.label{
+  color:#777;
 }
 
-.value {
-  font-weight: 600;
-  word-break: break-word;
+.value{
+  font-weight:600;
+  word-break:break-word;
 }
 
-.damage-box {
-  background: #f6f6f6;
-  padding: 15px;
-  border-radius: 8px;
-  border-left: 4px solid #FF5722;
+.damage-box{
+  background:#f5f5f5;
+  border-left:4px solid #FF5722;
+  border-radius:8px;
+  padding:17px;
+  line-height:1.6;
+  white-space:pre-wrap;
 }
 
-.price-box {
-  margin-top: 25px;
-  background: #171a21;
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
+.status{
+  display:inline-block;
+  background:#fff3e0;
+  color:#e64a19;
+  border-radius:20px;
+  padding:7px 12px;
+  font-size:13px;
+  font-weight:bold;
 }
 
-.price-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 7px 0;
+.price-box{
+  margin-top:25px;
+  padding:20px;
+  background:#15181e;
+  border-radius:10px;
+  color:#fff;
 }
 
-.total {
-  border-top: 1px solid #555;
-  margin-top: 8px;
-  padding-top: 15px;
-  font-size: 22px;
-  font-weight: bold;
-  color: #FF5722;
+.price-row{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:7px 0;
 }
 
-.status {
-  display: inline-block;
-  padding: 7px 12px;
-  border-radius: 20px;
-  background: #fff3e0;
-  color: #e64a19;
-  font-weight: bold;
+.total{
+  border-top:1px solid #555;
+  margin-top:8px;
+  padding-top:15px;
+  font-size:22px;
+  font-weight:bold;
 }
 
-.footer {
-  text-align: center;
-  border-top: 1px solid #ddd;
-  margin-top: 30px;
-  padding-top: 20px;
-  color: #777;
-  font-size: 13px;
+.total span:last-child{
+  color:#FF5722;
 }
 
-.buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
+.footer{
+  text-align:center;
+  color:#777;
+  border-top:1px solid #ddd;
+  margin-top:30px;
+  padding-top:20px;
+  font-size:13px;
+  line-height:1.6;
 }
 
-.buttons button {
-  flex: 1;
-  border: none;
-  padding: 13px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: white;
-  font-weight: bold;
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
 }
 
-.print {
-  background: #FF5722;
+.buttons button{
+  flex:1;
+  border:0;
+  padding:13px;
+  border-radius:8px;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-.whatsapp {
-  background: #25d366;
+.print-btn{
+  background:#FF5722;
 }
 
-.back {
-  background: #555;
+.wa-btn{
+  background:#25d366;
 }
 
-.loading {
-  text-align: center;
-  padding: 80px 20px;
-  color: #777;
+.close-btn{
+  background:#555;
 }
 
-.error {
-  text-align: center;
-  padding: 80px 20px;
-  color: #d32f2f;
+.loading{
+  text-align:center;
+  padding:80px 20px;
+  color:#777;
 }
 
-@media(max-width:600px) {
+.error{
+  text-align:center;
+  padding:70px 20px;
+  color:#d32f2f;
+}
 
-  .container {
-    margin: 0;
-    padding: 0;
+.error-code{
+  color:#FF5722;
+  font-size:20px;
+  font-weight:bold;
+}
+
+@media(max-width:600px){
+
+  .container{
+    margin:0;
+    padding:0;
   }
 
-  .nota {
-    border-radius: 0;
-    padding: 20px;
-    min-height: 100vh;
+  .nota{
+    min-height:100vh;
+    border-radius:0;
+    padding:20px;
   }
 
-  .header {
-    flex-direction: column;
+  .header{
+    flex-direction:column;
   }
 
-  .invoice {
-    text-align: left;
+  .invoice{
+    text-align:left;
   }
 
-  .info-grid {
-    grid-template-columns: 110px 1fr;
+  .info-grid{
+    grid-template-columns:110px 1fr;
   }
 
-  .buttons {
-    flex-direction: column;
+  .buttons{
+    flex-direction:column;
   }
 
 }
 
-@media print {
+@media print{
 
-  body {
-    background: white;
+  body{
+    background:#fff;
   }
 
-  .container {
-    margin: 0;
-    padding: 0;
-    max-width: none;
+  .container{
+    margin:0;
+    padding:0;
+    max-width:none;
   }
 
-  .nota {
-    box-shadow: none;
-    border-radius: 0;
+  .nota{
+    box-shadow:none;
+    border-radius:0;
   }
 
-  .buttons {
-    display: none;
+  .buttons{
+    display:none;
   }
 
 }
@@ -265,7 +278,7 @@ body {
     <div id="content">
 
       <div class="loading">
-        Memuat nota...
+        Memuat data nota...
       </div>
 
     </div>
@@ -294,10 +307,10 @@ let currentBooking = null;
 
 
 /* =========================
-   GET BOOKING CODE
+   GET CODE
 ========================= */
 
-function getBookingCode() {
+function getBookingCode(){
 
   const params =
     new URLSearchParams(
@@ -310,91 +323,64 @@ function getBookingCode() {
 
 
 /* =========================
-   LOAD NOTA
+   LOAD
 ========================= */
 
-async function loadNota() {
+async function loadNota(){
 
-  const bookingCode =
+  const code =
     getBookingCode();
 
+
   const content =
-    document.getElementById("content");
+    document.getElementById(
+      "content"
+    );
 
 
-  if (!bookingCode) {
+  if(!code){
 
-    content.innerHTML = `
-      <div class="error">
-
-        <h2>Kode Booking Tidak Ditemukan</h2>
-
-        <p>
-          Silakan buka nota melalui tombol
-          <b>🧾 Nota</b> pada halaman Admin.
-        </p>
-
-      </div>
-    `;
+    showError(
+      "Kode booking tidak ditemukan.",
+      ""
+    );
 
     return;
   }
 
 
-  const { data, error } =
+  const {data,error} =
     await supabaseClient.rpc(
       "check_booking",
       {
-        p_booking_code: bookingCode
+        p_booking_code:code
       }
     );
 
 
-  if (error) {
+  if(error){
 
     console.error(
       "SUPABASE ERROR:",
       error
     );
 
-    content.innerHTML = `
-      <div class="error">
 
-        <h2>Gagal Memuat Nota</h2>
-
-        <p>
-          ${escapeHtml(error.message)}
-        </p>
-
-        <p>
-          Kode booking:
-          <b>${escapeHtml(bookingCode)}</b>
-        </p>
-
-      </div>
-    `;
+    showError(
+      error.message,
+      code
+    );
 
     return;
   }
 
 
-  if (!data || data.length === 0) {
+  if(!data){
 
-    content.innerHTML = `
-      <div class="error">
-
-        <h2>Booking Tidak Ditemukan</h2>
-
-        <p>
-          Tidak ada data dengan kode:
-        </p>
-
-        <h3>
-          ${escapeHtml(bookingCode)}
-        </h3>
-
-      </div>
-    `;
+    showError(
+      "Data booking tidak ditemukan.",
+      code
+    );
 
     return;
   }
@@ -406,22 +392,87 @@ async function loadNota() {
       : data;
 
 
-  renderNota(currentBooking);
+  if(!currentBooking){
+
+    showError(
+      "Data booking tidak ditemukan.",
+      code
+    );
+
+    return;
+  }
+
+
+  renderNota(
+    currentBooking
+  );
 
 }
 
 
 /* =========================
-   RENDER NOTA
+   ERROR
 ========================= */
 
-function renderNota(b) {
+function showError(
+  message,
+  code
+){
+
+  document.getElementById(
+    "content"
+  ).innerHTML = `
+
+    <div class="error">
+
+      <h2>
+        Tidak dapat membuka nota
+      </h2>
+
+      ${
+        code
+        ? `
+          <p>
+            Kode booking:
+          </p>
+
+          <div class="error-code">
+            ${escapeHtml(code)}
+          </div>
+        `
+        : ""
+      }
+
+      <p>
+        ${escapeHtml(message)}
+      </p>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderNota(b){
 
   const content =
-    document.getElementById("content");
+    document.getElementById(
+      "content"
+    );
 
 
-  const price =
+  const estimated =
+    Number(
+      b.estimated_price || 0
+    );
+
+
+  const total =
     Number(
       b.total_price ||
       b.estimated_price ||
@@ -429,24 +480,23 @@ function renderNota(b) {
     );
 
 
-  const formattedPrice =
-    price.toLocaleString("id-ID");
-
-
-  const created =
+  const date =
     b.created_at
-      ? new Date(b.created_at)
-          .toLocaleString(
-            "id-ID",
-            {
-              dateStyle: "medium",
-              timeStyle: "short"
-            }
-          )
+      ? new Date(
+          b.created_at
+        ).toLocaleString(
+          "id-ID",
+          {
+            dateStyle:"medium",
+            timeStyle:"short"
+          }
+        )
       : "-";
 
 
   content.innerHTML = `
+
+    <!-- HEADER -->
 
     <div class="header">
 
@@ -486,11 +536,14 @@ function renderNota(b) {
     </div>
 
 
+    <!-- PELANGGAN -->
+
     <div class="section">
 
       <div class="section-title">
         Informasi Pelanggan
       </div>
+
 
       <div class="info-grid">
 
@@ -531,11 +584,14 @@ function renderNota(b) {
     </div>
 
 
+    <!-- PERANGKAT -->
+
     <div class="section">
 
       <div class="section-title">
         Detail Perangkat
       </div>
+
 
       <div class="info-grid">
 
@@ -566,7 +622,7 @@ function renderNota(b) {
         </div>
 
         <div class="value">
-          ${created}
+          ${date}
         </div>
 
 
@@ -589,25 +645,28 @@ function renderNota(b) {
     </div>
 
 
+    <!-- KETERANGAN KERUSAKAN -->
+
     <div class="section">
 
       <div class="section-title">
         Keterangan Kerusakan
       </div>
 
+
       <div class="damage-box">
 
         ${escapeHtml(
           b.description ||
-         <div class="damage-box">
-  ${escapeHtml(
-    b.description ||
-    "Tidak ada keterangan tambahan."
-  )}
-</div>
+          "Belum ada keterangan kerusakan."
+        )}
+
+      </div>
 
     </div>
 
+
+    <!-- HARGA -->
 
     <div class="price-box">
 
@@ -618,9 +677,7 @@ function renderNota(b) {
         </span>
 
         <span>
-          Rp ${Number(
-            b.estimated_price || 0
-          ).toLocaleString("id-ID")}
+          Rp ${estimated.toLocaleString("id-ID")}
         </span>
 
       </div>
@@ -633,13 +690,15 @@ function renderNota(b) {
         </span>
 
         <span>
-          Rp ${formattedPrice}
+          Rp ${total.toLocaleString("id-ID")}
         </span>
 
       </div>
 
     </div>
 
+
+    <!-- FOOTER -->
 
     <div class="footer">
 
@@ -653,10 +712,12 @@ function renderNota(b) {
     </div>
 
 
+    <!-- BUTTON -->
+
     <div class="buttons">
 
       <button
-        class="print"
+        class="print-btn"
         onclick="window.print()"
       >
         🖨️ Cetak Nota
@@ -664,7 +725,7 @@ function renderNota(b) {
 
 
       <button
-        class="whatsapp"
+        class="wa-btn"
         onclick="sendWhatsApp()"
       >
         💬 WhatsApp
@@ -672,7 +733,7 @@ function renderNota(b) {
 
 
       <button
-        class="back"
+        class="close-btn"
         onclick="window.close()"
       >
         ✕ Tutup
@@ -689,15 +750,15 @@ function renderNota(b) {
    WHATSAPP
 ========================= */
 
-function sendWhatsApp() {
+function sendWhatsApp(){
 
-  if (
+  if(
     !currentBooking ||
     !currentBooking.phone
-  ) {
+  ){
 
     alert(
-      "Nomor WhatsApp pelanggan tidak tersedia."
+      "Nomor WhatsApp tidak tersedia."
     );
 
     return;
@@ -707,10 +768,11 @@ function sendWhatsApp() {
   let number =
     String(
       currentBooking.phone
-    ).replace(/\D/g, "");
+    )
+      .replace(/\D/g,"");
 
 
-  if (number.startsWith("0")) {
+  if(number.startsWith("0")){
 
     number =
       "62" +
@@ -719,18 +781,16 @@ function sendWhatsApp() {
   }
 
 
-  const code =
-    currentBooking.booking_code || "-";
-
-
   const message =
+
 `Halo ${currentBooking.customer_name || ""},
 
-Ini informasi service dari GadgetCare.
+Berikut informasi service GadgetCare.
 
-Kode Booking: ${code}
+Kode Booking: ${currentBooking.booking_code || "-"}
 Perangkat: ${currentBooking.device || "-"}
 Kerusakan: ${currentBooking.damage || "-"}
+Keterangan: ${currentBooking.description || "-"}
 Status: ${currentBooking.status || "-"}
 Total: Rp ${Number(currentBooking.total_price || currentBooking.estimated_price || 0).toLocaleString("id-ID")}
 
@@ -752,14 +812,14 @@ Terima kasih telah menggunakan GadgetCare.`;
    ESCAPE
 ========================= */
 
-function escapeHtml(value) {
+function escapeHtml(value){
 
   return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -773,5 +833,4 @@ loadNota();
 </script>
 
 </body>
-
 </html>
