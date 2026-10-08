@@ -895,11 +895,32 @@ function createBookingCard(item) {
 
         </div>
 
+${locationHTML}
 
-        ${locationHTML}
+
+<div style="margin-top:15px;">
+
+    <button
+        type="button"
+        class="print-receipt"
+        data-code="${escapeHTML(item.booking_code)}"
+        style="
+            background:#22c55e;
+            color:white;
+            padding:11px 16px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        "
+    >
+        🧾 Cetak Nota
+    </button>
+
+</div>
 
 
-        <div class="controls">
+<div class="controls">
 
             <div class="control">
 
