@@ -599,10 +599,12 @@ function renderNota(b) {
 
         ${escapeHtml(
           b.description ||
-          "Tidak ada keterangan tambahan."
-        )}
-
-      </div>
+         <div class="damage-box">
+  ${escapeHtml(
+    b.description ||
+    "Tidak ada keterangan tambahan."
+  )}
+</div>
 
     </div>
 
