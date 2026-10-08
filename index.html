@@ -847,30 +847,40 @@
 
       try {
 
-        const { data, error } =
-          await supabaseClient.rpc(
-            "create_booking",
-            {
-              p_customer_name: name,
-              p_phone: phone,
-              p_device: device,
-              p_damage: damage,
-              p_description: description,
-              p_address: address,
-              p_latitude: latitude
-                ? Number(latitude)
-                : null,
-              p_longitude: longitude
-                ? Number(longitude)
-                : null
-            }
-          );
+        // Membuat kode booking otomatis
+const bookingCode =
+  "GC-" +
+  Date.now().toString().slice(-6);
 
-        if (error) {
-          throw error;
-        }
+// Simpan booking ke Supabase
+const { data, error } =
+  await supabaseClient
+    .from("bookings")
+    .insert({
+      booking_code: bookingCode,
+      customer_name: name,
+      phone: phone,
+      device: device,
+      damage: damage,
+      description: description,
+      address: address,
+      latitude: latitude
+        ? Number(latitude)
+        : null,
+      longitude: longitude
+        ? Number(longitude)
+        : null,
+      status: "Menunggu",
+      estimated_price: 0,
+      total_price: 0
+    })
+    .select()
+    .single();
 
-        const bookingCode = data;
+if (error) {
+  console.error("SUPABASE ERROR:", error);
+  throw error;
+}
 
         alertBox.className =
           "alert success";
