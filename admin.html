@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Admin - Home Service Cell</title>
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Admin - Home Service Cell
+  </title>
 
   <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
   <style>
 
@@ -18,222 +27,395 @@
       font-family: Arial, sans-serif;
     }
 
+
     body {
       background: #0b1117;
       color: white;
       padding: 20px;
     }
 
+
     .container {
       max-width: 1100px;
       margin: auto;
     }
 
+
     h1 {
       margin-bottom: 5px;
     }
+
 
     .subtitle {
       color: #8c9aa8;
       margin-bottom: 25px;
     }
 
-    .login-box,
-    .dashboard {
+
+    .login-box {
       background: #111a22;
       border: 1px solid #24313d;
       border-radius: 15px;
-      padding: 20px;
+      padding: 25px;
+      max-width: 500px;
+      margin: 40px auto;
     }
+
 
     input,
     button,
     select {
+
       width: 100%;
+
       padding: 13px;
+
       margin-top: 10px;
+
       border-radius: 8px;
+
       border: 1px solid #334454;
+
       background: #18232d;
+
       color: white;
+
       font-size: 15px;
+
     }
 
+
     button {
+
       background: #00c8ff;
+
       color: #001018;
+
       border: none;
+
       font-weight: bold;
+
       cursor: pointer;
+
     }
+
 
     button:hover {
       opacity: .9;
     }
 
+
     .logout {
+
       width: auto;
+
       background: #ef4444;
+
       color: white;
+
       float: right;
+
       padding: 10px 18px;
+
     }
+
 
     .stats {
+
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
       gap: 15px;
+
       margin: 20px 0;
+
     }
+
 
     .stat {
+
       background: #16212b;
+
       border: 1px solid #293947;
+
       border-radius: 12px;
+
       padding: 20px;
+
     }
+
 
     .stat-number {
+
       font-size: 30px;
+
       font-weight: bold;
+
       margin-top: 8px;
+
       color: #00c8ff;
+
     }
+
 
     .booking {
+
       background: #16212b;
+
       border: 1px solid #293947;
+
       border-radius: 12px;
+
       padding: 18px;
+
       margin-top: 15px;
+
     }
+
 
     .booking-code {
+
       color: #00c8ff;
-      font-size: 18px;
+
+      font-size: 19px;
+
       font-weight: bold;
-      margin-bottom: 5px;
+
     }
+
 
     .info {
-      margin-top: 10px;
-      line-height: 1.7;
+
+      margin-top: 12px;
+
+      line-height: 1.8;
+
       color: #d5dde5;
+
     }
+
+
+    .divider {
+
+      height: 1px;
+
+      background: #293947;
+
+      margin: 15px 0;
+
+    }
+
+
+    .location-box {
+
+      margin-top: 12px;
+
+      padding: 12px;
+
+      background: #101920;
+
+      border-radius: 10px;
+
+      border: 1px solid #293947;
+
+    }
+
+
+    .coordinates {
+
+      color: #8fdcff;
+
+      font-size: 14px;
+
+      margin-bottom: 8px;
+
+    }
+
+
+    .map-button {
+
+      display: inline-block;
+
+      margin-top: 5px;
+
+      padding: 10px 14px;
+
+      background: #00c8ff;
+
+      color: #001018;
+
+      text-decoration: none;
+
+      border-radius: 8px;
+
+      font-weight: bold;
+
+    }
+
+
+    .price-box {
+
+      margin-top: 15px;
+
+      padding: 15px;
+
+      background: #101920;
+
+      border: 1px solid #293947;
+
+      border-radius: 10px;
+
+    }
+
+
+    .price-input {
+
+      font-size: 17px;
+
+      margin-top: 8px;
+
+    }
+
+
+    .price-button {
+
+      background: #22c55e;
+
+      color: white;
+
+      margin-top: 8px;
+
+    }
+
+
+    .current-price {
+
+      color: #22c55e;
+
+      font-size: 20px;
+
+      font-weight: bold;
+
+      margin-top: 5px;
+
+    }
+
 
     .status {
-      margin-top: 12px;
+
+      margin-top: 15px;
+
     }
 
+
     .refresh {
+
       background: #263746;
+
       color: white;
+
       margin-bottom: 15px;
+
     }
+
 
     .hidden {
       display: none;
     }
 
+
     .message {
+
       margin-top: 12px;
+
       color: #ff8585;
+
     }
 
-    /* ========================= */
-    /* LOKASI */
-    /* ========================= */
 
-    .coordinates {
-      margin-top: 8px;
-      color: #8fdcff;
-      font-size: 14px;
+    .success-message {
+
+      color: #22c55e;
+
     }
 
-    .map-button {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 14px;
-      background: #00c8ff;
-      color: #001018;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: .2s;
-    }
 
-    .map-button:hover {
-      opacity: .85;
-      transform: translateY(-1px);
-    }
-
-    .no-location {
-      color: #ff8585;
-      font-size: 14px;
-    }
-
-    .booking-divider {
-      height: 1px;
-      background: #293947;
-      margin: 15px 0;
-    }
-
-    @media(max-width: 700px) {
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
+    @media(max-width:700px) {
 
       body {
         padding: 12px;
       }
 
+
+      .stats {
+
+        grid-template-columns: 1fr;
+
+      }
+
+
       .logout {
+
         float: none;
+
         width: 100%;
+
         margin-bottom: 20px;
+
       }
 
     }
 
   </style>
+
 </head>
 
 
 <body>
 
+
 <div class="container">
 
 
-  <!-- ========================= -->
+  <!-- ================================= -->
   <!-- LOGIN -->
-  <!-- ========================= -->
+  <!-- ================================= -->
 
   <div id="loginSection">
 
     <div class="login-box">
 
-      <h1>🔐 Admin Login</h1>
+      <h1>
+        🔐 Admin Login
+      </h1>
 
       <p class="subtitle">
         Home Service Cell
       </p>
 
+
       <input
         type="email"
         id="email"
         placeholder="Email admin"
+        autocomplete="username"
       >
+
 
       <input
         type="password"
         id="password"
         placeholder="Password"
+        autocomplete="current-password"
       >
+
 
       <button onclick="login()">
         LOGIN
       </button>
+
 
       <div
         id="loginMessage"
@@ -245,14 +427,15 @@
   </div>
 
 
-  <!-- ========================= -->
+  <!-- ================================= -->
   <!-- DASHBOARD -->
-  <!-- ========================= -->
+  <!-- ================================= -->
 
   <div
     id="dashboardSection"
     class="hidden"
   >
+
 
     <button
       class="logout"
@@ -266,23 +449,20 @@
       📱 Home Service Cell
     </h1>
 
+
     <p class="subtitle">
       Admin Dashboard
     </p>
 
 
-    <!-- ========================= -->
     <!-- STATISTIK -->
-    <!-- ========================= -->
 
     <div class="stats">
 
 
       <div class="stat">
 
-        <div>
-          📋 Total Booking
-        </div>
+        📋 Total Booking
 
         <div
           class="stat-number"
@@ -296,9 +476,7 @@
 
       <div class="stat">
 
-        <div>
-          🔧 Sedang Diproses
-        </div>
+        🔧 Sedang Diproses
 
         <div
           class="stat-number"
@@ -312,9 +490,7 @@
 
       <div class="stat">
 
-        <div>
-          ✅ Selesai
-        </div>
+        ✅ Selesai
 
         <div
           class="stat-number"
@@ -329,9 +505,7 @@
     </div>
 
 
-    <!-- ========================= -->
     <!-- REFRESH -->
-    <!-- ========================= -->
 
     <button
       class="refresh"
@@ -341,31 +515,37 @@
     </button>
 
 
-    <!-- ========================= -->
-    <!-- BOOKING LIST -->
-    <!-- ========================= -->
+    <!-- LIST -->
 
     <div id="bookingList">
-      Memuat booking...
+
+      <div class="booking">
+        Memuat booking...
+      </div>
+
     </div>
 
 
   </div>
+
 
 </div>
 
 
 <script>
 
-/* =========================================
+
+/* =====================================
    SUPABASE
-========================================= */
+===================================== */
 
 const SUPABASE_URL =
   "https://sqpolxwdyypbxylgvihi.supabase.co";
 
+
 const SUPABASE_KEY =
   "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+
 
 const supabaseClient =
   window.supabase.createClient(
@@ -374,9 +554,30 @@ const supabaseClient =
   );
 
 
-/* =========================================
+/* =====================================
+   FORMAT RUPIAH
+===================================== */
+
+function formatRupiah(value) {
+
+  const number =
+    Number(value || 0);
+
+  return number.toLocaleString(
+    "id-ID",
+    {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0
+    }
+  );
+
+}
+
+
+/* =====================================
    LOGIN
-========================================= */
+===================================== */
 
 async function login() {
 
@@ -386,10 +587,12 @@ async function login() {
       .value
       .trim();
 
+
   const password =
     document
       .getElementById("password")
       .value;
+
 
   const message =
     document
@@ -409,17 +612,20 @@ async function login() {
     "Memproses login...";
 
 
-  const { data, error } =
-    await supabaseClient.auth.signInWithPassword({
+  const { error } =
+    await supabaseClient.auth
+      .signInWithPassword({
 
-      email: email,
+        email: email,
 
-      password: password
+        password: password
 
-    });
+      });
 
 
   if (error) {
+
+    console.error(error);
 
     message.textContent =
       "Login gagal: " +
@@ -429,19 +635,23 @@ async function login() {
   }
 
 
+  message.textContent = "";
+
+
   showDashboard();
 
 }
 
 
-/* =========================================
-   CEK SESSION
-========================================= */
+/* =====================================
+   SESSION
+===================================== */
 
 async function checkSession() {
 
   const { data } =
-    await supabaseClient.auth.getSession();
+    await supabaseClient.auth
+      .getSession();
 
 
   if (data.session) {
@@ -453,9 +663,9 @@ async function checkSession() {
 }
 
 
-/* =========================================
-   TAMPILKAN DASHBOARD
-========================================= */
+/* =====================================
+   SHOW DASHBOARD
+===================================== */
 
 function showDashboard() {
 
@@ -476,9 +686,9 @@ function showDashboard() {
 }
 
 
-/* =========================================
+/* =====================================
    LOGOUT
-========================================= */
+===================================== */
 
 async function logout() {
 
@@ -489,9 +699,9 @@ async function logout() {
 }
 
 
-/* =========================================
+/* =====================================
    LOAD BOOKING
-========================================= */
+===================================== */
 
 async function loadBookings() {
 
@@ -501,41 +711,51 @@ async function loadBookings() {
 
 
   list.innerHTML =
-    "<div class='booking'>Memuat booking...</div>";
+    `<div class="booking">
+      ⏳ Memuat booking...
+    </div>`;
 
 
   const { data, error } =
     await supabaseClient
       .from("bookings")
       .select("*")
-      .order("created_at", {
-        ascending: false
-      });
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
 
-
-  /* ERROR */
 
   if (error) {
 
+    console.error(error);
+
+
     list.innerHTML =
-      "<div class='booking'>" +
-      "<p>❌ Gagal mengambil booking:</p>" +
-      "<p>" +
-      error.message +
-      "</p>" +
-      "</div>";
+      `<div class="booking">
+
+        ❌ Gagal mengambil booking.
+
+        <br><br>
+
+        ${error.message}
+
+      </div>`;
 
     return;
   }
 
 
-  /* =========================================
+  /* =====================================
      STATISTIK
-  ========================================= */
+  ===================================== */
 
   document
     .getElementById("totalBooking")
-    .textContent = data.length;
+    .textContent =
+      data.length;
 
 
   document
@@ -544,7 +764,6 @@ async function loadBookings() {
       data.filter(item =>
 
         item.status !== "Menunggu" &&
-
         item.status !== "Selesai"
 
       ).length;
@@ -560,101 +779,131 @@ async function loadBookings() {
       ).length;
 
 
-  /* =========================================
-     TIDAK ADA BOOKING
-  ========================================= */
+  /* =====================================
+     EMPTY
+  ===================================== */
 
-  if (data.length === 0) {
+  if (!data.length) {
 
     list.innerHTML =
-      "<div class='booking'>" +
-      "Belum ada booking masuk." +
-      "</div>";
+      `<div class="booking">
+
+        Belum ada booking masuk.
+
+      </div>`;
 
     return;
   }
 
 
-  /* =========================================
-     KOSONGKAN LIST
-  ========================================= */
-
   list.innerHTML = "";
 
 
-  /* =========================================
-     TAMPILKAN BOOKING
-  ========================================= */
+  /* =====================================
+     LOOP BOOKING
+  ===================================== */
 
   data.forEach(item => {
 
 
     const date =
-      new Date(item.created_at)
-        .toLocaleString("id-ID");
+      new Date(
+        item.created_at
+      ).toLocaleString(
+        "id-ID"
+      );
 
 
     const booking =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
 
     booking.className =
       "booking";
 
 
-    /* =========================================
+    /* =================================
        LOKASI
-    ========================================= */
+    ================================= */
 
     let locationHTML = "";
 
 
     if (
+
       item.latitude !== null &&
       item.latitude !== undefined &&
+
       item.longitude !== null &&
       item.longitude !== undefined
+
     ) {
 
+
       const latitude =
-        Number(item.latitude)
-          .toFixed(6);
+        Number(
+          item.latitude
+        ).toFixed(6);
+
 
       const longitude =
-        Number(item.longitude)
-          .toFixed(6);
+        Number(
+          item.longitude
+        ).toFixed(6);
 
 
       locationHTML = `
 
-        <div class="coordinates">
+        <div class="location-box">
 
-          📌 <b>Koordinat:</b><br>
+          <div class="coordinates">
 
-          ${latitude},
-          ${longitude}
+            📌 <b>Koordinat</b>
+
+            <br>
+
+            ${latitude},
+            ${longitude}
+
+          </div>
+
+
+          <a
+
+            class="map-button"
+
+            href="https://www.google.com/maps?q=${item.latitude},${item.longitude}"
+
+            target="_blank"
+
+            rel="noopener noreferrer"
+
+          >
+
+            🗺️ Lihat Lokasi di Google Maps
+
+          </a>
 
         </div>
-
-
-        <a
-          class="map-button"
-          href="https://www.google.com/maps?q=${item.latitude},${item.longitude}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          🗺️ Lihat Lokasi di Google Maps
-        </a>
 
       `;
 
     } else {
 
+
       locationHTML = `
 
-        <div class="no-location">
+        <div class="location-box">
 
-          📌 Koordinat belum tersedia
+          📌
+
+          <span class="message">
+
+            Koordinat belum tersedia
+
+          </span>
 
         </div>
 
@@ -663,63 +912,132 @@ async function loadBookings() {
     }
 
 
-    /* =========================================
-       HTML BOOKING
-    ========================================= */
+    /* =================================
+       HARGA
+    ================================= */
+
+    const currentPrice =
+      Number(
+        item.total_price || 0
+      );
+
+
+    /* =================================
+       BOOKING HTML
+    ================================= */
 
     booking.innerHTML = `
 
+
       <div class="booking-code">
 
-        ${item.booking_code}
+        🎫 ${item.booking_code}
 
       </div>
 
 
       <div class="info">
 
+
         👤 <b>Nama:</b>
+
         ${item.customer_name}
 
         <br>
 
 
         📱 <b>No. HP:</b>
+
         ${item.phone}
 
         <br>
 
 
         📱 <b>Perangkat:</b>
+
         ${item.device}
 
         <br>
 
 
         🔧 <b>Kerusakan:</b>
+
         ${item.damage}
 
         <br>
 
 
         📝 <b>Keterangan:</b>
+
         ${item.description || "-"}
 
         <br>
 
 
         📍 <b>Alamat:</b>
+
         ${item.address}
 
 
         ${locationHTML}
 
 
-        <div class="booking-divider"></div>
+        <div class="divider"></div>
+
+
+        <!-- HARGA -->
+
+        <div class="price-box">
+
+          💰 <b>Total Harga</b>
+
+
+          <div class="current-price">
+
+            ${formatRupiah(currentPrice)}
+
+          </div>
+
+
+          <input
+
+            class="price-input"
+
+            type="number"
+
+            min="0"
+
+            id="price-${item.id}"
+
+            value="${currentPrice}"
+
+            placeholder="Masukkan total harga"
+
+          >
+
+
+          <button
+
+            class="price-button"
+
+            onclick="updatePrice('${item.id}')"
+
+          >
+
+            💾 Simpan Harga
+
+          </button>
+
+        </div>
+
+
+        <div class="divider"></div>
 
 
         🕐 <b>Masuk:</b>
+
         ${date}
+
 
       </div>
 
@@ -728,79 +1046,123 @@ async function loadBookings() {
 
       <div class="status">
 
+
         <select
+
           onchange="updateStatus(
             '${item.id}',
             this.value
           )"
+
         >
 
+
           <option
+
             value="Menunggu"
-            ${item.status === "Menunggu"
+
+            ${
+              item.status === "Menunggu"
               ? "selected"
-              : ""}
+              : ""
+            }
+
           >
+
             Menunggu
+
           </option>
 
 
           <option
+
             value="Dikonfirmasi"
-            ${item.status === "Dikonfirmasi"
+
+            ${
+              item.status === "Dikonfirmasi"
               ? "selected"
-              : ""}
+              : ""
+            }
+
           >
+
             Dikonfirmasi
+
           </option>
 
 
           <option
+
             value="Teknisi Berangkat"
-            ${item.status === "Teknisi Berangkat"
+
+            ${
+              item.status === "Teknisi Berangkat"
               ? "selected"
-              : ""}
+              : ""
+            }
+
           >
+
             Teknisi Berangkat
+
           </option>
 
 
           <option
+
             value="Sedang Diperbaiki"
-            ${item.status === "Sedang Diperbaiki"
+
+            ${
+              item.status === "Sedang Diperbaiki"
               ? "selected"
-              : ""}
+              : ""
+            }
+
           >
+
             Sedang Diperbaiki
+
           </option>
 
 
           <option
+
             value="Selesai"
-            ${item.status === "Selesai"
+
+            ${
+              item.status === "Selesai"
               ? "selected"
-              : ""}
+              : ""
+            }
+
           >
+
             Selesai
+
           </option>
+
 
         </select>
 
+
       </div>
+
 
     `;
 
 
-    list.appendChild(booking);
+    list.appendChild(
+      booking
+    );
 
   });
 
 }
 
 
-/* =========================================
+/* =====================================
    UPDATE STATUS
-========================================= */
+===================================== */
 
 async function updateStatus(
   id,
@@ -816,13 +1178,16 @@ async function updateStatus(
         status: status
 
       })
-      .eq("id", id);
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
 
     alert(
-      "Gagal mengubah status: " +
+      "❌ Gagal mengubah status:\n" +
       error.message
     );
 
@@ -830,43 +1195,103 @@ async function updateStatus(
   }
 
 
-  loadBookings();
+  await loadBookings();
 
 }
-const harga = Number(data.total_price || 0);
 
-const hargaRupiah = harga.toLocaleString("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0
-});
-  <div style="
-    margin-top:15px;
-    padding:15px;
-    border-radius:10px;
-    background:#16212b;
-    border:1px solid #293947;
-">
-    💰 <b>Total Harga</b>
 
-    <div style="
-        font-size:24px;
-        font-weight:bold;
-        color:#00c8ff;
-        margin-top:6px;
-    ">
-        ${hargaRupiah}
-    </div>
-</div>
+/* =====================================
+   UPDATE PRICE
+===================================== */
 
-/* =========================================
-   JALANKAN SAAT HALAMAN DIBUKA
-========================================= */
+async function updatePrice(id) {
+
+
+  const input =
+    document.getElementById(
+      "price-" + id
+    );
+
+
+  if (!input) {
+
+    alert(
+      "Input harga tidak ditemukan."
+    );
+
+    return;
+  }
+
+
+  const price =
+    Number(
+      input.value
+    );
+
+
+  if (
+    !Number.isFinite(price) ||
+    price < 0
+  ) {
+
+    alert(
+      "❌ Masukkan harga yang valid."
+    );
+
+    return;
+  }
+
+
+  const { error } =
+    await supabaseClient
+      .from("bookings")
+      .update({
+
+        total_price:
+          Math.round(price)
+
+      })
+      .eq(
+        "id",
+        id
+      );
+
+
+  if (error) {
+
+    console.error(error);
+
+
+    alert(
+      "❌ Gagal menyimpan harga:\n" +
+      error.message
+    );
+
+    return;
+  }
+
+
+  alert(
+    "✅ Total harga berhasil disimpan:\n" +
+    formatRupiah(price)
+  );
+
+
+  await loadBookings();
+
+}
+
+
+/* =====================================
+   START
+===================================== */
 
 checkSession();
+
 
 </script>
 
 
 </body>
+
 </html>
