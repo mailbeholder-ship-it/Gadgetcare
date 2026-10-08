@@ -1189,13 +1189,16 @@ function createBookingCard(item) {
             </a>
 
 
-            <button
-                type="button"
-                class="print-button"
-            >
-                🧾 Cetak Nota
-            </button>
-
+            
+<a
+    href="./nota.html?kode=${encodeURIComponent(item.booking_code)}"
+    target="_blank"
+    rel="noopener"
+    class="print-button"
+    style="display:inline-block;text-decoration:none;text-align:center;"
+>
+    🧾 Cetak Nota
+</a>
         </div>
 
 
