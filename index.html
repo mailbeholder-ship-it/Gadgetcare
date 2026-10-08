@@ -1449,14 +1449,15 @@ document
 
         const booking = data[0];
 
+const harga = Number(data.total_price || 0);
 
-        const price =
-            booking.estimated_price
-                ? "Rp" +
-                  Number(
-                      booking.estimated_price
-                  ).toLocaleString("id-ID")
-                : "Belum ditentukan";
+const hargaRupiah = harga > 0
+  ? harga.toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0
+    })
+  : "Belum ditentukan";
 
 
         result.innerHTML =
@@ -1481,9 +1482,7 @@ document
             booking.status +
             "</p>" +
 
-            "<p><strong>💰 Estimasi:</strong> " +
-            price +
-            "</p>";
+          <b>Total Biaya:</b> ${hargaRupiah}
 
     });
 
