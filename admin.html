@@ -2,19 +2,14 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
 
-  <title>Admin - ServiceHome</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="description"
-    content="Dashboard Admin ServiceHome"
-  >
+  <title>GadgetCare - Admin Dashboard</title>
 
-  <!-- SUPABASE -->
+  <link rel="icon" href="./logo.png">
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -25,19 +20,10 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
+      font-family: Arial, sans-serif;
       background: #0b0f14;
-      color: #ffffff;
-      line-height: 1.5;
+      color: #fff;
     }
 
     button,
@@ -46,855 +32,293 @@
       font-family: inherit;
     }
 
-    /* =========================================
-       LOGIN
-    ========================================= */
+    .brand {
+      font-size: 25px;
+      font-weight: 800;
+    }
 
-    #loginPage {
+    .gadget {
+      color: #fff;
+    }
+
+    .care {
+      color: #FF5722;
+    }
+
+    .login-page {
       min-height: 100vh;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       padding: 20px;
-
       background:
         radial-gradient(
           circle at top right,
-          rgba(37, 211, 102, 0.13),
+          rgba(255,87,34,.15),
           transparent 35%
         ),
         #0b0f14;
     }
 
-    .login-card {
+    .login-box {
       width: 100%;
       max-width: 420px;
-
-      background: #121820;
-
-      border: 1px solid #27313d;
-
-      border-radius: 20px;
-
+      background: #111820;
+      border: 1px solid #25303b;
       padding: 30px;
-
-      box-shadow:
-        0 20px 70px rgba(0,0,0,0.35);
+      border-radius: 16px;
     }
 
-    .login-logo {
-      text-align: center;
-
-      font-size: 27px;
-
-      font-weight: 800;
-
-      color: #25d366;
-
-      margin-bottom: 8px;
+    .login-box h1 {
+      margin: 15px 0 5px;
     }
 
-    .login-title {
-      text-align: center;
-
-      font-size: 23px;
-
-      margin-bottom: 7px;
-    }
-
-    .login-description {
-      text-align: center;
-
+    .login-box p {
       color: #8995a2;
-
-      font-size: 14px;
-
-      margin-bottom: 28px;
-    }
-
-    /* =========================================
-       FORM
-    ========================================= */
-
-    .form-group {
-      margin-bottom: 17px;
-    }
-
-    label {
-      display: block;
-
-      font-size: 13px;
-
-      font-weight: 700;
-
-      margin-bottom: 7px;
+      margin-bottom: 25px;
     }
 
     input,
     select {
       width: 100%;
-
-      padding: 13px 14px;
-
-      border-radius: 9px;
-
-      border: 1px solid #2a3541;
-
-      background: #0b1016;
-
-      color: #ffffff;
-
+      padding: 12px;
+      border-radius: 8px;
+      background: #0a0f14;
+      border: 1px solid #293540;
+      color: #fff;
       outline: none;
-
-      font-size: 14px;
     }
 
     input:focus,
     select:focus {
-      border-color: #25d366;
+      border-color: #FF5722;
     }
 
-    input::placeholder {
-      color: #65717e;
-    }
-
-    .button {
-      display: inline-flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      border: none;
-
-      border-radius: 9px;
-
-      padding: 12px 17px;
-
-      font-size: 13px;
-
-      font-weight: 700;
-
-      cursor: pointer;
-
-      transition: 0.2s;
-    }
-
-    .button:hover {
-      transform: translateY(-1px);
-    }
-
-    .button:disabled {
-      opacity: 0.55;
-
-      cursor: not-allowed;
-
-      transform: none;
-    }
-
-    .button-primary {
-      background: #25d366;
-
-      color: #07120b;
-    }
-
-    .button-secondary {
-      background: #1a222c;
-
-      color: #ffffff;
-
-      border: 1px solid #2a3541;
-    }
-
-    .button-danger {
-      background: #351b20;
-
-      color: #ff7d88;
-
-      border: 1px solid #5a2930;
-    }
-
-    .login-button {
-      width: 100%;
-
-      margin-top: 7px;
-    }
-
-    .login-error {
-      display: none;
-
-      background: #30181d;
-
-      color: #ff858f;
-
-      border: 1px solid #5b2931;
-
-      border-radius: 9px;
-
-      padding: 11px 13px;
-
-      font-size: 13px;
-
+    .form-group {
       margin-bottom: 15px;
     }
 
-    .login-error.show {
+    label {
       display: block;
+      color: #b9c2cb;
+      font-size: 13px;
+      margin-bottom: 7px;
     }
 
-    /* =========================================
-       ADMIN
-    ========================================= */
-
-    #adminPage {
-      display: none;
-
-      min-height: 100vh;
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 15px;
+      cursor: pointer;
+      font-weight: 700;
     }
 
-    .container {
-      width: 92%;
-
-      max-width: 1200px;
-
-      margin: auto;
+    .btn-orange {
+      background: #FF5722;
+      color: white;
     }
 
-    /* =========================================
-       NAVBAR
-    ========================================= */
+    .btn-dark {
+      background: #18212a;
+      border: 1px solid #2a3540;
+      color: #fff;
+    }
 
-    .admin-nav {
+    .btn-danger {
+      background: #c62828;
+      color: #fff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    header {
+      border-bottom: 1px solid #202a34;
+      background: #0d1218;
       position: sticky;
-
       top: 0;
-
-      z-index: 999;
-
-      background:
-        rgba(11,15,20,0.96);
-
-      backdrop-filter: blur(10px);
-
-      border-bottom:
-        1px solid #202833;
+      z-index: 100;
     }
 
-    .nav-inner {
-      min-height: 68px;
-
+    .header-inner {
+      min-height: 70px;
+      width: 94%;
+      max-width: 1300px;
+      margin: auto;
       display: flex;
-
-      align-items: center;
-
       justify-content: space-between;
-
+      align-items: center;
       gap: 15px;
-    }
-
-    .brand {
-      color: #25d366;
-
-      font-size: 20px;
-
-      font-weight: 800;
     }
 
     .admin-label {
-      color: #8995a2;
-
-      font-size: 12px;
-
-      margin-left: 8px;
+      color: #8e99a6;
+      font-size: 13px;
     }
 
-    .nav-actions {
-      display: flex;
-
-      gap: 8px;
-
-      align-items: center;
+    .container {
+      width: 94%;
+      max-width: 1300px;
+      margin: auto;
+      padding: 30px 0;
     }
 
-    /* =========================================
-       MAIN
-    ========================================= */
-
-    .main {
-      padding: 35px 0 70px;
-    }
-
-    .page-header {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      gap: 15px;
-
+    .top-title {
       margin-bottom: 25px;
     }
 
-    .page-header h1 {
-      font-size: 29px;
-
-      margin-bottom: 4px;
+    .top-title h1 {
+      font-size: 30px;
+      margin-bottom: 5px;
     }
 
-    .page-header p {
-      color: #8995a2;
-
-      font-size: 14px;
+    .top-title p {
+      color: #84909d;
     }
 
-    /* =========================================
-       STATS
-    ========================================= */
-
-    .stats-grid {
+    .stats {
       display: grid;
-
-      grid-template-columns:
-        repeat(4, 1fr);
-
+      grid-template-columns: repeat(4, 1fr);
       gap: 15px;
-
       margin-bottom: 25px;
     }
 
-    .stat-card {
-      background: #121820;
-
-      border: 1px solid #27313d;
-
-      border-radius: 15px;
-
+    .stat {
+      background: #111820;
+      border: 1px solid #202a34;
+      border-radius: 12px;
       padding: 20px;
     }
 
-    .stat-icon {
-      font-size: 25px;
-
-      margin-bottom: 8px;
-    }
-
-    .stat-label {
-      color: #8995a2;
-
-      font-size: 12px;
-
-      margin-bottom: 4px;
+    .stat-title {
+      color: #8b96a2;
+      font-size: 13px;
     }
 
     .stat-value {
-      font-size: 26px;
-
+      font-size: 27px;
       font-weight: 800;
-
-      color: #ffffff;
+      margin-top: 7px;
     }
 
-    /* =========================================
-       FILTER
-    ========================================= */
-
-    .filter-card {
-      background: #121820;
-
-      border: 1px solid #27313d;
-
-      border-radius: 15px;
-
-      padding: 17px;
-
+    .toolbar {
+      background: #111820;
+      border: 1px solid #202a34;
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      gap: 10px;
       margin-bottom: 20px;
     }
 
-    .filter-grid {
-      display: grid;
-
-      grid-template-columns:
-        1fr 200px 130px;
-
-      gap: 10px;
+    .toolbar input {
+      flex: 1;
     }
 
-    /* =========================================
-       BOOKINGS
-    ========================================= */
-
-    .bookings-card {
-      background: #121820;
-
-      border: 1px solid #27313d;
-
-      border-radius: 16px;
-
-      overflow: hidden;
+    .table-wrapper {
+      overflow-x: auto;
+      background: #111820;
+      border: 1px solid #202a34;
+      border-radius: 12px;
     }
 
-    .bookings-header {
-      padding: 18px;
-
-      border-bottom:
-        1px solid #27313d;
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      gap: 10px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 950px;
     }
 
-    .bookings-header h2 {
-      font-size: 18px;
+    th,
+    td {
+      padding: 13px;
+      text-align: left;
+      border-bottom: 1px solid #202a34;
+      font-size: 13px;
     }
 
-    .booking-count {
-      color: #8995a2;
-
-      font-size: 12px;
+    th {
+      color: #8e99a5;
+      font-weight: 600;
+      background: #0f151c;
     }
 
-    .booking-list {
-      display: grid;
-
-      gap: 1px;
-
-      background: #27313d;
+    td {
+      color: #d9dfe5;
     }
 
-    /* =========================================
-       BOOKING CARD
-    ========================================= */
-
-    .booking-card {
-      background: #121820;
-
-      padding: 20px;
-    }
-
-    .booking-top {
-      display: flex;
-
-      justify-content: space-between;
-
-      gap: 15px;
-
-      margin-bottom: 17px;
-    }
-
-    .booking-code {
-      color: #25d366;
-
-      font-size: 16px;
-
-      font-weight: 800;
-    }
-
-    .booking-date {
-      color: #687482;
-
-      font-size: 11px;
-
-      margin-top: 3px;
-    }
-
-    .status-badge {
-      display: inline-flex;
-
-      align-items: center;
-
-      padding: 6px 10px;
-
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
       border-radius: 20px;
-
+      color: #FF5722;
+      background: rgba(255,87,34,.12);
       font-size: 11px;
-
       font-weight: 700;
-
-      white-space: nowrap;
-
-      background: #26313c;
-
-      color: #ffffff;
     }
 
-    .status-menunggu {
-      background: #352d16;
-
-      color: #ffd75e;
-    }
-
-    .status-diproses {
-      background: #152e38;
-
-      color: #5fdcff;
-    }
-
-    .status-selesai {
-      background: #153323;
-
-      color: #52e784;
-    }
-
-    .status-dibatalkan {
-      background: #351b20;
-
-      color: #ff7d88;
-    }
-
-    .booking-info {
-      display: grid;
-
-      grid-template-columns:
-        repeat(2, 1fr);
-
-      gap: 10px;
-
-      margin-bottom: 18px;
-    }
-
-    .info-box {
-      background: #0b1016;
-
-      border: 1px solid #202a34;
-
-      border-radius: 9px;
-
-      padding: 11px;
-    }
-
-    .info-label {
-      color: #687482;
-
-      font-size: 10px;
-
-      text-transform: uppercase;
-
-      margin-bottom: 3px;
-    }
-
-    .info-value {
-      color: #e7ebef;
-
-      font-size: 13px;
-
-      word-break: break-word;
-    }
-
-    .booking-description {
-      background: #0b1016;
-
-      border: 1px solid #202a34;
-
-      border-radius: 9px;
-
-      padding: 12px;
-
-      color: #aeb8c4;
-
-      font-size: 13px;
-
-      margin-bottom: 17px;
-    }
-
-    .booking-price {
-      display: grid;
-
-      grid-template-columns:
-        1fr 1fr;
-
-      gap: 10px;
-
-      margin-bottom: 17px;
-    }
-
-    .price-box {
-      background: #0b1016;
-
-      border: 1px solid #202a34;
-
-      border-radius: 9px;
-
-      padding: 12px;
-    }
-
-    .price-label {
-      color: #687482;
-
-      font-size: 10px;
-
-      margin-bottom: 4px;
-    }
-
-    .price-value {
-      color: #25d366;
-
-      font-size: 17px;
-
-      font-weight: 800;
-    }
-
-    .booking-actions {
+    .actions {
       display: flex;
-
-      gap: 8px;
-
+      gap: 6px;
       flex-wrap: wrap;
     }
 
-    .booking-actions .button {
-      flex: 1;
-      min-width: 120px;
+    .actions button {
+      font-size: 11px;
+      padding: 7px 9px;
     }
-
-    /* =========================================
-       EMPTY / LOADING
-    ========================================= */
-
-    .empty-state {
-      padding: 50px 20px;
-
-      text-align: center;
-
-      background: #121820;
-
-      color: #8995a2;
-    }
-
-    .empty-icon {
-      font-size: 40px;
-
-      margin-bottom: 10px;
-    }
-
-    .loading {
-      padding: 45px;
-
-      text-align: center;
-
-      color: #8995a2;
-
-      background: #121820;
-    }
-
-    /* =========================================
-       MODAL
-    ========================================= */
 
     .modal {
       position: fixed;
-
       inset: 0;
-
-      z-index: 2000;
-
-      background:
-        rgba(0,0,0,0.72);
-
-      display: none;
-
+      background: rgba(0,0,0,.7);
+      display: flex;
       align-items: center;
-
       justify-content: center;
-
+      z-index: 999;
       padding: 20px;
     }
 
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-card {
+    .modal-box {
       width: 100%;
-
       max-width: 430px;
-
-      background: #121820;
-
-      border: 1px solid #27313d;
-
-      border-radius: 17px;
-
-      padding: 23px;
-
-      box-shadow:
-        0 20px 70px rgba(0,0,0,0.5);
+      background: #111820;
+      border: 1px solid #293440;
+      border-radius: 14px;
+      padding: 25px;
     }
 
-    .modal-header {
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
+    .modal-box h2 {
       margin-bottom: 20px;
     }
 
-    .modal-header h3 {
-      font-size: 18px;
-    }
-
-    .close-button {
-      width: 32px;
-
-      height: 32px;
-
-      border-radius: 8px;
-
-      border: 1px solid #2a3541;
-
-      background: #0b1016;
-
-      color: #ffffff;
-
-      cursor: pointer;
-    }
-
-    .modal-actions {
+    .modal-buttons {
       display: flex;
-
+      justify-content: flex-end;
       gap: 8px;
-
-      margin-top: 15px;
+      margin-top: 20px;
     }
 
-    .modal-actions .button {
-      flex: 1;
-    }
-
-    /* =========================================
-       TOAST
-    ========================================= */
-
-    #toast {
-      position: fixed;
-
-      right: 20px;
-
-      bottom: 20px;
-
-      z-index: 5000;
-
-      max-width: 350px;
-
-      background: #16201a;
-
-      border: 1px solid #2c5b3c;
-
-      color: #8df0ad;
-
-      padding: 13px 16px;
-
-      border-radius: 10px;
-
+    .error {
+      color: #ef9a9a;
+      margin-top: 10px;
       font-size: 13px;
-
-      display: none;
-
-      box-shadow:
-        0 10px 35px rgba(0,0,0,0.35);
     }
 
-    #toast.show {
-      display: block;
-    }
+    @media (max-width: 800px) {
 
-    /* =========================================
-       MOBILE
-    ========================================= */
-
-    @media (max-width: 850px) {
-
-      .stats-grid {
-        grid-template-columns:
-          repeat(2, 1fr);
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
       }
 
-      .filter-grid {
-        grid-template-columns: 1fr;
-      }
-
-    }
-
-    @media (max-width: 600px) {
-
-      .container {
-        width: 94%;
-      }
-
-      .main {
-        padding-top: 25px;
-      }
-
-      .nav-inner {
-        min-height: 60px;
-      }
-
-      .admin-label {
-        display: none;
-      }
-
-      .nav-actions .button {
-        padding: 9px 11px;
-
-        font-size: 11px;
-      }
-
-      .page-header {
-        align-items: flex-start;
-
+      .toolbar {
         flex-direction: column;
       }
 
-      .page-header h1 {
-        font-size: 25px;
-      }
-
-      .stats-grid {
-        grid-template-columns:
-          repeat(2, 1fr);
-
-        gap: 9px;
-      }
-
-      .stat-card {
-        padding: 15px;
-      }
-
-      .stat-value {
-        font-size: 22px;
-      }
-
-      .booking-info {
-        grid-template-columns: 1fr;
-      }
-
-      .booking-top {
-        align-items: flex-start;
-
+      .header-inner {
         flex-direction: column;
-      }
-
-      .booking-price {
-        grid-template-columns: 1fr;
-      }
-
-      .booking-actions {
-        display: grid;
-
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .booking-actions .button {
-        min-width: 0;
+        align-items: flex-start;
+        padding: 15px 0;
       }
 
     }
@@ -904,2282 +328,803 @@
 
 <body>
 
+<!-- LOGIN -->
 
-  <!-- =====================================================
-       LOGIN PAGE
-  ====================================================== -->
+<div id="loginPage" class="login-page">
 
-  <div id="loginPage">
+  <div class="login-box">
 
-    <div class="login-card">
+    <div class="brand">
+      <span class="gadget">Gadget</span><span class="care">Care</span>
+    </div>
 
-      <div class="login-logo">
-        📱 ServiceHome
+    <h1>Admin Dashboard</h1>
+
+    <p>
+      Masuk untuk mengelola data service pelanggan.
+    </p>
+
+    <form id="loginForm">
+
+      <div class="form-group">
+        <label>Email</label>
+
+        <input
+          id="email"
+          type="email"
+          placeholder="admin@email.com"
+          required>
       </div>
 
-      <h1 class="login-title">
-        Admin Dashboard
-      </h1>
+      <div class="form-group">
+        <label>Password</label>
 
-      <p class="login-description">
-        Login untuk mengelola booking service.
+        <input
+          id="password"
+          type="password"
+          placeholder="Password"
+          required>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-orange"
+        style="width:100%;">
+        Login
+      </button>
+
+      <div id="loginError" class="error"></div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="hidden">
+
+  <header>
+
+    <div class="header-inner">
+
+      <div>
+        <div class="brand">
+          <span class="gadget">Gadget</span><span class="care">Care</span>
+        </div>
+
+        <div class="admin-label">
+          Admin Dashboard
+        </div>
+      </div>
+
+      <button
+        id="logoutBtn"
+        class="btn btn-dark">
+        Logout
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <main class="container">
+
+    <div class="top-title">
+
+      <h1>Dashboard Service</h1>
+
+      <p>
+        Kelola booking dan perkembangan service pelanggan.
       </p>
 
-
-      <div
-        id="loginError"
-        class="login-error"
-      ></div>
+    </div>
 
 
-      <form id="loginForm">
+    <!-- STATS -->
 
-        <div class="form-group">
+    <div class="stats">
 
-          <label for="email">
-            Email Admin
-          </label>
+      <div class="stat">
+        <div class="stat-title">Total Booking</div>
+        <div id="totalStat" class="stat-value">0</div>
+      </div>
 
-          <input
-            type="email"
-            id="email"
-            placeholder="admin@email.com"
-            autocomplete="email"
-            required
-          >
+      <div class="stat">
+        <div class="stat-title">Menunggu</div>
+        <div id="waitingStat" class="stat-value">0</div>
+      </div>
 
-        </div>
+      <div class="stat">
+        <div class="stat-title">Diproses</div>
+        <div id="processStat" class="stat-value">0</div>
+      </div>
 
+      <div class="stat">
+        <div class="stat-title">Selesai</div>
+        <div id="doneStat" class="stat-value">0</div>
+      </div>
 
-        <div class="form-group">
-
-          <label for="password">
-            Password
-          </label>
-
-          <input
-            type="password"
-            id="password"
-            placeholder="Masukkan password"
-            autocomplete="current-password"
-            required
-          >
-
-        </div>
+    </div>
 
 
-        <button
-          type="submit"
-          id="loginButton"
-          class="button button-primary login-button"
-        >
-          🔐 Login Admin
-        </button>
+    <!-- TOOLBAR -->
 
-      </form>
+    <div class="toolbar">
+
+      <input
+        id="search"
+        type="text"
+        placeholder="Cari nama, nomor, gadget, atau kode booking...">
+
+      <select id="statusFilter">
+
+        <option value="">Semua Status</option>
+        <option value="Menunggu">Menunggu</option>
+        <option value="Dikonfirmasi">Dikonfirmasi</option>
+        <option value="Diproses">Diproses</option>
+        <option value="Menunggu Sparepart">Menunggu Sparepart</option>
+        <option value="Selesai">Selesai</option>
+        <option value="Dibatalkan">Dibatalkan</option>
+
+      </select>
+
+      <button
+        id="refreshBtn"
+        class="btn btn-orange">
+        Refresh
+      </button>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Kode</th>
+            <th>Pelanggan</th>
+            <th>Gadget</th>
+            <th>Kerusakan</th>
+            <th>Status</th>
+            <th>Harga</th>
+            <th>Tanggal</th>
+            <th>Aksi</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="bookingTable">
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- PRICE MODAL -->
+
+<div id="priceModal" class="modal hidden">
+
+  <div class="modal-box">
+
+    <h2>Update Harga</h2>
+
+    <div class="form-group">
+
+      <label>Harga Service</label>
+
+      <input
+        id="priceInput"
+        type="number"
+        min="0"
+        placeholder="Contoh: 250000">
+
+    </div>
+
+    <div class="modal-buttons">
+
+      <button
+        id="cancelPrice"
+        class="btn btn-dark">
+        Batal
+      </button>
+
+      <button
+        id="savePrice"
+        class="btn btn-orange">
+        Simpan
+      </button>
 
     </div>
 
   </div>
 
+</div>
 
-  <!-- =====================================================
-       ADMIN PAGE
-  ====================================================== -->
 
-  <div id="adminPage">
+<!-- STATUS MODAL -->
 
+<div id="statusModal" class="modal hidden">
 
-    <!-- NAVBAR -->
+  <div class="modal-box">
 
-    <nav class="admin-nav">
+    <h2>Update Status</h2>
 
-      <div class="container nav-inner">
+    <div class="form-group">
 
-        <div>
+      <label>Status Service</label>
 
-          <span class="brand">
-            📱 ServiceHome
-          </span>
+      <select id="statusInput">
 
-          <span class="admin-label">
-            Admin Dashboard
-          </span>
+        <option value="Menunggu">Menunggu</option>
+        <option value="Dikonfirmasi">Dikonfirmasi</option>
+        <option value="Diproses">Diproses</option>
+        <option value="Menunggu Sparepart">
+          Menunggu Sparepart
+        </option>
+        <option value="Selesai">Selesai</option>
+        <option value="Dibatalkan">Dibatalkan</option>
 
-        </div>
+      </select>
 
+    </div>
 
-        <div class="nav-actions">
+    <div class="modal-buttons">
 
-          <button
-            type="button"
-            id="refreshButton"
-            class="button button-secondary"
-          >
-            🔄 Refresh
-          </button>
+      <button
+        id="cancelStatus"
+        class="btn btn-dark">
+        Batal
+      </button>
 
-          <button
-            type="button"
-            id="logoutButton"
-            class="button button-danger"
-          >
-            🚪 Logout
-          </button>
-
-        </div>
-
-      </div>
-
-    </nav>
-
-
-    <!-- MAIN -->
-
-    <main class="main">
-
-      <div class="container">
-
-
-        <!-- HEADER -->
-
-        <div class="page-header">
-
-          <div>
-
-            <h1>
-              Dashboard
-            </h1>
-
-            <p>
-              Kelola seluruh pesanan ServiceHome.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             STATISTICS
-        ================================================== -->
-
-        <div class="stats-grid">
-
-
-          <div class="stat-card">
-
-            <div class="stat-icon">
-              📋
-            </div>
-
-            <div class="stat-label">
-              Total Booking
-            </div>
-
-            <div
-              id="totalBooking"
-              class="stat-value"
-            >
-              0
-            </div>
-
-          </div>
-
-
-          <div class="stat-card">
-
-            <div class="stat-icon">
-              ⏳
-            </div>
-
-            <div class="stat-label">
-              Menunggu
-            </div>
-
-            <div
-              id="waitingBooking"
-              class="stat-value"
-            >
-              0
-            </div>
-
-          </div>
-
-
-          <div class="stat-card">
-
-            <div class="stat-icon">
-              🔧
-            </div>
-
-            <div class="stat-label">
-              Diproses
-            </div>
-
-            <div
-              id="processBooking"
-              class="stat-value"
-            >
-              0
-            </div>
-
-          </div>
-
-
-          <div class="stat-card">
-
-            <div class="stat-icon">
-              ✅
-            </div>
-
-            <div class="stat-label">
-              Selesai
-            </div>
-
-            <div
-              id="doneBooking"
-              class="stat-value"
-            >
-              0
-            </div>
-
-          </div>
-
-
-        </div>
-
-
-        <!-- =================================================
-             FILTER
-        ================================================== -->
-
-        <div class="filter-card">
-
-          <div class="filter-grid">
-
-
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="🔎 Cari nama, kode, HP, nomor WhatsApp..."
-            >
-
-
-            <select id="statusFilter">
-
-              <option value="">
-                Semua Status
-              </option>
-
-              <option value="Menunggu">
-                Menunggu
-              </option>
-
-              <option value="Diproses">
-                Diproses
-              </option>
-
-              <option value="Selesai">
-                Selesai
-              </option>
-
-              <option value="Dibatalkan">
-                Dibatalkan
-              </option>
-
-            </select>
-
-
-            <button
-              type="button"
-              id="clearFilter"
-              class="button button-secondary"
-            >
-              Reset Filter
-            </button>
-
-
-          </div>
-
-        </div>
-
-
-        <!-- =================================================
-             BOOKINGS
-        ================================================== -->
-
-        <div class="bookings-card">
-
-
-          <div class="bookings-header">
-
-            <h2>
-              📋 Daftar Booking
-            </h2>
-
-            <span
-              id="bookingCount"
-              class="booking-count"
-            >
-              0 booking
-            </span>
-
-          </div>
-
-
-          <div
-            id="bookingList"
-            class="booking-list"
-          >
-
-            <div class="loading">
-              ⏳ Memuat data booking...
-            </div>
-
-          </div>
-
-
-        </div>
-
-
-      </div>
-
-    </main>
-
-  </div>
-
-
-  <!-- =====================================================
-       PRICE MODAL
-  ====================================================== -->
-
-  <div
-    id="priceModal"
-    class="modal"
-  >
-
-    <div class="modal-card">
-
-
-      <div class="modal-header">
-
-        <h3>
-          💰 Ubah Harga Service
-        </h3>
-
-        <button
-          type="button"
-          class="close-button"
-          id="closePriceModal"
-        >
-          ✕
-        </button>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Kode Booking
-        </label>
-
-        <input
-          type="text"
-          id="priceBookingCode"
-          readonly
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Total Harga
-        </label>
-
-        <input
-          type="number"
-          id="priceInput"
-          placeholder="Contoh: 250000"
-          min="0"
-        >
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        <button
-          type="button"
-          id="cancelPrice"
-          class="button button-secondary"
-        >
-          Batal
-        </button>
-
-        <button
-          type="button"
-          id="savePrice"
-          class="button button-primary"
-        >
-          💾 Simpan Harga
-        </button>
-
-      </div>
+      <button
+        id="saveStatus"
+        class="btn btn-orange">
+        Simpan
+      </button>
 
     </div>
 
   </div>
 
+</div>
 
-  <!-- =====================================================
-       STATUS MODAL
-  ====================================================== -->
 
-  <div
-    id="statusModal"
-    class="modal"
-  >
+<script>
 
-    <div class="modal-card">
+  const SUPABASE_URL =
+    "https://sqpolxwdyypbxylgvihi.supabase.co";
 
+  const SUPABASE_KEY =
+    "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 
-      <div class="modal-header">
-
-        <h3>
-          🔧 Ubah Status
-        </h3>
-
-        <button
-          type="button"
-          class="close-button"
-          id="closeStatusModal"
-        >
-          ✕
-        </button>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Kode Booking
-        </label>
-
-        <input
-          type="text"
-          id="statusBookingCode"
-          readonly
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Status Service
-        </label>
-
-        <select id="statusInput">
-
-          <option value="Menunggu">
-            Menunggu
-          </option>
-
-          <option value="Diproses">
-            Diproses
-          </option>
-
-          <option value="Selesai">
-            Selesai
-          </option>
-
-          <option value="Dibatalkan">
-            Dibatalkan
-          </option>
-
-        </select>
-
-      </div>
-
-
-      <div class="modal-actions">
-
-        <button
-          type="button"
-          id="cancelStatus"
-          class="button button-secondary"
-        >
-          Batal
-        </button>
-
-        <button
-          type="button"
-          id="saveStatus"
-          class="button button-primary"
-        >
-          💾 Simpan Status
-        </button>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- TOAST -->
-
-  <div id="toast"></div>
-
-
-  <script>
-
-    /* =====================================================
-       SUPABASE
-    ===================================================== */
-
-    const SUPABASE_URL =
-      "https://sqpolxwdyypbxylgvihi.supabase.co";
-
-    const SUPABASE_ANON_KEY =
-      "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
-
-
-    const supabaseClient =
-      window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-      );
-
-
-    /* =====================================================
-       VARIABLES
-    ===================================================== */
-
-    let allBookings = [];
-
-    let currentPriceBookingId = null;
-
-    let currentStatusBookingId = null;
-
-
-    /* =====================================================
-       LOGIN
-    ===================================================== */
-
-    const loginForm =
-      document.getElementById(
-        "loginForm"
-      );
-
-
-    loginForm.addEventListener(
-      "submit",
-      async function(e) {
-
-        e.preventDefault();
-
-
-        const email =
-          document
-            .getElementById("email")
-            .value
-            .trim();
-
-
-        const password =
-          document
-            .getElementById("password")
-            .value;
-
-
-        const button =
-          document.getElementById(
-            "loginButton"
-          );
-
-
-        const errorBox =
-          document.getElementById(
-            "loginError"
-          );
-
-
-        errorBox.classList.remove(
-          "show"
-        );
-
-
-        button.disabled = true;
-
-        button.textContent =
-          "⏳ Login...";
-
-
-        try {
-
-          const {
-            data,
-            error
-          } =
-            await supabaseClient.auth.signInWithPassword({
-
-              email: email,
-
-              password: password
-
-            });
-
-
-          if (error) {
-
-            throw error;
-
-          }
-
-
-          if (!data.session) {
-
-            throw new Error(
-              "Session login tidak ditemukan."
-            );
-
-          }
-
-
-          showAdmin();
-
-
-        } catch (error) {
-
-          console.error(
-            "Login error:",
-            error
-          );
-
-
-          errorBox.textContent =
-            getAuthErrorMessage(
-              error
-            );
-
-
-          errorBox.classList.add(
-            "show"
-          );
-
-
-        } finally {
-
-          button.disabled = false;
-
-          button.textContent =
-            "🔐 Login Admin";
-
-        }
-
-      }
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
     );
 
 
-    /* =====================================================
-       AUTH ERROR
-    ===================================================== */
-
-    function getAuthErrorMessage(
-      error
-    ) {
-
-      const message =
-        String(
-          error?.message || ""
-        ).toLowerCase();
+  let bookings = [];
+  let selectedBooking = null;
 
 
-      if (
-        message.includes(
-          "invalid login credentials"
-        )
-      ) {
+  /* =====================
+     LOGIN
+  ===================== */
 
-        return "❌ Email atau password salah.";
+  async function checkSession() {
 
-      }
+    const {
+      data: { session }
+    } = await supabaseClient.auth.getSession();
 
+    if (session) {
 
-      if (
-        message.includes(
-          "email not confirmed"
-        )
-      ) {
+      showDashboard();
 
-        return "❌ Email admin belum dikonfirmasi di Supabase.";
+    } else {
 
-      }
-
-
-      if (
-        message.includes(
-          "too many requests"
-        )
-      ) {
-
-        return "❌ Terlalu banyak percobaan login. Coba lagi beberapa saat.";
-
-      }
-
-
-      return (
-        "❌ Login gagal: " +
-        (
-          error?.message ||
-          "Terjadi kesalahan."
-        )
-      );
+      showLogin();
 
     }
+  }
 
 
-    /* =====================================================
-       SHOW ADMIN
-    ===================================================== */
-
-    function showAdmin() {
-
-      document.getElementById(
-        "loginPage"
-      ).style.display = "none";
-
-
-      document.getElementById(
-        "adminPage"
-      ).style.display = "block";
-
-
-      loadBookings();
-
-    }
-
-
-    /* =====================================================
-       LOGOUT
-    ===================================================== */
+  function showLogin() {
 
     document
-      .getElementById(
-        "logoutButton"
-      )
-      .addEventListener(
-        "click",
-        async function() {
+      .getElementById("loginPage")
+      .classList.remove("hidden");
 
-          const confirmLogout =
-            confirm(
-              "Yakin ingin logout?"
-            );
+    document
+      .getElementById("dashboard")
+      .classList.add("hidden");
 
+  }
 
-          if (!confirmLogout) {
 
-            return;
+  function showDashboard() {
 
-          }
+    document
+      .getElementById("loginPage")
+      .classList.add("hidden");
 
+    document
+      .getElementById("dashboard")
+      .classList.remove("hidden");
 
-          await supabaseClient.auth.signOut();
+    loadBookings();
 
+  }
 
-          document.getElementById(
-            "adminPage"
-          ).style.display = "none";
 
+  document
+    .getElementById("loginForm")
+    .addEventListener("submit", async e => {
 
-          document.getElementById(
-            "loginPage"
-          ).style.display = "flex";
+      e.preventDefault();
 
+      const email =
+        document.getElementById("email").value;
 
-          document.getElementById(
-            "password"
-          ).value = "";
+      const password =
+        document.getElementById("password").value;
 
-        }
-      );
+      const errorBox =
+        document.getElementById("loginError");
 
+      errorBox.textContent = "";
 
-    /* =====================================================
-       CHECK SESSION
-    ===================================================== */
+      const {
+        error
+      } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
 
-    async function checkSession() {
+      if (error) {
 
-      try {
-
-        const {
-          data
-        } =
-          await supabaseClient.auth.getSession();
-
-
-        if (
-          data &&
-          data.session
-        ) {
-
-          showAdmin();
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          error
-        );
-
-      }
-
-    }
-
-
-    /* =====================================================
-       LOAD BOOKINGS
-    ===================================================== */
-
-    async function loadBookings() {
-
-      const list =
-        document.getElementById(
-          "bookingList"
-        );
-
-
-      list.innerHTML =
-        `
-          <div class="loading">
-            ⏳ Memuat data booking...
-          </div>
-        `;
-
-
-      try {
-
-        const {
-          data,
-          error
-        } =
-          await supabaseClient
-            .from("bookings")
-            .select("*")
-            .order(
-              "created_at",
-              {
-                ascending: false
-              }
-            );
-
-
-        if (error) {
-
-          throw error;
-
-        }
-
-
-        allBookings =
-          data || [];
-
-
-        updateStatistics();
-
-        renderBookings();
-
-
-      } catch (error) {
-
-        console.error(
-          "Load booking error:",
-          error
-        );
-
-
-        list.innerHTML =
-          `
-            <div class="empty-state">
-
-              <div class="empty-icon">
-                ⚠️
-              </div>
-
-              <p>
-                Gagal memuat data booking.
-              </p>
-
-              <p style="
-                margin-top:8px;
-                font-size:12px;
-                color:#65717e;
-              ">
-                ${escapeHTML(
-                  error?.message ||
-                  ""
-                )}
-              </p>
-
-            </div>
-          `;
-
-      }
-
-    }
-
-
-    /* =====================================================
-       STATISTICS
-    ===================================================== */
-
-    function updateStatistics() {
-
-      const total =
-        allBookings.length;
-
-
-      const waiting =
-        allBookings.filter(
-          item =>
-            item.status ===
-            "Menunggu"
-        ).length;
-
-
-      const process =
-        allBookings.filter(
-          item =>
-            item.status ===
-            "Diproses"
-        ).length;
-
-
-      const done =
-        allBookings.filter(
-          item =>
-            item.status ===
-            "Selesai"
-        ).length;
-
-
-      document.getElementById(
-        "totalBooking"
-      ).textContent = total;
-
-
-      document.getElementById(
-        "waitingBooking"
-      ).textContent = waiting;
-
-
-      document.getElementById(
-        "processBooking"
-      ).textContent = process;
-
-
-      document.getElementById(
-        "doneBooking"
-      ).textContent = done;
-
-    }
-
-
-    /* =====================================================
-       RENDER BOOKINGS
-    ===================================================== */
-
-    function renderBookings() {
-
-      const list =
-        document.getElementById(
-          "bookingList"
-        );
-
-
-      const search =
-        document
-          .getElementById(
-            "searchInput"
-          )
-          .value
-          .trim()
-          .toLowerCase();
-
-
-      const status =
-        document
-          .getElementById(
-            "statusFilter"
-          )
-          .value;
-
-
-      let filtered =
-        allBookings.filter(
-          booking => {
-
-            const searchable =
-              [
-                booking.booking_code,
-                booking.customer_name,
-                booking.phone,
-                booking.device,
-                booking.damage,
-                booking.address
-              ]
-                .join(" ")
-                .toLowerCase();
-
-
-            const matchSearch =
-              !search ||
-              searchable.includes(
-                search
-              );
-
-
-            const matchStatus =
-              !status ||
-              booking.status ===
-              status;
-
-
-            return (
-              matchSearch &&
-              matchStatus
-            );
-
-          }
-        );
-
-
-      document.getElementById(
-        "bookingCount"
-      ).textContent =
-        filtered.length +
-        " booking";
-
-
-      if (
-        filtered.length === 0
-      ) {
-
-        list.innerHTML =
-          `
-            <div class="empty-state">
-
-              <div class="empty-icon">
-                📭
-              </div>
-
-              <p>
-                Tidak ada booking yang ditemukan.
-              </p>
-
-            </div>
-          `;
+        errorBox.textContent =
+          "Login gagal: " + error.message;
 
         return;
-
       }
 
+      showDashboard();
 
-      list.innerHTML =
-        filtered
-          .map(
-            booking =>
-              createBookingHTML(
-                booking
-              )
-          )
-          .join("");
+    });
 
+
+  document
+    .getElementById("logoutBtn")
+    .addEventListener("click", async () => {
+
+      await supabaseClient.auth.signOut();
+
+      showLogin();
+
+    });
+
+
+  /* =====================
+     LOAD BOOKINGS
+  ===================== */
+
+  async function loadBookings() {
+
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from("bookings")
+      .select("*")
+      .order("created_at", {
+        ascending: false
+      });
+
+    if (error) {
+
+      console.error(error);
+
+      alert("Gagal mengambil data booking.");
+
+      return;
     }
 
+    bookings = data || [];
 
-    /* =====================================================
-       CREATE BOOKING HTML
-    ===================================================== */
+    renderStats();
+    renderBookings();
 
-    function createBookingHTML(
-      booking
-    ) {
+  }
 
-      const statusClass =
-        getStatusClass(
-          booking.status
-        );
 
+  function renderStats() {
 
-      const created =
-        formatDate(
-          booking.created_at
-        );
+    document.getElementById("totalStat")
+      .textContent = bookings.length;
 
+    document.getElementById("waitingStat")
+      .textContent =
+      bookings.filter(x =>
+        x.status === "Menunggu"
+      ).length;
 
-      const totalPrice =
-        Number(
-          booking.total_price || 0
-        );
+    document.getElementById("processStat")
+      .textContent =
+      bookings.filter(x =>
+        x.status === "Diproses"
+      ).length;
 
+    document.getElementById("doneStat")
+      .textContent =
+      bookings.filter(x =>
+        x.status === "Selesai"
+      ).length;
 
-      const estimatedPrice =
-        Number(
-          booking.estimated_price || 0
-        );
+  }
 
 
-      const lat =
-        booking.latitude;
+  function renderBookings() {
 
+    const tbody =
+      document.getElementById("bookingTable");
 
-      const lng =
-        booking.longitude;
+    const search =
+      document.getElementById("search")
+        .value.toLowerCase();
 
+    const status =
+      document.getElementById("statusFilter")
+        .value;
 
-      const hasLocation =
-        lat !== null &&
-        lat !== undefined &&
-        lng !== null &&
-        lng !== undefined;
+    const filtered =
+      bookings.filter(item => {
 
+        const text =
+          `${item.booking_code}
+           ${item.customer_name}
+           ${item.phone}
+           ${item.device}`
+          .toLowerCase();
 
-      const mapsUrl =
-        hasLocation
-          ? "https://www.google.com/maps?q=" +
-            encodeURIComponent(
-              lat + "," + lng
-            )
-          : null;
+        const matchSearch =
+          text.includes(search);
 
+        const matchStatus =
+          !status || item.status === status;
 
-      const whatsappUrl =
-        createWhatsAppUrl(
-          booking
-        );
+        return matchSearch && matchStatus;
 
+      });
 
-      return `
 
-        <div class="booking-card">
+    tbody.innerHTML = "";
 
 
-          <div class="booking-top">
+    filtered.forEach(item => {
 
-            <div>
+      const tr =
+        document.createElement("tr");
 
-              <div class="booking-code">
-                ${escapeHTML(
-                  booking.booking_code ||
-                  "-"
-                )}
-              </div>
+      const price =
+        Number(item.total_price || item.estimated_price || 0)
+          .toLocaleString("id-ID");
 
-              <div class="booking-date">
-                ${created}
-              </div>
+      const date =
+        new Date(item.created_at)
+          .toLocaleString("id-ID");
 
-            </div>
 
+      const maps =
+        item.latitude && item.longitude
+          ? `https://www.google.com/maps?q=${item.latitude},${item.longitude}`
+          : "";
 
-            <span
-              class="status-badge ${statusClass}"
-            >
-              ${escapeHTML(
-                booking.status ||
-                "Menunggu"
-              )}
-            </span>
 
-          </div>
+      const whatsapp =
+        `https://wa.me/${normalizePhone(item.phone)}`;
 
 
-          <div class="booking-info">
+      tr.innerHTML = `
 
+        <td>
+          <strong>${escapeHtml(item.booking_code)}</strong>
+        </td>
 
-            <div class="info-box">
+        <td>
+          ${escapeHtml(item.customer_name)}<br>
+          <small>${escapeHtml(item.phone)}</small>
+        </td>
 
-              <div class="info-label">
-                Pelanggan
-              </div>
+        <td>
+          ${escapeHtml(item.device)}
+        </td>
 
-              <div class="info-value">
-                ${escapeHTML(
-                  booking.customer_name ||
-                  "-"
-                )}
-              </div>
+        <td>
+          ${escapeHtml(item.damage)}
+        </td>
 
-            </div>
+        <td>
+          <span class="status">
+            ${escapeHtml(item.status)}
+          </span>
+        </td>
 
+        <td>
+          Rp${price}
+        </td>
 
-            <div class="info-box">
+        <td>
+          ${date}
+        </td>
 
-              <div class="info-label">
-                WhatsApp
-              </div>
+        <td>
 
-              <div class="info-value">
-                ${escapeHTML(
-                  booking.phone ||
-                  "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="info-box">
-
-              <div class="info-label">
-                Handphone
-              </div>
-
-              <div class="info-value">
-                ${escapeHTML(
-                  booking.device ||
-                  "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="info-box">
-
-              <div class="info-label">
-                Kerusakan
-              </div>
-
-              <div class="info-value">
-                ${escapeHTML(
-                  booking.damage ||
-                  "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="info-box"
-              style="grid-column:1/-1;">
-
-              <div class="info-label">
-                Alamat
-              </div>
-
-              <div class="info-value">
-                ${escapeHTML(
-                  booking.address ||
-                  "-"
-                )}
-              </div>
-
-            </div>
-
-
-          </div>
-
-
-          <div class="booking-description">
-
-            <strong
-              style="
-                color:#ffffff;
-                display:block;
-                margin-bottom:4px;
-              "
-            >
-              Keterangan:
-            </strong>
-
-            ${escapeHTML(
-              booking.description ||
-              "Tidak ada keterangan tambahan."
-            )}
-
-          </div>
-
-
-          <div class="booking-price">
-
-
-            <div class="price-box">
-
-              <div class="price-label">
-                Estimasi Harga
-              </div>
-
-              <div class="price-value">
-                ${formatRupiah(
-                  estimatedPrice
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="price-box">
-
-              <div class="price-label">
-                Total Harga
-              </div>
-
-              <div class="price-value">
-                ${formatRupiah(
-                  totalPrice
-                )}
-              </div>
-
-            </div>
-
-
-          </div>
-
-
-          <div class="booking-actions">
-
+          <div class="actions">
 
             <button
-              type="button"
-              class="button button-primary"
-              onclick="openPriceModal(
-                '${booking.id}',
-                '${escapeJS(
-                  booking.booking_code
-                )}',
-                '${totalPrice}'
-              )"
-            >
-              💰 Harga
+              class="btn btn-orange"
+              onclick="openPriceModal('${item.id}')">
+              Harga
             </button>
-
 
             <button
-              type="button"
-              class="button button-secondary"
-              onclick="openStatusModal(
-                '${booking.id}',
-                '${escapeJS(
-                  booking.booking_code
-                )}',
-                '${escapeJS(
-                  booking.status
-                )}'
-              )"
-            >
-              🔧 Status
+              class="btn btn-dark"
+              onclick="openStatusModal('${item.id}')">
+              Status
             </button>
 
+            <a
+              class="btn btn-dark"
+              href="${whatsapp}"
+              target="_blank">
+              WA
+            </a>
 
             ${
-              mapsUrl
-                ? `
-                  <a
-                    href="${mapsUrl}"
-                    target="_blank"
-                    rel="noopener"
-                    class="button button-secondary"
-                  >
-                    📍 Maps
-                  </a>
-                `
-                : ""
+              maps
+              ? `
+              <a
+                class="btn btn-dark"
+                href="${maps}"
+                target="_blank">
+                Maps
+              </a>
+              `
+              : ""
             }
 
-
             <a
-              href="${whatsappUrl}"
-              target="_blank"
-              rel="noopener"
-              class="button button-secondary"
-            >
-              💬 WhatsApp
+              class="btn btn-dark"
+              href="./nota.html?kode=${encodeURIComponent(item.booking_code)}"
+              target="_blank">
+              Nota
             </a>
-
-
-            <a
-              href="./nota.html?kode=${encodeURIComponent(
-                booking.booking_code || ""
-              )}"
-              target="_blank"
-              rel="noopener"
-              class="button button-secondary"
-            >
-              🧾 Nota
-            </a>
-
 
           </div>
 
-
-        </div>
+        </td>
 
       `;
 
-    }
+      tbody.appendChild(tr);
+
+    });
+
+  }
 
 
-    /* =====================================================
-       STATUS CLASS
-    ===================================================== */
+  function escapeHtml(value) {
 
-    function getStatusClass(
-      status
-    ) {
-
-      if (
-        status ===
-        "Menunggu"
-      ) {
-
-        return "status-menunggu";
-
-      }
-
-
-      if (
-        status ===
-        "Diproses"
-      ) {
-
-        return "status-diproses";
-
-      }
-
-
-      if (
-        status ===
-        "Selesai"
-      ) {
-
-        return "status-selesai";
-
-      }
-
-
-      if (
-        status ===
-        "Dibatalkan"
-      ) {
-
-        return "status-dibatalkan";
-
-      }
-
-
+    if (value === null || value === undefined)
       return "";
 
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  function normalizePhone(phone) {
+
+    let p =
+      String(phone || "")
+        .replace(/\D/g, "");
+
+    if (p.startsWith("0")) {
+      p = "62" + p.substring(1);
     }
 
-
-    /* =====================================================
-       PRICE MODAL
-    ===================================================== */
-
-    function openPriceModal(
-      id,
-      code,
-      price
-    ) {
-
-      currentPriceBookingId =
-        id;
-
-
-      document.getElementById(
-        "priceBookingCode"
-      ).value =
-        code;
-
-
-      document.getElementById(
-        "priceInput"
-      ).value =
-        Number(price || 0);
-
-
-      document.getElementById(
-        "priceModal"
-      ).classList.add(
-        "show"
-      );
-
+    if (!p.startsWith("62")) {
+      p = "62" + p;
     }
 
+    return p;
+  }
 
-    function closePriceModal() {
 
-      currentPriceBookingId =
-        null;
+  /* =====================
+     PRICE
+  ===================== */
 
+  window.openPriceModal =
+    function(id) {
 
-      document.getElementById(
-        "priceModal"
-      ).classList.remove(
-        "show"
-      );
+      selectedBooking =
+        bookings.find(x => x.id === id);
 
-    }
+      if (!selectedBooking) return;
 
+      document.getElementById("priceInput")
+        .value =
+        selectedBooking.total_price ||
+        selectedBooking.estimated_price ||
+        0;
 
-    document
-      .getElementById(
-        "closePriceModal"
-      )
-      .addEventListener(
-        "click",
-        closePriceModal
-      );
+      document
+        .getElementById("priceModal")
+        .classList.remove("hidden");
 
+    };
 
-    document
-      .getElementById(
-        "cancelPrice"
-      )
-      .addEventListener(
-        "click",
-        closePriceModal
-      );
 
+  document
+    .getElementById("cancelPrice")
+    .addEventListener("click", () => {
 
-    /* =====================================================
-       SAVE PRICE
-    ===================================================== */
+      document
+        .getElementById("priceModal")
+        .classList.add("hidden");
 
-    document
-      .getElementById(
-        "savePrice"
-      )
-      .addEventListener(
-        "click",
-        async function() {
+    });
 
-          if (
-            !currentPriceBookingId
-          ) {
 
-            return;
+  document
+    .getElementById("savePrice")
+    .addEventListener("click", async () => {
 
-          }
+      if (!selectedBooking) return;
 
-
-          const price =
-            Number(
-              document
-                .getElementById(
-                  "priceInput"
-                )
-                .value
-            );
-
-
-          if (
-            !Number.isFinite(price) ||
-            price < 0
-          ) {
-
-            alert(
-              "Masukkan harga yang valid."
-            );
-
-            return;
-
-          }
-
-
-          const button =
-            document.getElementById(
-              "savePrice"
-            );
-
-
-          button.disabled = true;
-
-          button.textContent =
-            "⏳ Menyimpan...";
-
-
-          try {
-
-            const {
-              data,
-              error
-            } =
-              await supabaseClient.rpc(
-                "update_booking_price",
-                {
-                  p_booking_id:
-                    currentPriceBookingId,
-
-                  p_total_price:
-                    Math.round(price)
-                }
-              );
-
-
-            if (error) {
-
-              throw error;
-
-            }
-
-
-            showToast(
-              "✅ Harga berhasil diperbarui."
-            );
-
-
-            closePriceModal();
-
-            await loadBookings();
-
-
-          } catch (error) {
-
-            console.error(
-              error
-            );
-
-
-            alert(
-              "❌ Gagal mengubah harga:\n" +
-              (
-                error?.message ||
-                "Unknown error"
-              )
-            );
-
-          } finally {
-
-            button.disabled = false;
-
-            button.textContent =
-              "💾 Simpan Harga";
-
-          }
-
-        }
-      );
-
-
-    /* =====================================================
-       STATUS MODAL
-    ===================================================== */
-
-    function openStatusModal(
-      id,
-      code,
-      status
-    ) {
-
-      currentStatusBookingId =
-        id;
-
-
-      document.getElementById(
-        "statusBookingCode"
-      ).value =
-        code;
-
-
-      document.getElementById(
-        "statusInput"
-      ).value =
-        status || "Menunggu";
-
-
-      document.getElementById(
-        "statusModal"
-      ).classList.add(
-        "show"
-      );
-
-    }
-
-
-    function closeStatusModal() {
-
-      currentStatusBookingId =
-        null;
-
-
-      document.getElementById(
-        "statusModal"
-      ).classList.remove(
-        "show"
-      );
-
-    }
-
-
-    document
-      .getElementById(
-        "closeStatusModal"
-      )
-      .addEventListener(
-        "click",
-        closeStatusModal
-      );
-
-
-    document
-      .getElementById(
-        "cancelStatus"
-      )
-      .addEventListener(
-        "click",
-        closeStatusModal
-      );
-
-
-    /* =====================================================
-       SAVE STATUS
-    ===================================================== */
-
-    document
-      .getElementById(
-        "saveStatus"
-      )
-      .addEventListener(
-        "click",
-        async function() {
-
-          if (
-            !currentStatusBookingId
-          ) {
-
-            return;
-
-          }
-
-
-          const status =
-            document
-              .getElementById(
-                "statusInput"
-              )
-              .value;
-
-
-          const button =
-            document.getElementById(
-              "saveStatus"
-            );
-
-
-          button.disabled = true;
-
-          button.textContent =
-            "⏳ Menyimpan...";
-
-
-          try {
-
-            const {
-              error
-            } =
-              await supabaseClient
-                .from("bookings")
-                .update({
-                  status: status
-                })
-                .eq(
-                  "id",
-                  currentStatusBookingId
-                );
-
-
-            if (error) {
-
-              throw error;
-
-            }
-
-
-            showToast(
-              "✅ Status berhasil diperbarui."
-            );
-
-
-            closeStatusModal();
-
-            await loadBookings();
-
-
-          } catch (error) {
-
-            console.error(
-              error
-            );
-
-
-            alert(
-              "❌ Gagal mengubah status:\n" +
-              (
-                error?.message ||
-                "Unknown error"
-              )
-            );
-
-          } finally {
-
-            button.disabled = false;
-
-            button.textContent =
-              "💾 Simpan Status";
-
-          }
-
-        }
-      );
-
-
-    /* =====================================================
-       SEARCH
-    ===================================================== */
-
-    document
-      .getElementById(
-        "searchInput"
-      )
-      .addEventListener(
-        "input",
-        renderBookings
-      );
-
-
-    document
-      .getElementById(
-        "statusFilter"
-      )
-      .addEventListener(
-        "change",
-        renderBookings
-      );
-
-
-    document
-      .getElementById(
-        "clearFilter"
-      )
-      .addEventListener(
-        "click",
-        function() {
-
-          document.getElementById(
-            "searchInput"
-          ).value = "";
-
-
-          document.getElementById(
-            "statusFilter"
-          ).value = "";
-
-
-          renderBookings();
-
-        }
-      );
-
-
-    /* =====================================================
-       REFRESH
-    ===================================================== */
-
-    document
-      .getElementById(
-        "refreshButton"
-      )
-      .addEventListener(
-        "click",
-        async function() {
-
-          const button =
-            this;
-
-
-          button.disabled = true;
-
-          button.textContent =
-            "⏳ Loading...";
-
-
-          await loadBookings();
-
-
-          button.disabled = false;
-
-          button.textContent =
-            "🔄 Refresh";
-
-        }
-      );
-
-
-    /* =====================================================
-       WHATSAPP
-    ===================================================== */
-
-    function createWhatsAppUrl(
-      booking
-    ) {
-
-      let phone =
-        String(
-          booking.phone || ""
-        )
-        .replace(
-          /\D/g,
-          ""
-        );
-
-
-      if (
-        phone.startsWith("0")
-      ) {
-
-        phone =
-          "62" +
-          phone.substring(1);
-
-      }
-
-
-      const message =
-
-        "Halo " +
-        (
-          booking.customer_name ||
-          ""
-        ) +
-        ", saya dari ServiceHome.%0A%0A" +
-
-        "Kode Booking: " +
-        encodeURIComponent(
-          booking.booking_code ||
-          ""
-        ) +
-        "%0A" +
-
-        "HP: " +
-        encodeURIComponent(
-          booking.device ||
-          ""
-        ) +
-        "%0A" +
-
-        "Kerusakan: " +
-        encodeURIComponent(
-          booking.damage ||
-          ""
-        ) +
-        "%0A" +
-
-        "Status: " +
-        encodeURIComponent(
-          booking.status ||
-          ""
-        ) +
-        "%0A" +
-
-        "Total: " +
-        encodeURIComponent(
-          formatRupiah(
-            booking.total_price
-          )
-        );
-
-
-      return (
-        "https://wa.me/" +
-        phone +
-        "?text=" +
-        message
-      );
-
-    }
-
-
-    /* =====================================================
-       RUPIAH
-    ===================================================== */
-
-    function formatRupiah(
-      value
-    ) {
-
-      const number =
+      const price =
         Number(
-          value || 0
+          document.getElementById("priceInput").value
         );
 
-
-      if (
-        number <= 0
-      ) {
-
-        return "Belum ditentukan";
-
-      }
-
-
-      return new Intl.NumberFormat(
-        "id-ID",
+      const {
+        error
+      } = await supabaseClient.rpc(
+        "update_booking_price",
         {
-          style: "currency",
-          currency: "IDR",
-          maximumFractionDigits: 0
+          p_booking_id: selectedBooking.id,
+          p_price: price
         }
-      ).format(
-        number
       );
 
-    }
+      if (error) {
 
+        alert(error.message);
 
-    /* =====================================================
-       DATE
-    ===================================================== */
-
-    function formatDate(
-      value
-    ) {
-
-      if (!value) {
-
-        return "-";
-
+        return;
       }
 
+      document
+        .getElementById("priceModal")
+        .classList.add("hidden");
 
-      try {
+      await loadBookings();
 
-        return new Intl.DateTimeFormat(
-          "id-ID",
-          {
-            dateStyle: "medium",
-            timeStyle: "short"
-          }
-        ).format(
-          new Date(value)
-        );
+    });
 
-      } catch {
 
-        return "-";
+  /* =====================
+     STATUS
+  ===================== */
 
+  window.openStatusModal =
+    function(id) {
+
+      selectedBooking =
+        bookings.find(x => x.id === id);
+
+      if (!selectedBooking) return;
+
+      document.getElementById("statusInput")
+        .value = selectedBooking.status;
+
+      document
+        .getElementById("statusModal")
+        .classList.remove("hidden");
+
+    };
+
+
+  document
+    .getElementById("cancelStatus")
+    .addEventListener("click", () => {
+
+      document
+        .getElementById("statusModal")
+        .classList.add("hidden");
+
+    });
+
+
+  document
+    .getElementById("saveStatus")
+    .addEventListener("click", async () => {
+
+      if (!selectedBooking) return;
+
+      const status =
+        document.getElementById("statusInput")
+          .value;
+
+      const {
+        error
+      } = await supabaseClient
+        .from("bookings")
+        .update({
+          status: status
+        })
+        .eq("id", selectedBooking.id);
+
+      if (error) {
+
+        alert(error.message);
+
+        return;
       }
 
-    }
+      document
+        .getElementById("statusModal")
+        .classList.add("hidden");
+
+      await loadBookings();
+
+    });
 
 
-    /* =====================================================
-       ESCAPE HTML
-    ===================================================== */
+  /* =====================
+     SEARCH
+  ===================== */
 
-    function escapeHTML(
-      value
-    ) {
+  document
+    .getElementById("search")
+    .addEventListener("input", renderBookings);
 
-      return String(
-        value ?? ""
-      )
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-        .replace(
-          /</g,
-          "&lt;"
-        )
-        .replace(
-          />/g,
-          "&gt;"
-        )
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+  document
+    .getElementById("statusFilter")
+    .addEventListener("change", renderBookings);
 
-    }
+  document
+    .getElementById("refreshBtn")
+    .addEventListener("click", loadBookings);
 
 
-    /* =====================================================
-       ESCAPE JS
-    ===================================================== */
+  /* START */
 
-    function escapeJS(
-      value
-    ) {
+  checkSession();
 
-      return String(
-        value ?? ""
-      )
-        .replace(
-          /\\/g,
-          "\\\\"
-        )
-        .replace(
-          /'/g,
-          "\\'"
-        )
-        .replace(
-          /"/g,
-          '\\"'
-        )
-        .replace(
-          /\n/g,
-          "\\n"
-        )
-        .replace(
-          /\r/g,
-          "\\r"
-        );
-
-    }
-
-
-    /* =====================================================
-       TOAST
-    ===================================================== */
-
-    let toastTimer = null;
-
-
-    function showToast(
-      message
-    ) {
-
-      const toast =
-        document.getElementById(
-          "toast"
-        );
-
-
-      toast.textContent =
-        message;
-
-
-      toast.classList.add(
-        "show"
-      );
-
-
-      clearTimeout(
-        toastTimer
-      );
-
-
-      toastTimer =
-        setTimeout(
-          function() {
-
-            toast.classList.remove(
-              "show"
-            );
-
-          },
-          3000
-        );
-
-    }
-
-
-    /* =====================================================
-       MODAL CLICK OUTSIDE
-    ===================================================== */
-
-    document
-      .getElementById(
-        "priceModal"
-      )
-      .addEventListener(
-        "click",
-        function(e) {
-
-          if (
-            e.target === this
-          ) {
-
-            closePriceModal();
-
-          }
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "statusModal"
-      )
-      .addEventListener(
-        "click",
-        function(e) {
-
-          if (
-            e.target === this
-          ) {
-
-            closeStatusModal();
-
-          }
-
-        }
-      );
-
-
-    /* =====================================================
-       AUTH STATE
-    ===================================================== */
-
-    supabaseClient
-      .auth
-      .onAuthStateChange(
-        function(event, session) {
-
-          if (
-            session
-          ) {
-
-            document.getElementById(
-              "loginPage"
-            ).style.display = "none";
-
-
-            document.getElementById(
-              "adminPage"
-            ).style.display = "block";
-
-          }
-
-        }
-      );
-
-
-    /* =====================================================
-       START
-    ===================================================== */
-
-    checkSession();
-
-  </script>
+</script>
 
 </body>
 </html>
