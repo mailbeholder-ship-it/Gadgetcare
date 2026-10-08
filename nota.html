@@ -1,708 +1,552 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
 
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <title>Nota Servis - Home Service Cell</title>
+  <title>GadgetCare - Nota Service</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="icon" href="./logo.png">
 
-    <style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        * {
-            box-sizing: border-box;
-        }
+  <style>
 
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #081018;
-            color: #111;
-            font-family: Arial, sans-serif;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .page {
-            max-width: 600px;
-            margin: auto;
-        }
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0f14;
+      color: #fff;
+      padding: 30px 15px;
+    }
 
-        .actions {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }
 
-        .actions button {
-            flex: 1;
-            border: none;
-            border-radius: 9px;
-            padding: 13px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .invoice {
+      background: #fff;
+      color: #111;
+      border-radius: 12px;
+      overflow: hidden;
+    }
 
-        .print-button {
-            background: #00c8ff;
-            color: #001018;
-        }
+    .invoice-header {
+      background: #111820;
+      color: white;
+      padding: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
 
-        .back-button {
-            background: #263746;
-            color: white;
-        }
+    .brand {
+      font-size: 27px;
+      font-weight: 800;
+    }
 
-        .nota {
-            background: white;
-            border-radius: 12px;
-            padding: 35px;
-            box-shadow: 0 15px 40px rgba(0,0,0,.35);
-        }
+    .gadget {
+      color: #fff;
+    }
 
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #111;
-            padding-bottom: 18px;
-            margin-bottom: 20px;
-        }
+    .care {
+      color: #FF5722;
+    }
 
-        .logo {
-            font-size: 38px;
-            margin-bottom: 5px;
-        }
+    .invoice-title {
+      text-align: right;
+    }
 
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
+    .invoice-title h2 {
+      font-size: 20px;
+    }
 
-        .header p {
-            margin: 5px 0 0;
-            color: #555;
-        }
+    .invoice-title p {
+      color: #adb5bd;
+      font-size: 12px;
+    }
 
-        .booking-code {
-            margin-top: 12px;
-            font-size: 18px;
-            font-weight: bold;
-        }
+    .invoice-body {
+      padding: 28px;
+    }
 
-        .section-title {
-            font-size: 14px;
-            font-weight: bold;
-            margin-top: 22px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            color: #555;
-        }
+    .section {
+      margin-bottom: 25px;
+    }
 
-        .row {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-            line-height: 1.5;
-        }
+    .section h3 {
+      font-size: 14px;
+      color: #FF5722;
+      border-bottom: 2px solid #FF5722;
+      padding-bottom: 7px;
+      margin-bottom: 12px;
+    }
 
-        .label {
-            color: #666;
-            min-width: 110px;
-        }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 7px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
 
-        .value {
-            text-align: right;
-            font-weight: 600;
-            word-break: break-word;
-        }
+    .label {
+      color: #777;
+    }
 
-        .damage-box {
-            background: #f5f5f5;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 8px;
-            line-height: 1.5;
-        }
+    .value {
+      text-align: right;
+      font-weight: 600;
+    }
 
-        .status-box {
-            margin-top: 20px;
-            padding: 13px;
-            border-radius: 8px;
-            background: #e8f7ff;
-            text-align: center;
-            font-weight: bold;
-        }
+    .status {
+      display: inline-block;
+      background: #fff0eb;
+      color: #FF5722;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
 
-        .total-box {
-            margin-top: 25px;
-            padding: 18px;
-            border: 2px solid #111;
-            border-radius: 10px;
-            text-align: center;
-        }
+    .total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      font-weight: 800;
+      padding-top: 15px;
+      border-top: 2px solid #111;
+    }
 
-        .total-label {
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 7px;
-        }
+    .footer {
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+      margin-top: 25px;
+      line-height: 1.7;
+    }
 
-        .total {
-            font-size: 28px;
-            font-weight: bold;
-        }
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
 
-        .footer {
-            text-align: center;
-            border-top: 1px dashed #999;
-            margin-top: 25px;
-            padding-top: 18px;
-            color: #666;
-            font-size: 12px;
-            line-height: 1.6;
-        }
+    button {
+      padding: 11px 17px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-        .loading,
-        .error {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-        }
+    .print {
+      background: #FF5722;
+      color: white;
+    }
 
-        .error {
-            color: #b91c1c;
-        }
+    .back {
+      background: #1b232c;
+      color: white;
+    }
 
-        @media (max-width: 600px) {
+    .error {
+      text-align: center;
+      background: #111820;
+      border: 1px solid #293440;
+      padding: 25px;
+      border-radius: 12px;
+    }
 
-            body {
-                padding: 10px;
-            }
+    @media print {
 
-            .nota {
-                padding: 22px;
-            }
+      body {
+        background: white;
+        padding: 0;
+      }
 
-            .row {
-                flex-direction: column;
-                gap: 3px;
-            }
+      .actions {
+        display: none;
+      }
 
-            .value {
-                text-align: left;
-            }
+      .invoice {
+        box-shadow: none;
+      }
 
-        }
+    }
 
-        @media print {
+    @media (max-width: 600px) {
 
-            body {
-                background: white;
-                padding: 0;
-            }
+      .invoice-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
 
-            .actions {
-                display: none;
-            }
+      .invoice-title {
+        text-align: left;
+      }
 
-            .nota {
-                box-shadow: none;
-                border-radius: 0;
-                padding: 15px;
-            }
+      .row {
+        flex-direction: column;
+        gap: 2px;
+      }
 
-            .page {
-                max-width: none;
-            }
+      .value {
+        text-align: left;
+      }
 
-        }
+    }
 
-    </style>
+  </style>
 
 </head>
 
-
 <body>
 
-<div class="page">
+<div class="container">
 
-    <div class="actions">
-
-        <button
-            type="button"
-            class="back-button"
-            id="backButton"
-        >
-            ← Kembali
-        </button>
-
-        <button
-            type="button"
-            class="print-button"
-            id="printButton"
-        >
-            🖨️ Cetak / PDF
-        </button>
-
-    </div>
-
-
-    <div id="content">
-
-        <div class="loading">
-            Memuat nota...
-        </div>
-
-    </div>
+  <div id="content">
+    Memuat nota...
+  </div>
 
 </div>
 
 
 <script>
 
-/* =====================================================
-   SUPABASE
-===================================================== */
-
-const SUPABASE_URL =
+  const SUPABASE_URL =
     "https://sqpolxwdyypbxylgvihi.supabase.co";
 
-const SUPABASE_KEY =
+  const SUPABASE_KEY =
     "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 
-const supabaseClient =
+  const supabaseClient =
     window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
+      SUPABASE_URL,
+      SUPABASE_KEY
     );
 
 
-/* =====================================================
-   ELEMENT
-===================================================== */
+  function rupiah(number) {
 
-const content =
-    document.getElementById("content");
+    return "Rp" +
+      Number(number || 0)
+        .toLocaleString("id-ID");
 
-const printButton =
-    document.getElementById("printButton");
-
-const backButton =
-    document.getElementById("backButton");
+  }
 
 
-/* =====================================================
-   FORMAT RUPIAH
-===================================================== */
+  function escapeHtml(value) {
 
-function formatRupiah(number) {
-
-    return new Intl.NumberFormat(
-        "id-ID",
-        {
-            style: "currency",
-            currency: "IDR",
-            maximumFractionDigits: 0
-        }
-    ).format(
-        Number(number) || 0
-    );
-
-}
-
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHTML(value) {
-
-    if (
-        value === null ||
-        value === undefined
-    ) {
-        return "";
-    }
+    if (value === null || value === undefined)
+      return "";
 
     return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
 
-}
+  }
 
 
-/* =====================================================
-   GET BOOKING CODE
-===================================================== */
+  async function loadNota() {
 
-const params =
-    new URLSearchParams(
+    const params =
+      new URLSearchParams(
         window.location.search
-    );
+      );
 
-const bookingCode =
-    params.get("kode");
+    const kode =
+      params.get("kode");
 
 
-/* =====================================================
-   LOAD BOOKING
-===================================================== */
+    if (!kode) {
 
-async function loadBooking() {
+      document.getElementById("content")
+        .innerHTML = `
+          <div class="error">
+            <h2>Kode booking tidak ditemukan.</h2>
+            <p style="margin-top:8px;">
+              Silakan buka nota melalui Admin Dashboard.
+            </p>
+          </div>
+        `;
 
-    if (!bookingCode) {
-
-        content.innerHTML =
-            `
-            <div class="error">
-
-                <h3>
-                    ❌ Kode booking tidak ditemukan
-                </h3>
-
-                <p>
-                    Gunakan format:
-                </p>
-
-                <b>
-                    nota.html?kode=KODEBOOKING
-                </b>
-
-            </div>
-            `;
-
-        return;
+      return;
     }
 
 
-    const {
+    try {
+
+      const {
         data,
         error
-    } = await supabaseClient.rpc(
+      } = await supabaseClient.rpc(
         "check_booking",
         {
-            p_booking_code:
-                bookingCode
+          p_booking_code: kode
         }
-    );
+      );
 
 
-    if (error) {
+      if (error) {
+        throw error;
+      }
 
-        content.innerHTML =
-            `
+
+      if (!data || data.length === 0) {
+
+        document.getElementById("content")
+          .innerHTML = `
             <div class="error">
-
-                <h3>
-                    ❌ Gagal mengambil data
-                </h3>
-
-                <p>
-                    ${escapeHTML(error.message)}
-                </p>
-
+              <h2>Booking tidak ditemukan.</h2>
+              <p style="margin-top:8px;">
+                Kode: ${escapeHtml(kode)}
+              </p>
             </div>
-            `;
+          `;
 
         return;
-    }
+      }
 
 
-    if (
-        !data ||
-        data.length === 0
-    ) {
-
-        content.innerHTML =
-            `
-            <div class="error">
-
-                <h3>
-                    ❌ Booking tidak ditemukan
-                </h3>
-
-                <p>
-                    Kode:
-                    <strong>
-                        ${escapeHTML(bookingCode)}
-                    </strong>
-                </p>
-
-            </div>
-            `;
-
-        return;
-    }
+      const booking =
+        Array.isArray(data)
+          ? data[0]
+          : data;
 
 
-    const booking =
-        data[0];
+      const date =
+        booking.created_at
+          ? new Date(booking.created_at)
+              .toLocaleString("id-ID")
+          : "-";
 
 
-    renderNota(booking);
+      document.getElementById("content")
+        .innerHTML = `
 
-}
+        <div class="invoice">
 
+          <div class="invoice-header">
 
-/* =====================================================
-   RENDER NOTA
-===================================================== */
+            <div>
 
-function renderNota(booking) {
+              <div class="brand">
+                <span class="gadget">Gadget</span><span class="care">Care</span>
+              </div>
 
-    const tanggal =
-        new Date(
-            booking.created_at
-        ).toLocaleString(
-            "id-ID",
-            {
-                dateStyle: "long",
-                timeStyle: "short"
-            }
-        );
-
-
-    const total =
-        formatRupiah(
-            booking.total_price
-        );
-
-
-    content.innerHTML =
-        `
-        <div class="nota">
-
-
-            <div class="header">
-
-                <div class="logo">
-                    📱
-                </div>
-
-                <h1>
-                    HOME SERVICE CELL
-                </h1>
-
-                <p>
-                    Nota Servis Handphone
-                </p>
-
-                <div class="booking-code">
-                    ${escapeHTML(
-                        booking.booking_code
-                    )}
-                </div>
+              <div style="
+                color:#adb5bd;
+                font-size:12px;
+                margin-top:4px;
+              ">
+                Home Service & Repair Gadget
+              </div>
 
             </div>
 
 
-            <div class="section-title">
-                Informasi Pelanggan
-            </div>
+            <div class="invoice-title">
 
+              <h2>NOTA SERVICE</h2>
 
-            <div class="row">
-
-                <div class="label">
-                    Nama
-                </div>
-
-                <div class="value">
-                    ${escapeHTML(
-                        booking.customer_name
-                    )}
-                </div>
+              <p>
+                ${escapeHtml(date)}
+              </p>
 
             </div>
 
-
-            <div class="row">
-
-                <div class="label">
-                    No. HP
-                </div>
-
-                <div class="value">
-                    ${escapeHTML(
-                        booking.phone
-                    )}
-                </div>
-
-            </div>
+          </div>
 
 
-            <div class="row">
-
-                <div class="label">
-                    Tanggal
-                </div>
-
-                <div class="value">
-                    ${escapeHTML(
-                        tanggal
-                    )}
-                </div>
-
-            </div>
+          <div class="invoice-body">
 
 
-            <div class="section-title">
-                Detail Servis
-            </div>
+            <div class="section">
+
+              <h3>DATA PELANGGAN</h3>
+
+              <div class="row">
+                <span class="label">
+                  Kode Booking
+                </span>
+
+                <span class="value">
+                  ${escapeHtml(booking.booking_code)}
+                </span>
+              </div>
 
 
-            <div class="row">
+              <div class="row">
 
-                <div class="label">
-                    Perangkat
-                </div>
+                <span class="label">
+                  Nama
+                </span>
 
-                <div class="value">
-                    ${escapeHTML(
-                        booking.device
-                    )}
-                </div>
+                <span class="value">
+                  ${escapeHtml(booking.customer_name)}
+                </span>
+
+              </div>
+
 
             </div>
 
 
-            <div class="row">
+            <div class="section">
 
-                <div class="label">
-                    Kerusakan
-                </div>
+              <h3>DETAIL PERANGKAT</h3>
 
-                <div class="value">
-                    ${escapeHTML(
-                        booking.damage
-                    )}
-                </div>
+
+              <div class="row">
+
+                <span class="label">
+                  Gadget
+                </span>
+
+                <span class="value">
+                  ${escapeHtml(booking.device)}
+                </span>
+
+              </div>
+
+
+              <div class="row">
+
+                <span class="label">
+                  Kerusakan
+                </span>
+
+                <span class="value">
+                  ${escapeHtml(booking.damage)}
+                </span>
+
+              </div>
+
+
+              <div class="row">
+
+                <span class="label">
+                  Status
+                </span>
+
+                <span class="value">
+
+                  <span class="status">
+                    ${escapeHtml(booking.status)}
+                  </span>
+
+                </span>
+
+              </div>
+
 
             </div>
 
 
-            <div class="section-title">
-                Keterangan Kerusakan
-            </div>
+            <div class="section">
+
+              <h3>PEMBAYARAN</h3>
 
 
-            <div class="damage-box">
+              <div class="row">
 
-                ${escapeHTML(
-                    booking.description || "-"
-                )}
+                <span class="label">
+                  Estimasi Harga
+                </span>
 
-            </div>
+                <span class="value">
+                  ${rupiah(booking.estimated_price)}
+                </span>
 
-
-            <div class="section-title">
-                Alamat Servis
-            </div>
-
-
-            <div class="damage-box">
-
-                ${escapeHTML(
-                    booking.address
-                )}
-
-            </div>
+              </div>
 
 
-            <div class="status-box">
+              <div class="total">
 
-                STATUS:
-                ${escapeHTML(
-                    booking.status
-                )}
+                <span>
+                  TOTAL
+                </span>
 
-            </div>
+                <span style="color:#FF5722;">
+                  ${rupiah(booking.total_price)}
+                </span>
 
-
-            <div class="total-box">
-
-                <div class="total-label">
-                    TOTAL BIAYA SERVIS
-                </div>
-
-                <div class="total">
-                    ${total}
-                </div>
+              </div>
 
             </div>
 
 
             <div class="footer">
 
-                Terima kasih telah menggunakan
-                <strong>
-                    Home Service Cell
-                </strong>
+              Terima kasih telah menggunakan
+              <strong>GadgetCare</strong>.<br>
 
-                <br>
-
-                Servis HP • Home Service • Profesional
-
-                <br><br>
-
-                Simpan nota ini sebagai bukti servis.
+              Home Service & Repair Gadget
 
             </div>
 
 
+          </div>
+
         </div>
+
+
+        <div class="actions">
+
+          <button
+            class="print"
+            onclick="window.print()">
+            🖨️ Cetak Nota
+          </button>
+
+
+          <button
+            class="back"
+            onclick="window.close()">
+            Tutup
+          </button>
+
+        </div>
+
+      `;
+
+    } catch (error) {
+
+      console.error(error);
+
+      document.getElementById("content")
+        .innerHTML = `
+          <div class="error">
+            <h2>Gagal memuat nota.</h2>
+            <p style="margin-top:8px;">
+              ${escapeHtml(error.message)}
+            </p>
+          </div>
         `;
 
-}
-
-
-/* =====================================================
-   PRINT
-===================================================== */
-
-printButton.addEventListener(
-    "click",
-    function() {
-
-        window.print();
-
     }
-);
+
+  }
 
 
-/* =====================================================
-   BACK
-===================================================== */
-
-backButton.addEventListener(
-    "click",
-    function() {
-
-        window.history.back();
-
-    }
-);
-
-
-/* =====================================================
-   START
-===================================================== */
-
-loadBooking();
+  loadNota();
 
 </script>
 
 </body>
-
 </html>
