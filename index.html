@@ -80,37 +80,31 @@
        NAVBAR
     ========================== */
 
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      background: rgba(11,15,20,.94);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid #202832;
-    }
 
-    .nav-inner {
-      min-height: 68px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-    }
+<a href="./index.html" class="brand">
+  <img src="./logo.png" alt="Logo GadgetCare" class="brand-logo">
+</a>
 
-    .nav-links {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
+.brand {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
 
-    .nav-links a {
-      color: #b8c0ca;
-      font-size: 14px;
-    }
+.brand-logo {
+  display: block;
+  width: 95px;
+  height: 60px;
+  object-fit: contain;
+  border-radius: 6px;
+}
 
-    .nav-links a:hover {
-      color: #FF5722;
-    }
+@media (max-width: 600px) {
+  .brand-logo {
+    width: 75px;
+    height: 50px;
+  }
+}
 
     /* ==========================
        HERO
