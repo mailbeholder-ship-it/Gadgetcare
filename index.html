@@ -76,6 +76,28 @@
       color: #FF5722;
     }
     
+.corner-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.corner-logo img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .corner-logo img {
+    width: 48px;
+    height: 48px;
+  }
+}
+    
 
 <!-- NAVBAR -->
 <nav>
@@ -99,27 +121,6 @@
   </div>
 </nav>
 
-.corner-logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-.corner-logo img {
-  width: 58px;
-  height: 58px;
-  object-fit: contain;
-  display: block;
-}
-
-@media (max-width: 600px) {
-  .corner-logo img {
-    width: 48px;
-    height: 48px;
-  }
-}
 
     /* ==========================
        HERO
