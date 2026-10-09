@@ -1186,6 +1186,34 @@
       </p>
 
     </div>
+    <script>
+  // JavaScript website yang sudah ada
+
+  function tampilkanQRIS(qrCodeImageUrl) {
+    const area = document.getElementById("qris-payment-area");
+    const gambar = document.getElementById("qris-image");
+    const status = document.getElementById("qris-payment-status");
+
+    if (!qrCodeImageUrl) {
+      status.textContent = "URL gambar QRIS belum tersedia.";
+      area.hidden = false;
+      return;
+    }
+
+    gambar.onload = () => {
+      status.textContent = "Silakan scan QRIS untuk membayar.";
+    };
+
+    gambar.onerror = () => {
+      status.textContent = "Gambar QRIS gagal dimuat.";
+    };
+
+    gambar.src = qrCodeImageUrl;
+    area.hidden = false;
+  }
+
+  // JavaScript website lainnya
+</script>
 
 <!-- Area QRIS GadgetCare -->
 <div id="qris-payment-area" hidden>
