@@ -2031,7 +2031,7 @@ nav {
     message.textContent = "Memeriksa booking dan membuat sesi pembayaran yang aman.";
 
     try {
-      const response = await fetch(SUPABASE_URL + "/functions/v1/create-xendit-payment", {
+      const response = await fetch(SUPABASE_URL + "/functions/v1/create-midtrans-payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
