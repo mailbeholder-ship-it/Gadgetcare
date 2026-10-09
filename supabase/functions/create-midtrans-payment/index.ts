@@ -91,7 +91,8 @@ serve(async (req) => {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        transaction_details: { order_id: orderId, gross_amount: total },
+  enabled_payments: ["other_qris"],
+  transaction_details: { order_id: orderId, gross_amount: total },
         item_details: [{
           id: String(booking.booking_code).slice(0, 50),
           price: total,
