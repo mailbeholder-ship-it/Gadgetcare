@@ -1197,170 +1197,29 @@ nav {
      PEMBAYARAN
 ========================== -->
 
-<section
-  id="pembayaran"
-  class="payment-section"
->
+<!-- ==========================
+     PEMBAYARAN ONLINE
+========================== -->
 
+<section id="pembayaran" class="payment-section">
   <div class="container payment-container">
-
     <div class="section-title">
-
-      <h2>
-        Pembayaran
-      </h2>
-
-      <p>
-        Silakan pilih metode pembayaran yang tersedia.
-      </p>
-
+      <h2>Pembayaran Online</h2>
+      <p>Masukkan kode booking dan nomor WhatsApp. Nominal akan diambil dari harga yang tersimpan di sistem.</p>
     </div>
 
-
-    <!-- TOTAL -->
-    <div class="payment-total">
-
-      <span>
-        Total yang harus dibayar
-      </span>
-
-      <strong id="paymentTotal">
-        Rp0
-      </strong>
-
-    </div>
-
-
-    <!-- METODE -->
-    <div class="payment-methods">
-
-
-      <button
-        type="button"
-        class="payment-method active"
-        onclick="selectPayment('gopay', this)"
-      >
-        🟢 GoPay
-      </button>
-
-
-      <button
-        type="button"
-        class="payment-method"
-        onclick="selectPayment('dana', this)"
-      >
-        🔵 DANA
-      </button>
-
-
-      <button
-        type="button"
-        class="payment-method"
-        onclick="selectPayment('shopeepay', this)"
-      >
-        🟠 ShopeePay
-      </button>
-
-
-      <button
-        type="button"
-        class="payment-method"
-        onclick="selectPayment('seabank', this)"
-      >
-        🟢 SeaBank
-      </button>
-
-
-      <button
-        type="button"
-        class="payment-method"
-        onclick="selectPayment('superbank', this)"
-      >
-        🔴 Superbank
-      </button>
-
-
-    </div>
-
-
-    <!-- DETAIL PEMBAYARAN -->
     <div class="payment-detail">
-
-
-      <div
-        class="payment-logo"
-        id="paymentLogo"
-      >
-        🟢
-      </div>
-
-
-      <h3 id="paymentName">
-        GoPay
-      </h3>
-
-
-      <p class="payment-label">
-        Nomor Pembayaran
-      </p>
-
-
-      <div class="payment-number">
-
-        <strong id="paymentNumber">
-          085846009748
-        </strong>
-
-        <button
-          type="button"
-          onclick="copyPaymentNumber()"
-        >
-          📋 Salin
-        </button>
-
-      </div>
-
-
-      <p class="payment-owner">
-
-        Atas Nama<br>
-
-        <strong id="paymentOwner">
-          Abdul Azis
-        </strong>
-
-      </p>
-
-
-      <div class="payment-warning">
-
-        ⚠️ Pastikan nama penerima adalah
-        <strong>Abdul Azis</strong>
-        sebelum melakukan pembayaran.
-
-      </div>
-
-
-      <button
-        type="button"
-        class="payment-confirm"
-        onclick="confirmPayment()"
-      >
-        ✅ Saya Sudah Bayar
-      </button>
-
-
+      <div class="payment-logo">🔒</div>
+      <h3>Bayar dengan Midtrans</h3>
+      <p class="payment-label">Kode Booking</p>
+      <input id="paymentBookingCode" type="text" placeholder="Contoh: GC-123456" autocomplete="off" required>
+      <p class="payment-label">Nomor WhatsApp saat booking</p>
+      <input id="paymentPhone" type="tel" placeholder="Contoh: 08xxxxxxxxxx" autocomplete="tel" required>
+      <p class="payment-warning">Pembayaran hanya dapat dilakukan setelah admin menetapkan harga service. Pilihan metode pembayaran akan ditampilkan oleh halaman pembayaran Midtrans.</p>
+      <button type="button" class="payment-confirm" id="midtransPayButton" onclick="createMidtransPayment()">Lanjut ke Pembayaran</button>
+      <div id="paymentMessage" class="payment-message" role="status" aria-live="polite"></div>
     </div>
-
-
-    <div
-      id="paymentMessage"
-      class="payment-message"
-    ></div>
-
-
   </div>
-
 </section>
 
 
@@ -2153,249 +2012,50 @@ nav {
      PEMBAYARAN
   ========================== */
 
-  const paymentData = {
+  async function createMidtransPayment() {
+    const codeInput = document.getElementById("paymentBookingCode");
+    const phoneInput = document.getElementById("paymentPhone");
+    const button = document.getElementById("midtransPayButton");
+    const message = document.getElementById("paymentMessage");
+    const bookingCode = codeInput.value.trim().toUpperCase();
+    const phone = phoneInput.value.trim();
 
-    gopay: {
-
-      name:
-        "GoPay",
-
-      number:
-        "085846009748",
-
-      owner:
-        "Abdul Azis",
-
-      logo:
-        "🟢"
-
-    },
-
-
-    dana: {
-
-      name:
-        "DANA",
-
-      number:
-        "087892005428",
-
-      owner:
-        "Abdul Azis",
-
-      logo:
-        "🔵"
-
-    },
-
-
-    shopeepay: {
-
-      name:
-        "ShopeePay",
-
-      number:
-        "085846009748",
-
-      owner:
-        "Abdul Azis",
-
-      logo:
-        "🟠"
-
-    },
-
-
-    seabank: {
-
-      name:
-        "SeaBank",
-
-      number:
-        "083897538357",
-
-      owner:
-        "Abdul Azis",
-
-      logo:
-        "🟢"
-
-    },
-
-
-    superbank: {
-
-      name:
-        "Superbank",
-
-      number:
-        "000075305250",
-
-      owner:
-        "Abdul Azis",
-
-      logo:
-        "🔴"
-
+    message.textContent = "";
+    if (!bookingCode || !phone) {
+      message.textContent = "Masukkan kode booking dan nomor WhatsApp terlebih dahulu.";
+      return;
     }
 
-  };
+    button.disabled = true;
+    button.textContent = "Menyiapkan pembayaran...";
+    message.textContent = "Memeriksa booking dan membuat sesi pembayaran yang aman.";
 
+    try {
+      const response = await fetch(SUPABASE_URL + "/functions/v1/create-midtrans-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY
+        },
+        body: JSON.stringify({ booking_code: bookingCode, phone })
+      });
 
-  let selectedPayment =
-    "gopay";
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(result.error || "Pembayaran belum dapat dibuat. Periksa data booking atau hubungi admin.");
+      }
+      if (!result.redirect_url) {
+        throw new Error("Tautan pembayaran tidak diterima dari server.");
+      }
 
-
-  function selectPayment(
-    type,
-    button
-  ) {
-
-    selectedPayment =
-      type;
-
-
-    const data =
-      paymentData[type];
-
-
-    document
-      .querySelectorAll(
-        ".payment-method"
-      )
-      .forEach(
-        btn => {
-
-          btn.classList.remove(
-            "active"
-          );
-
-        }
-      );
-
-
-    button.classList.add(
-      "active"
-    );
-
-
-    document.getElementById(
-      "paymentLogo"
-    ).textContent =
-      data.logo;
-
-
-    document.getElementById(
-      "paymentName"
-    ).textContent =
-      data.name;
-
-
-    document.getElementById(
-      "paymentNumber"
-    ).textContent =
-      data.number;
-
-
-    document.getElementById(
-      "paymentOwner"
-    ).textContent =
-      data.owner;
-
-
-    document.getElementById(
-      "paymentMessage"
-    ).textContent =
-      "";
-
-  }
-
-
-  function copyPaymentNumber() {
-
-    const number =
-      document.getElementById(
-        "paymentNumber"
-      ).textContent;
-
-
-    if (
-      navigator.clipboard &&
-      navigator.clipboard.writeText
-    ) {
-
-      navigator.clipboard
-        .writeText(number)
-        .then(
-          () => {
-
-            document.getElementById(
-              "paymentMessage"
-            ).textContent =
-              "✅ Nomor pembayaran berhasil disalin.";
-
-            setTimeout(
-              () => {
-
-                document.getElementById(
-                  "paymentMessage"
-                ).textContent =
-                  "";
-
-              },
-              2500
-            );
-
-          }
-        )
-        .catch(
-          () => {
-
-            alert(
-              "Nomor: " +
-              number
-            );
-
-          }
-        );
-
-    } else {
-
-      alert(
-        "Nomor: " +
-        number
-      );
-
+      message.textContent = "Mengarahkan ke halaman pembayaran aman...";
+      window.location.href = result.redirect_url;
+    } catch (error) {
+      console.error("Midtrans checkout error:", error);
+      message.textContent = error.message || "Terjadi kesalahan saat menyiapkan pembayaran.";
+      button.disabled = false;
+      button.textContent = "Lanjut ke Pembayaran";
     }
-
-  }
-
-
-  function confirmPayment() {
-
-    const data =
-      paymentData[
-        selectedPayment
-      ];
-
-
-    const total =
-      document.getElementById(
-        "paymentTotal"
-      ).textContent;
-
-
-    document.getElementById(
-      "paymentMessage"
-    ).innerHTML =
-
-      `✅ Metode pembayaran:
-       <strong>${data.name}</strong><br>
-       Total:
-       <strong>${total}</strong><br>
-       Silakan kirim bukti pembayaran
-       kepada admin GadgetCare.`;
-
   }
 
 </script>
