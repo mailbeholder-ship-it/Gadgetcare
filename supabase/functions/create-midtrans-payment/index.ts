@@ -102,9 +102,6 @@ serve(async (req) => {
           first_name: String(booking.customer_name || "Pelanggan GadgetCare").slice(0, 50),
           phone: String(booking.phone).slice(0, 20),
         },
-        callbacks: {
-          finish: "https://sqpolxwdyypbxylgvihi.supabase.co/functions/v1/midtrans-payment-return",
-        },
       }),
     });
 
