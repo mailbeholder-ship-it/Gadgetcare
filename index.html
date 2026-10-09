@@ -2031,7 +2031,7 @@ nav {
     message.textContent = "Memeriksa booking dan membuat sesi pembayaran yang aman.";
 
     try {
-      const response = await fetch(SUPABASE_URL + "/functions/v1/create-midtrans-payment", {
+      const response = await fetch(SUPABASE_URL + "/functions/v1/create-xendit-payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -2051,7 +2051,7 @@ nav {
       message.textContent = "Mengarahkan ke halaman pembayaran aman...";
       window.location.href = result.redirect_url;
     } catch (error) {
-      console.error("Midtrans checkout error:", error);
+      console.error("Xendit checkout error:", error);
       message.textContent = error.message || "Terjadi kesalahan saat menyiapkan pembayaran.";
       button.disabled = false;
       button.textContent = "Lanjut ke Pembayaran";
