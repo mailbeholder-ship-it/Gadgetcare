@@ -1282,6 +1282,32 @@ function openDetail(id){
       )}
     </div>
 
+    <div class="detail-label">
+      Status Pembayaran
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(selectedBooking.payment_status || "Belum Dibayar")}
+    </div>
+
+    <div class="detail-label">
+      Metode Pembayaran
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(selectedBooking.payment_method || "-")}
+    </div>
+
+    <div class="detail-label">
+      Waktu Pembayaran
+    </div>
+
+    <div class="detail-value">
+      ${escapeHtml(selectedBooking.payment_paid_at
+        ? new Date(selectedBooking.payment_paid_at).toLocaleString("id-ID")
+        : "-")}
+    </div>
+
   `;
 
 
