@@ -2046,7 +2046,13 @@ nav {
       if (!response.ok) {
         throw new Error(result.error || "Pembayaran belum dapat dibuat. Periksa data booking atau hubungi admin.");
       }
-      if (!result.redirect_url) {
+      if (!data.qr_code_image_url) {
+  throw new Error(
+    data.error || "URL gambar QRIS tidak diterima dari server"
+  );
+}
+
+tampilkanQRIS(data.qr_code_image_url);
         throw new Error("Tautan pembayaran tidak diterima dari server.");
       }
 
