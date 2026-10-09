@@ -21,15 +21,15 @@ Buka Supabase Dashboard → SQL Editor → New query. Salin dan jalankan isi fil
    - `MIDTRANS_IS_PRODUCTION` = `false`
    - `SUPABASE_URL` = URL proyek Supabase
    - `SUPABASE_SERVICE_ROLE_KEY` = service-role key proyek (secret server-side saja; jangan commit nilainya)
-4. Pastikan fungsi dijalankan dengan secrets tersebut. Jangan pernah menambahkan service-role key ke file frontend.
+4. Pastikan fungsi dijalankan dengan secrets tersebut. Gunakan `--no-verify-jwt` karena endpoint checkout dipanggil oleh pelanggan tanpa sesi login dan webhook dipanggil Midtrans. Keamanan tetap dijaga melalui verifikasi kode booking + nomor WhatsApp pada checkout dan verifikasi signature pada webhook. Jangan pernah menambahkan service-role key ke file frontend.
 
 ## 3. Deploy Edge Functions
 
 Dari folder proyek lokal yang sudah dihubungkan ke proyek Supabase, jalankan:
 
 ```sh
-supabase functions deploy create-midtrans-payment
-supabase functions deploy midtrans-webhook
+supabase functions deploy create-midtrans-payment --no-verify-jwt
+supabase functions deploy midtrans-webhook --no-verify-jwt
 ```
 
 Jika menggunakan dashboard/editor, buat kedua Edge Function dengan nama dan isi file yang sama lalu deploy. Pastikan fungsi `create-midtrans-payment` dapat dipanggil publik; fungsi ini memvalidasi kode booking + nomor WhatsApp dan hanya membaca harga dari database. Jangan nonaktifkan validasi di webhook.
