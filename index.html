@@ -42,9 +42,12 @@
 <section id="status"><div class="container"><div class="section-title"><h2>Cek Status Service</h2><p>Masukkan kode booking. Data status diambil melalui fungsi Supabase yang dikonfigurasi admin.</p></div><div class="status-box"><form id="statusForm"><div class="form-group"><label for="bookingCode">Kode booking</label><input id="bookingCode" required placeholder="Contoh: GC-123456" autocomplete="off"></div><button class="btn btn-orange full" type="submit">Cek Status</button></form><div id="statusResult" class="status-result" role="status" aria-live="polite"></div></div></div></section>
 <section id="pembayaran" class="payment-section"><div class="container"><div class="section-title"><h2>Pembayaran Online</h2><p>Pembayaran tersedia setelah admin menetapkan harga service.</p></div><div class="payment-detail"><div class="payment-logo">🔒</div><h3>Bayar dengan Midtrans</h3><div class="form-group"><label for="paymentBookingCode">Kode booking</label><input id="paymentBookingCode" placeholder="Contoh: GC-123456" autocomplete="off"></div><div class="form-group"><label for="paymentPhone">Nomor WhatsApp saat booking</label><input id="paymentPhone" type="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div><p class="hint">Metode pembayaran akan ditampilkan oleh halaman pembayaran penyedia setelah server berhasil membuat sesi pembayaran.</p><button type="button" class="btn btn-orange full" id="midtransPayButton">Lanjut ke Pembayaran</button><div id="paymentMessage" class="payment-message" role="status" aria-live="polite"></div></div></div></section>
 <footer><div class="container">© 2026 <strong>GadgetCare</strong> — Home Service & Repair Gadget<br>Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366<br><a href="https://wa.me/6285846009748">WhatsApp GadgetCare</a></div></footer>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
+
   'use strict';
   const SUPABASE_URL = 'https://sqpolxwdyypbxylgvihi.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G';
