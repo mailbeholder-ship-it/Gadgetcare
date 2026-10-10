@@ -35,6 +35,17 @@
 const SUPABASE_URL="https://sqpolxwdyypbxylgvihi.supabase.co";
 const SUPABASE_KEY="sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  console.log("GadgetCare: Supabase berhasil dimuat");
+
+window.addEventListener("error", function (e) {
+  alert("JavaScript error: " + e.message);
+});
+
+window.addEventListener("unhandledrejection", function (e) {
+  alert("Proses gagal: " + (
+    e.reason?.message || String(e.reason)
+  ));
+});
 const $=id=>document.getElementById(id);
 function digits(s){return (s||"").replace(/\\D/g,"")}
 function phoneMatches(a,b){const x=digits(a),y=digits(b);return x===y || (x.startsWith("62")&&("0"+x.slice(2))===y) || (y.startsWith("62")&&("0"+y.slice(2))===x)}
