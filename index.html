@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="id">
 <head>
+  <script>
+    if (!window.supabase || !window.supabase.createClient) {
+  console.error("Library Supabase gagal dimuat.");
+  throw new Error(
+    "Supabase tidak termuat. Periksa koneksi atau CDN."
+    </script>
+  );
+}
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GadgetCare — Home Service & Repair Gadget</title>
 <meta name="description" content="Booking service gadget panggilan, pelacakan perbaikan, dan pembayaran online GadgetCare.">
