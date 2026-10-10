@@ -41,7 +41,107 @@ function phoneMatches(a,b){const x=digits(a),y=digits(b);return x===y || (x.star
 function escapeHTML(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function newCode(){return "GC-"+Date.now().toString(36).toUpperCase()+"-"+Math.random().toString(36).slice(2,6).toUpperCase()}
 $("gpsBtn").addEventListener("click",()=>{if(!navigator.geolocation){alert("Browser tidak mendukung GPS.");return} $("gpsBtn").disabled=true;$("gpsBtn").textContent="Mengambil lokasi...";navigator.geolocation.getCurrentPosition(p=>{$("latitude").value=p.coords.latitude;$("longitude").value=p.coords.longitude;$("gpsBtn").disabled=false;$("gpsBtn").textContent="📍 Lokasi berhasil diambil"},e=>{alert("Lokasi gagal diambil: "+e.message);$("gpsBtn").disabled=false;$("gpsBtn").textContent="📍 Ambil lokasi GPS"},{enableHighAccuracy:true,timeout:12000})});
-$("bookingForm").addEventListener("submit",async e=>{e.preventDefault();const btn=$("submitBtn"),out=$("bookingResult");btn.disabled=true;btn.textContent="Mengirim...";out.classList.remove("show");try{const booking_code=newCode();const payload={booking_code,customer_name:$("name").value.trim(),phone:$("phone").value.trim(),device:$("device").value,damage:$("damage").value,description:$("description").value.trim()||null,address:$("address").value.trim(),latitude:$("latitude").value?Number($("latitude").value):null,longitude:$("longitude").value?Number($("longitude").value):null,status:"Menunggu",estimated_price:50000,total_price:50000,payment_status:"pending",payment_method:null,payment_order_id:null};const {data,error}=await sb.from("bookings").insert(payload).select("booking_code,customer_name,phone,estimated_price,status").single();if(error)throw error;out.innerHTML="<h3>Booking berhasil dibuat!</h3><p>Nomor booking: <strong>"+escapeHTML(data.booking_code)+"</strong></p><p>Simpan nomor ini untuk melacak status.</p><p>Estimasi awal: Rp"+Number(data.estimated_price||50000).toLocaleString("id-ID")+"</p><button class='btn' id='payBtn' type='button'>Lanjut ke Pembayaran</button> <a class='btn secondary' href='nota.html?booking_code="+encodeURIComponent(data.booking_code)+"&phone="+encodeURIComponent(data.phone)+"'>Lihat Nota</a><p class='hint'>Pembayaran baru dapat dilakukan setelah total biaya dikonfirmasi admin.</p>";out.classList.add("show");$("payBtn").addEventListener("click",()=>startPayment(data.booking_code,data.phone));$("trackCode").value=data.booking_code;$("trackPhone").value=data.phone;$("bookingForm").reset();$("latitude").value="";$("longitude").value=""}
+
+$("bookingForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const btn = $("submitBtn");
+  const out = $("bookingResult");
+
+  btn.disabled = true;
+  btn.textContent = "Mengirim...";
+  out.classList.remove("show");
+
+  try {
+    const booking_code = newCode();
+
+    const payload = {
+      booking_code,
+      customer_name: $("name").value.trim(),
+      phone: $("phone").value.trim(),
+      device: $("device").value,
+      damage: $("damage").value,
+      description: $("description").value.trim() || null,
+      address: $("address").value.trim(),
+      latitude: $("latitude").value
+        ? Number($("latitude").value) : null,
+      longitude: $("longitude").value
+        ? Number($("longitude").value) : null,
+      status: "Menunggu",
+      estimated_price: 50000,
+      total_price: 50000,
+      payment_status: "pending",
+      payment_method: null,
+      payment_order_id: null
+    };
+
+    // INSERT saja: tidak memerlukan SELECT publik
+    // untuk membaca kembali data booking.
+    const { error } = await sb
+      .from("bookings")
+      .insert(payload);
+
+    if (error) throw error;
+
+    out.innerHTML = `
+      <h3>Booking berhasil dibuat!</h3>
+      <p>Nomor booking:
+        <strong>${escapeHTML(booking_code)}</strong>
+      </p>
+      <p>Simpan nomor ini untuk melacak status.</p>
+      <p>Estimasi awal: Rp${Number(
+        payload.estimated_price
+      ).toLocaleString("id-ID")}</p>
+      <button class="btn" id="payBtn" type="button">
+        Lanjut ke Pembayaran
+      </button>
+      <a class="btn secondary"
+         href="nota.html?booking_code=${encodeURIComponent(booking_code)}&phone=${encodeURIComponent(payload.phone)}">
+        Lihat Nota
+      </a>
+      <p class="hint">
+        Pembayaran baru dapat dilakukan setelah total biaya
+        dikonfirmasi admin.
+      </p>
+    `;
+
+    out.classList.add("show");
+
+    $("payBtn").addEventListener("click", () => {
+      startPayment(booking_code, payload.phone);
+    });
+
+    $("trackCode").value = booking_code;
+    $("trackPhone").value = payload.phone;
+
+    $("bookingForm").reset();
+    $("latitude").value = "";
+    $("longitude").value = "";
+
+  } catch (err) {
+    console.error("Booking error:", err);
+
+    const detail = [
+      err.message,
+      err.details,
+      err.hint,
+      err.code
+    ].filter(Boolean).join(" | ");
+
+    out.innerHTML =
+      "<b>Booking gagal disimpan.</b><p>" +
+      escapeHTML(detail || "Periksa koneksi internet.") +
+      "</p>";
+
+    out.classList.add("show");
+
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Kirim Booking";
+  }
+});
+
+  {e.preventDefault();const btn=$("submitBtn"),out=$("bookingResult");btn.disabled=true;btn.textContent="Mengirim...";out.classList.remove("show");try{const booking_code=newCode();const payload={booking_code,customer_name:$("name").value.trim(),phone:$("phone").value.trim(),device:$("device").value,damage:$("damage").value,description:$("description").value.trim()||null,address:$("address").value.trim(),latitude:$("latitude").value?Number($("latitude").value):null,longitude:$("longitude").value?Number($("longitude").value):null,status:"Menunggu",estimated_price:50000,total_price:50000,payment_status:"pending",payment_method:null,payment_order_id:null};const {data,error}=await sb.from("bookings").insert(payload).select("booking_code,customer_name,phone,estimated_price,status").single();if(error)throw error;out.innerHTML="<h3>Booking berhasil dibuat!</h3><p>Nomor booking: <strong>"+escapeHTML(data.booking_code)+"</strong></p><p>Simpan nomor ini untuk melacak status.</p><p>Estimasi awal: Rp"+Number(data.estimated_price||50000).toLocaleString("id-ID")+"</p><button class='btn' id='payBtn' type='button'>Lanjut ke Pembayaran</button> <a class='btn secondary' href='nota.html?booking_code="+encodeURIComponent(data.booking_code)+"&phone="+encodeURIComponent(data.phone)+"'>Lihat Nota</a><p class='hint'>Pembayaran baru dapat dilakukan setelah total biaya dikonfirmasi admin.</p>";out.classList.add("show");$("payBtn").addEventListener("click",()=>startPayment(data.booking_code,data.phone));$("trackCode").value=data.booking_code;$("trackPhone").value=data.phone;$("bookingForm").reset();$("latitude").value="";$("longitude").value=""}
 console.error("Booking error:", err);
 
 const detail = [
