@@ -162,7 +162,7 @@
     message.textContent=''; if(!bookingCode||!phone){message.textContent='Masukkan kode booking dan nomor WhatsApp terlebih dahulu.';return;}
     button.disabled=true;button.textContent='Menyiapkan pembayaran...';
     try {
-      
+      <script>
 $('midtransPayButton').addEventListener('click', async function () {
   const button = this;
   const message = $('paymentMessage');
@@ -235,8 +235,7 @@ $('midtransPayButton').addEventListener('click', async function () {
     button.disabled = false;
     button.textContent = 'Lanjut ke Pembayaran';
   }
-});
-
+  </script>
 })();
 </script>
 </body>
