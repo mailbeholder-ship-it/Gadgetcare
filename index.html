@@ -140,23 +140,6 @@ $("bookingForm").addEventListener("submit", async e => {
     btn.textContent = "Kirim Booking";
   }
 });
-
-  {e.preventDefault();const btn=$("submitBtn"),out=$("bookingResult");btn.disabled=true;btn.textContent="Mengirim...";out.classList.remove("show");try{const booking_code=newCode();const payload={booking_code,customer_name:$("name").value.trim(),phone:$("phone").value.trim(),device:$("device").value,damage:$("damage").value,description:$("description").value.trim()||null,address:$("address").value.trim(),latitude:$("latitude").value?Number($("latitude").value):null,longitude:$("longitude").value?Number($("longitude").value):null,status:"Menunggu",estimated_price:50000,total_price:50000,payment_status:"pending",payment_method:null,payment_order_id:null};const {data,error}=await sb.from("bookings").insert(payload).select("booking_code,customer_name,phone,estimated_price,status").single();if(error)throw error;out.innerHTML="<h3>Booking berhasil dibuat!</h3><p>Nomor booking: <strong>"+escapeHTML(data.booking_code)+"</strong></p><p>Simpan nomor ini untuk melacak status.</p><p>Estimasi awal: Rp"+Number(data.estimated_price||50000).toLocaleString("id-ID")+"</p><button class='btn' id='payBtn' type='button'>Lanjut ke Pembayaran</button> <a class='btn secondary' href='nota.html?booking_code="+encodeURIComponent(data.booking_code)+"&phone="+encodeURIComponent(data.phone)+"'>Lihat Nota</a><p class='hint'>Pembayaran baru dapat dilakukan setelah total biaya dikonfirmasi admin.</p>";out.classList.add("show");$("payBtn").addEventListener("click",()=>startPayment(data.booking_code,data.phone));$("trackCode").value=data.booking_code;$("trackPhone").value=data.phone;$("bookingForm").reset();$("latitude").value="";$("longitude").value=""}
-console.error("Booking error:", err);
-
-const detail = [
-  err.message,
-  err.details,
-  err.hint,
-  err.code
-].filter(Boolean).join(" | ");
-
-out.innerHTML =
-  "<b>Booking gagal disimpan.</b><p>" +
-  escapeHTML(detail || "Tidak ada detail error. Periksa koneksi internet.") +
-  "</p>";
-
-out.classList.add("show");
-async function startPayment(code,phone){try{const {data,error}=await sb.functions.invoke("create-midtrans-payment",{body:{booking_code:code,phone}});if(error)throw error;const url=data?.redirect_url||data?.payment_url||data?.redirectUrl;if(url){location.href=url;return}if(data?.qr_code_url||data?.qr_url){const u=data.qr_code_url||data.qr_url;const w=window.open("","_blank");if(w)w.document.write("<title>QRIS GadgetCare</title><h2>Scan QRIS di aplikasi yang didukung Sandbox</h2><img style='max-width:90vw' src='"+escapeHTML(u)+"'>");else location.href=u;return}throw new Error(data?.error||"Server belum mengirim tautan pembayaran. Pastikan fungsi mengembalikan redirect_url.")}catch(err){alert("Pembayaran belum bisa dibuat: "+(err.message||"Periksa fungsi Supabase dan lognya.")+"\\nBooking tetap tersimpan; hubungi admin untuk konfirmasi biaya.")}}
-$("trackForm").addEventListener("submit",async e=>{e.preventDefault();const out=$("trackResult");out.textContent="Mencari booking...";try{const code=$("trackCode").value.trim(),phone=$("trackPhone").value.trim();const {data,error}=await sb.from("bookings").select("booking_code,customer_name,phone,device,damage,status,estimated_price,total_price,payment_status,payment_method,created_at").eq("booking_code",code).maybeSingle();if(error)throw error;if(!data||!phoneMatches(data.phone,phone)){out.textContent="Booking tidak ditemukan. Periksa nomor booking dan nomor HP.";return}out.innerHTML="<div class='card'><b>"+escapeHTML(data.booking_code)+" — "+escapeHTML(data.status||"Menunggu")+"</b><p>Nama: "+escapeHTML(data.customer_name)+"</p><p>Perangkat: "+escapeHTML(data.device)+"</p><p>Kerusakan: "+escapeHTML(data.damage)+"</p><p>Estimasi: Rp"+Number(data.estimated_price||0).toLocaleString("id-ID")+"</p><p>Total tagihan: "+(data.total_price==null?"Belum ditetapkan":"Rp"+Number(data.total_price).toLocaleString("id-ID"))+"</p><p>Pembayaran: "+escapeHTML(data.payment_status||"Belum ada")+"</p><a class='btn secondary' href='nota.html?booking_code="+encodeURIComponent(data.booking_code)+"&phone="+encodeURIComponent(phone)+"'>Buka Nota</a></div>"}catch(err){out.textContent="Gagal memeriksa booking: "+(err.message||"Periksa koneksi.")}});
-</script></body></html>
+</script>
+</body>
+</html>
