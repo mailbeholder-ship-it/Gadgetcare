@@ -162,13 +162,81 @@
     message.textContent=''; if(!bookingCode||!phone){message.textContent='Masukkan kode booking dan nomor WhatsApp terlebih dahulu.';return;}
     button.disabled=true;button.textContent='Menyiapkan pembayaran...';
     try {
-      const response=await fetch(SUPABASE_URL+'/functions/v1/create-midtrans-payment',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({booking_code:bookingCode,phone})});
-      const result=await response.json().catch(()=>({}));
-      if(!response.ok) throw new Error(result.error||result.message||`Server pembayaran merespons ${response.status}.`);
-      if(!result.redirect_url) throw new Error('Server tidak mengembalikan redirect_url. Periksa kontrak Edge Function pembayaran.');
-      window.location.href=result.redirect_url;
-    } catch(err) { console.error('Payment error:',err);message.textContent='Pembayaran belum dapat dibuat: '+(err.message||'Kesalahan tidak diketahui');button.disabled=false;button.textContent='Lanjut ke Pembayaran'; }
-  });
+      
+$('midtransPayButton').addEventListener('click', async function () {
+  const button = this;
+  const message = $('paymentMessage');
+  const bookingCode = $('paymentBookingCode').value.trim().toUpperCase();
+  const phone = $('paymentPhone').value.trim();
+
+  if (!bookingCode || !phone) {
+    message.textContent = 'Masukkan kode booking dan nomor WhatsApp.';
+    return;
+  }
+
+  const endpoint =
+    SUPABASE_URL.replace(/\/+$/, '') +
+    '/functions/v1/create-midtrans-payment';
+
+  button.disabled = true;
+  button.textContent = 'Memeriksa koneksi...';
+  message.textContent = 'Menghubungi server pembayaran...';
+
+  try {
+    console.log('Payment endpoint:', endpoint);
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify({
+        booking_code: bookingCode,
+        phone: phone
+      })
+    });
+
+    const raw = await response.text();
+    console.log('Payment HTTP status:', response.status);
+    console.log('Payment response:', raw);
+
+    let result = {};
+    try {
+      result = JSON.parse(raw);
+    } catch (_) {}
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        result.message ||
+        'Server pembayaran merespons HTTP ' + response.status
+      );
+    }
+
+    if (!result.redirect_url) {
+      throw new Error(
+        'Respons server tidak berisi redirect_url. Periksa log Edge Function.'
+      );
+    }
+
+    window.location.href = result.redirect_url;
+
+  } catch (err) {
+    console.error('Payment diagnostic error:', err);
+
+    message.textContent =
+      err instanceof TypeError
+        ? 'Gagal menghubungi server. Periksa URL, jaringan, dan CORS. Detail: ' + err.message
+        : 'Pembayaran gagal: ' + err.message;
+
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Lanjut ke Pembayaran';
+  }
+});
+
 })();
 </script>
 </body>
