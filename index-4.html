@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GadgetCare — Home Service & Repair Gadget</title>
+<meta name="description" content="Booking service gadget panggilan, pelacakan perbaikan, dan pembayaran online GadgetCare.">
+<link rel="icon" href="./logo.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{color-scheme:dark;--bg:#0b0f14;--panel:#111820;--line:#26313c;--muted:#aeb7c2;--orange:#ff5722;--green:#81c784;--red:#ef9a9a}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;font:16px/1.6 Arial,sans-serif;background:var(--bg);color:#fff}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}.container{width:min(1100px,92%);margin:auto}nav{position:sticky;top:0;z-index:100;background:#0b0f14f5;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0}.brand{font-size:23px;font-weight:800;display:flex;align-items:center;gap:9px}.brand img{width:42px;height:42px;object-fit:contain}.orange{color:var(--orange)}.nav-links{display:flex;gap:18px;flex-wrap:wrap}.nav-links a{color:#cbd5e1;font-size:14px}.nav-links a:hover{color:var(--orange)}.hero{padding:76px 0 64px;background:radial-gradient(circle at 80% 20%,#ff572224,transparent 32%),var(--bg)}.hero-content{max-width:760px}.badge{display:inline-block;padding:6px 12px;border:1px solid #ff572255;border-radius:22px;color:var(--orange);background:#ff572218;font-size:13px}.hero h1{font-size:clamp(38px,7vw,64px);line-height:1.08;margin:18px 0}.hero p,.section-title p{color:var(--muted)}.hero p{max-width:650px;margin-bottom:25px}section{padding:60px 0}.section-title{text-align:center;margin-bottom:30px}.section-title h2{margin:0 0 8px;font-size:30px}.services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card,.form-wrapper,.status-result,.payment-detail{background:var(--panel);border:1px solid #202a34;border-radius:14px;padding:22px}.card h3{margin:6px 0}.card p{color:var(--muted);font-size:14px}.service-icon{font-size:28px}.price{font-size:17px;font-weight:bold;color:var(--orange);margin-top:12px}.form-wrapper{max-width:760px;margin:auto}.form-group{margin-bottom:15px}label{display:block;margin-bottom:6px;font-size:14px;color:#c9d0d8}input,select,textarea{width:100%;padding:12px;border:1px solid #293440;border-radius:8px;background:#0b1016;color:white}input:focus,select:focus,textarea:focus{outline:1px solid var(--orange);border-color:var(--orange)}textarea{min-height:90px;resize:vertical}.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:9px;padding:12px 17px;font-weight:bold;cursor:pointer}.btn-orange{background:var(--orange);color:white}.btn-dark{background:#151c24;color:white;border:1px solid #2a3540}.btn:disabled{opacity:.6;cursor:wait}.full{width:100%}.gps-row{display:flex;gap:10px}.gps-row>*{flex:1}#map{height:280px;border-radius:10px;margin-top:12px;overflow:hidden;background:#202832}.coordinates,.hint{font-size:12px;color:#9aa5b1;margin-top:7px}.alert{display:none;padding:12px;border-radius:8px;margin-top:14px;font-size:14px;overflow-wrap:anywhere}.alert.success{display:block;background:#2e7d3226;border:1px solid #4caf5055;color:var(--green)}.alert.error{display:block;background:#c6282826;border:1px solid #f4433655;color:var(--red)}.status-box{max-width:650px;margin:auto}.status-result{display:none;margin-top:18px;overflow-wrap:anywhere}.status-row{display:flex;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid #202932}.status-row:last-child{border-bottom:0}.status-label{color:#8f9aa7}.status-value{text-align:right;font-weight:600}.status-badge{display:inline-block;background:#ff57221f;color:var(--orange);padding:4px 9px;border-radius:18px;font-size:12px}.payment-section{background:#0f141a}.payment-detail{max-width:650px;margin:auto;text-align:left}.payment-detail h3{text-align:center}.payment-detail .payment-logo{text-align:center;font-size:34px}.payment-message{margin-top:12px;overflow-wrap:anywhere;color:var(--orange)}footer{border-top:1px solid #202832;padding:28px 0;color:#87919c;font-size:13px;text-align:center} @media(max-width:800px){.services{grid-template-columns:1fr}.nav-inner{flex-wrap:wrap}.nav-links{width:100%;justify-content:space-between;gap:8px}.nav-links a{font-size:12px}.hero{padding:55px 0}.gps-row{flex-direction:column}.status-row{flex-direction:column;gap:3px}.status-value{text-align:left}}
+</style>
+</head>
+<body>
+<nav><div class="container nav-inner"><a href="./index.html" class="brand"><img src="./logo.png" alt="Logo GadgetCare" onerror="this.style.display='none'"><span>Gadget<span class="orange">Care</span></span></a><div class="nav-links"><a href="#layanan">Layanan</a><a href="#booking">Booking</a><a href="#status">Cek Status</a><a href="#pembayaran">Pembayaran</a></div></div></nav>
+<header class="hero"><div class="container hero-content"><span class="badge">HOME SERVICE & REPAIR GADGET</span><h1>Perbaikan Gadget<br><span class="orange">Datang ke Rumah Anda.</span></h1><p>GadgetCare menyediakan layanan perbaikan gadget dengan teknisi yang siap datang ke lokasi Anda. Isi booking dan admin akan menghubungi Anda untuk konfirmasi.</p><a class="btn btn-orange" href="#booking">Booking Service</a></div></header>
+<section id="layanan"><div class="container"><div class="section-title"><h2>Layanan GadgetCare</h2><p>Pilih layanan sesuai kebutuhan perangkat Anda.</p></div><div class="services">
+<div class="card"><div class="service-icon">📱</div><h3>Ganti LCD</h3><p>Penggantian layar pecah, bergaris atau tidak berfungsi.</p><div class="price">Mulai Rp150.000</div></div>
+<div class="card"><div class="service-icon">🔋</div><h3>Ganti Baterai</h3><p>Untuk baterai cepat habis atau mengembung.</p><div class="price">Mulai Rp100.000</div></div>
+<div class="card"><div class="service-icon">🔌</div><h3>Perbaikan Charging</h3><p>Mengatasi masalah pengisian daya dan konektor.</p><div class="price">Mulai Rp100.000</div></div>
+<div class="card"><div class="service-icon">💧</div><h3>Kerusakan Air</h3><p>Pemeriksaan perangkat yang terkena air atau cairan.</p><div class="price">Mulai Rp150.000</div></div>
+<div class="card"><div class="service-icon">⚡</div><h3>Mati Total</h3><p>Pemeriksaan perangkat yang tidak dapat menyala.</p><div class="price">Mulai Rp150.000</div></div>
+<div class="card"><div class="service-icon">🛠️</div><h3>Kerusakan Lainnya</h3><p>Konsultasikan kerusakan gadget kepada teknisi.</p><div class="price">Cek Dahulu</div></div>
+</div></div></section>
+<section id="booking"><div class="container"><div class="section-title"><h2>Booking Home Service</h2><p>Isi data agar teknisi dapat menghubungi Anda.</p></div><div class="form-wrapper"><form id="bookingForm">
+<div class="form-group"><label for="customerName">Nama lengkap</label><input id="customerName" name="customerName" autocomplete="name" required maxlength="120"></div>
+<div class="form-group"><label for="phone">Nomor WhatsApp</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" required maxlength="30"></div>
+<div class="form-group"><label for="device">Jenis / tipe gadget</label><input id="device" name="device" placeholder="Contoh: Redmi Note 13 Pro 5G" required maxlength="120"></div>
+<div class="form-group"><label for="damage">Kerusakan</label><select id="damage" name="damage" required><option value="">Pilih kerusakan</option><option>LCD / Layar</option><option>Baterai</option><option>Charging</option><option>Mati Total</option><option>Terkena Air</option><option>Software</option><option>Kerusakan Lainnya</option></select></div>
+<div class="form-group"><label for="description">Keterangan kerusakan (opsional)</label><textarea id="description" name="description" maxlength="1500" placeholder="Jelaskan kondisi gadget Anda..."></textarea></div>
+<div class="form-group"><label for="address">Alamat lengkap</label><textarea id="address" name="address" required maxlength="1000" placeholder="Alamat tempat teknisi datang"></textarea></div>
+<div class="form-group"><label>Lokasi GPS (opsional)</label><div class="gps-row"><button type="button" class="btn btn-orange" id="gpsBtn">📍 Gunakan GPS Saya</button><button type="button" class="btn btn-dark" id="mapResetBtn">🔄 Reset Lokasi</button></div><div id="map" aria-label="Peta untuk memilih lokasi"></div><div id="coordinates" class="coordinates">Belum menentukan lokasi. Anda juga dapat mengetuk peta untuk memilih titik.</div><input type="hidden" id="latitude" name="latitude"><input type="hidden" id="longitude" name="longitude"></div>
+<button id="submitBtn" type="submit" class="btn btn-orange full">Kirim Booking</button><div id="bookingAlert" class="alert" role="status" aria-live="polite"></div><p class="hint">Jangan tutup halaman sampai hasil booking ditampilkan.</p>
+</form></div></div></section>
+<section id="status"><div class="container"><div class="section-title"><h2>Cek Status Service</h2><p>Masukkan kode booking. Data status diambil melalui fungsi Supabase yang dikonfigurasi admin.</p></div><div class="status-box"><form id="statusForm"><div class="form-group"><label for="bookingCode">Kode booking</label><input id="bookingCode" required placeholder="Contoh: GC-123456" autocomplete="off"></div><button class="btn btn-orange full" type="submit">Cek Status</button></form><div id="statusResult" class="status-result" role="status" aria-live="polite"></div></div></div></section>
+<section id="pembayaran" class="payment-section"><div class="container"><div class="section-title"><h2>Pembayaran Online</h2><p>Pembayaran tersedia setelah admin menetapkan harga service.</p></div><div class="payment-detail"><div class="payment-logo">🔒</div><h3>Bayar dengan Midtrans</h3><div class="form-group"><label for="paymentBookingCode">Kode booking</label><input id="paymentBookingCode" placeholder="Contoh: GC-123456" autocomplete="off"></div><div class="form-group"><label for="paymentPhone">Nomor WhatsApp saat booking</label><input id="paymentPhone" type="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div><p class="hint">Metode pembayaran akan ditampilkan oleh halaman pembayaran penyedia setelah server berhasil membuat sesi pembayaran.</p><button type="button" class="btn btn-orange full" id="midtransPayButton">Lanjut ke Pembayaran</button><div id="paymentMessage" class="payment-message" role="status" aria-live="polite"></div></div></div></section>
+<footer><div class="container">© 2026 <strong>GadgetCare</strong> — Home Service & Repair Gadget<br>Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366<br><a href="https://wa.me/6285846009748">WhatsApp GadgetCare</a></div></footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  'use strict';
+  const SUPABASE_URL = 'https://sqpolxwdyypbxylgvihi.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G';
+  const $ = id => document.getElementById(id);
+  const bookingAlert = $('bookingAlert');
+  let supabaseClient = null;
+  let map = null, marker = null, accuracyCircle = null;
+
+  function showAlert(type, message) {
+    bookingAlert.className = 'alert ' + type;
+    bookingAlert.textContent = message;
+    bookingAlert.style.display = 'block';
+    bookingAlert.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+  function makeBookingCode() {
+    return 'GC-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,6).toUpperCase();
+  }
+  function setLocation(lat, lng, accuracy) {
+    $('latitude').value = String(lat); $('longitude').value = String(lng);
+    $('coordinates').textContent = `Latitude: ${lat.toFixed(6)} | Longitude: ${lng.toFixed(6)}${accuracy ? ' | Akurasi ±' + Math.round(accuracy) + ' m' : ''}`;
+    if (map && window.L) {
+      if (marker) marker.setLatLng([lat,lng]); else marker = L.marker([lat,lng]).addTo(map);
+      if (accuracy) { if (accuracyCircle) accuracyCircle.remove(); accuracyCircle = L.circle([lat,lng],{radius:accuracy}).addTo(map); }
+      map.setView([lat,lng],16);
+    }
+  }
+  function resetMap() {
+    $('latitude').value = ''; $('longitude').value = ''; $('coordinates').textContent = 'Belum menentukan lokasi. Anda juga dapat mengetuk peta untuk memilih titik.';
+    if (marker) { marker.remove(); marker = null; } if (accuracyCircle) { accuracyCircle.remove(); accuracyCircle = null; }
+  }
+  function initMap() {
+    if (!window.L || !$('map')) { $('coordinates').textContent = 'Peta tidak berhasil dimuat. Booking tetap dapat dilakukan dengan mengisi alamat.'; return; }
+    map = L.map('map').setView([-6.9175,107.6191],10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap contributors',maxZoom:19}).addTo(map);
+    map.on('click', e => setLocation(e.latlng.lat,e.latlng.lng));
+    setTimeout(() => map && map.invalidateSize(),250);
+  }
+  function getGPS() {
+    if (!navigator.geolocation) { $('coordinates').textContent = 'Browser tidak mendukung GPS. Pilih titik pada peta atau isi alamat.'; return; }
+    const button = $('gpsBtn'); button.disabled = true; button.textContent = 'Mengambil lokasi...';
+    navigator.geolocation.getCurrentPosition(pos => { setLocation(pos.coords.latitude,pos.coords.longitude,pos.coords.accuracy); button.disabled=false; button.textContent='✅ Lokasi didapat'; }, err => { console.warn('GPS:',err); button.disabled=false; button.textContent='📍 Gunakan GPS Saya'; $('coordinates').textContent = 'GPS tidak tersedia/izin ditolak. Anda tetap bisa memilih titik di peta atau melanjutkan tanpa GPS.'; }, {enableHighAccuracy:true,timeout:15000,maximumAge:0});
+  }
+
+  // Inisialisasi terisolasi: kegagalan peta tidak boleh mematikan booking.
+  try { initMap(); } catch (err) { console.error('Map init error:',err); $('coordinates').textContent='Peta gagal dimuat. Booking tetap dapat dilakukan dengan alamat.'; }
+  $('gpsBtn').addEventListener('click',getGPS);
+  $('mapResetBtn').addEventListener('click',resetMap);
+
+  // Pasang handler booking sebelum melakukan request jaringan apa pun.
+  $('bookingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const button = $('submitBtn');
+    button.disabled = true; button.textContent = 'Mengirim booking...';
+    bookingAlert.className='alert'; bookingAlert.style.display='none'; bookingAlert.textContent='';
+    try {
+      if (!window.supabase || typeof window.supabase.createClient !== 'function') throw new Error('Pustaka Supabase tidak berhasil dimuat. Periksa koneksi internet lalu muat ulang halaman.');
+      if (!supabaseClient) supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+      const phone = $('phone').value.trim();
+      const payload = {
+        booking_code: makeBookingCode(),
+        customer_name: $('customerName').value.trim(),
+        phone,
+        device: $('device').value.trim(),
+        damage: $('damage').value,
+        description: $('description').value.trim() || null,
+        address: $('address').value.trim(),
+        latitude: $('latitude').value ? Number($('latitude').value) : null,
+        longitude: $('longitude').value ? Number($('longitude').value) : null,
+        status: 'Menunggu',
+        estimated_price: 0,
+        total_price: 0
+      };
+      if (!payload.customer_name || !phone || !payload.device || !payload.damage || !payload.address) throw new Error('Lengkapi semua kolom wajib sebelum mengirim booking.');
+      const { error } = await supabaseClient.from('bookings').insert(payload);
+      if (error) {
+        console.error('Supabase insert error:',error);
+        const detail = [error.message,error.details,error.hint,error.code].filter(Boolean).join(' — ');
+        throw new Error(detail || 'Database menolak booking. Periksa struktur tabel dan kebijakan RLS.');
+      }
+      showAlert('success',`Booking berhasil disimpan! Kode booking Anda: ${payload.booking_code}. Simpan kode ini untuk cek status. Admin akan menghubungi Anda untuk konfirmasi harga dan jadwal.`);
+      $('bookingCode').value = payload.booking_code;
+      $('paymentBookingCode').value = payload.booking_code;
+      $('paymentPhone').value = phone;
+      const waText = `Halo GadgetCare, saya sudah membuat booking service.%0A%0AKode: ${encodeURIComponent(payload.booking_code)}%0ANama: ${encodeURIComponent(payload.customer_name)}%0ANo. WhatsApp: ${encodeURIComponent(phone)}%0AGadget: ${encodeURIComponent(payload.device)}%0AKerusakan: ${encodeURIComponent(payload.damage)}%0AAlamat: ${encodeURIComponent(payload.address)}${payload.latitude != null && payload.longitude != null ? '%0ALokasi: https://www.google.com/maps?q='+payload.latitude+','+payload.longitude : ''}`;
+      const wa = document.createElement('a'); wa.href='https://wa.me/6285846009748?text='+waText; wa.target='_blank'; wa.rel='noopener'; wa.className='btn btn-dark'; wa.textContent='Kirim detail ke WhatsApp'; wa.style.marginTop='10px'; bookingAlert.appendChild(document.createElement('br')); bookingAlert.appendChild(wa);
+      this.reset(); resetMap();
+    } catch (err) {
+      console.error('Booking failed:',err);
+      showAlert('error','Booking gagal: '+(err && err.message ? err.message : String(err))+' Jika masalah berlanjut, kirim teks error ini ke admin.');
+    } finally { button.disabled=false; button.textContent='Kirim Booking'; }
+  });
+
+  $('statusForm').addEventListener('submit',async function(e){
+    e.preventDefault(); const result=$('statusResult'); result.style.display='block'; result.textContent='Memeriksa status...';
+    try {
+      if (!window.supabase) throw new Error('Pustaka Supabase tidak dimuat.');
+      if (!supabaseClient) supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+      const code=$('bookingCode').value.trim().toUpperCase();
+      const {data,error}=await supabaseClient.rpc('check_booking',{p_booking_code:code});
+      if(error) throw error;
+      const booking=Array.isArray(data)?data[0]:data;
+      if(!booking){result.innerHTML='<div class="alert error">Kode tidak ditemukan atau fungsi cek status belum dikonfigurasi.</div>';return;}
+      result.innerHTML=`<div class="status-row"><span class="status-label">Kode booking</span><span class="status-value">${escapeHTML(booking.booking_code||'-')}</span></div><div class="status-row"><span class="status-label">Nama</span><span class="status-value">${escapeHTML(booking.customer_name||'-')}</span></div><div class="status-row"><span class="status-label">Gadget</span><span class="status-value">${escapeHTML(booking.device||'-')}</span></div><div class="status-row"><span class="status-label">Kerusakan</span><span class="status-value">${escapeHTML(booking.damage||'-')}</span></div><div class="status-row"><span class="status-label">Status</span><span class="status-value"><span class="status-badge">${escapeHTML(booking.status||'Menunggu')}</span></span></div><div class="status-row"><span class="status-label">Estimasi</span><span class="status-value">Rp${Number(booking.estimated_price||0).toLocaleString('id-ID')}</span></div><div class="status-row"><span class="status-label">Total</span><span class="status-value">Rp${Number(booking.total_price||0).toLocaleString('id-ID')}</span></div>`;
+    } catch(err) { console.error('Status lookup error:',err); result.innerHTML='<div class="alert error">Gagal cek status: '+escapeHTML(err.message||'Kesalahan tidak diketahui')+'</div>'; }
+  });
+
+  $('midtransPayButton').addEventListener('click',async function(){
+    const button=this, message=$('paymentMessage'), bookingCode=$('paymentBookingCode').value.trim().toUpperCase(), phone=$('paymentPhone').value.trim();
+    message.textContent=''; if(!bookingCode||!phone){message.textContent='Masukkan kode booking dan nomor WhatsApp terlebih dahulu.';return;}
+    button.disabled=true;button.textContent='Menyiapkan pembayaran...';
+    try {
+      const response=await fetch(SUPABASE_URL+'/functions/v1/create-midtrans-payment',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({booking_code:bookingCode,phone})});
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok) throw new Error(result.error||result.message||`Server pembayaran merespons ${response.status}.`);
+      if(!result.redirect_url) throw new Error('Server tidak mengembalikan redirect_url. Periksa kontrak Edge Function pembayaran.');
+      window.location.href=result.redirect_url;
+    } catch(err) { console.error('Payment error:',err);message.textContent='Pembayaran belum dapat dibuat: '+(err.message||'Kesalahan tidak diketahui');button.disabled=false;button.textContent='Lanjut ke Pembayaran'; }
+  });
+})();
+</script>
+</body>
+</html>
