@@ -550,9 +550,26 @@
          <span class="status-label">Perangkat</span>
          <span class="status-value">${escapeHTML(booking.device)}</span>
        </div>
-       <div class="status-row">
-         <span class="status-label">Status servis</span>
-         <span class="status-value">${escapeHTML(booking.status)}</span>
+       
+<div class="status-row">
+  <span class="status-label">Status servis</span>
+  <span class="status-value">
+  
+  <span class="service-status-badge ${
+    ['menunggu', 'pending'].includes(String(booking.status || '').toLowerCase())
+      ? 'service-menunggu'
+      : ['diproses', 'proses'].includes(String(booking.status || '').toLowerCase())
+        ? 'service-diproses'
+        : ['sedang diperbaiki', 'diperbaiki', 'perbaikan'].includes(String(booking.status || '').toLowerCase())
+          ? 'service-diperbaiki'
+          : ['selesai', 'completed'].includes(String(booking.status || '').toLowerCase())
+            ? 'service-selesai'
+            : ['dibatalkan', 'batal', 'cancelled'].includes(String(booking.status || '').toLowerCase())
+              ? 'service-dibatalkan'
+              : 'service-menunggu'
+  }">${escapeHTML(String(booking.status || 'Menunggu').toUpperCase())}</span>
+</span>
+
        </div>
 
 <div class="status-row">
