@@ -411,31 +411,92 @@
     }
   });
 
-  // Form Cek Status
-  $('statusForm').addEventListener('submit', async function(e){
-    e.preventDefault(); 
-    const result = $('statusResult'); 
-    result.style.display = 'block'; 
-    result.textContent = 'Memeriksa status...';
-    
-    try {
-      if (!supabaseClient) supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      const code = $('bookingCode').value.trim().toUpperCase();
-      
-      const { data, error } = await supabaseClient.from('bookings').select('*').eq('booking_code', code).single();
-      if(error || !data) throw new Error('Kode booking tidak ditemukan.');
 
-      result.innerHTML = `
-        <div class="status-row"><span class="status-label">Kode booking</span><span class="status-value">${escapeHTML(data.booking_code)}</span></div>
-        <div class="status-row"><span class="status-label">Nama</span><span class="status-value">${escapeHTML(data.customer_name)}</span></div>
-        <div class="status-row"><span class="status-label">Gadget</span><span class="status-value">${escapeHTML(data.device)}</span></div>
-        <div class="status-row"><span class="status-label">Status</span><span class="status-value"><span class="status-badge">${escapeHTML(data.status)}</span></span></div>
-        <div class="status-row"><span class="status-label">Total Biaya</span><span class="status-value">Rp${Number(data.total_price || 0).toLocaleString('id-ID')}</span></div>
-      `;
-    } catch(err) { 
-      result.innerHTML = `<div class="alert error">${escapeHTML(err.message)}</div>`; 
-    }
-  });
+ // Form Cek Status
+ $('statusForm').addEventListener('submit', async function(e) {
+   e.preventDefault();
+
+   const result = $('statusResult');
+   result.style.display = 'block';
+   result.textContent = 'Memeriksa status...';
+
+   try {
+     if (!supabaseClient) {
+       supabaseClient = window.supabase.createClient(
+         SUPABASE_URL,
+         SUPABASE_KEY
+       );
+     }
+
+     const code = $('bookingCode').value.trim().toUpperCase();
+
+     if (!code) {
+       throw new Error('Masukkan kode booking terlebih dahulu.');
+     }
+
+     const { data, error } = await supabaseClient.rpc(
+       'check_booking',
+       { p_booking_code: code }
+     );
+
+     if (error) throw error;
+
+     const booking = Array.isArray(data) ? data[0] : data;
+
+     if (!booking) {
+       throw new Error('Kode booking tidak ditemukan.');
+     }
+
+     const payment = String(
+       booking.payment_status || 'pending'
+     ).toLowerCase();
+
+     let paymentLabel = 'Menunggu Pembayaran';
+     if (payment === 'lunas' || payment === 'settlement') {
+       paymentLabel = 'Lunas';
+     } else if (payment === 'gagal' ||
+                payment === 'deny' ||
+                payment === 'cancel' ||
+                payment === 'expire' ||
+                payment === 'failure') {
+       paymentLabel = 'Gagal';
+     } else if (payment === 'refund' ||
+                payment === 'partial_refund') {
+       paymentLabel = 'Refund';
+     }
+
+     result.innerHTML = `
+       <div class="status-row">
+         <span class="status-label">Kode booking</span>
+         <span class="status-value">${escapeHTML(booking.booking_code)}</span>
+       </div>
+       <div class="status-row">
+         <span class="status-label">Nama pelanggan</span>
+         <span class="status-value">${escapeHTML(booking.customer_name)}</span>
+       </div>
+       <div class="status-row">
+         <span class="status-label">Perangkat</span>
+         <span class="status-value">${escapeHTML(booking.device)}</span>
+       </div>
+       <div class="status-row">
+         <span class="status-label">Status servis</span>
+         <span class="status-value">${escapeHTML(booking.status)}</span>
+       </div>
+       <div class="status-row">
+         <span class="status-label">Status pembayaran</span>
+         <span class="status-value">${escapeHTML(paymentLabel)}</span>
+       </div>
+       <div class="status-row">
+         <span class="status-label">Total biaya</span>
+         <span class="status-value">Rp${Number(booking.total_price || booking.estimated_price || 0).toLocaleString('id-ID')}</span>
+       </div>
+     `;
+   } catch (err) {
+     console.error('Cek status error:', err);
+     result.innerHTML =
+       `<div class="alert error">${escapeHTML(err.message || 'Gagal memeriksa status.')}</div>`;
+   }
+ });
 
     // Handler Pembayaran Midtrans yang sudah diperbaiki
   const payBtn = $('midtransPayButton');
