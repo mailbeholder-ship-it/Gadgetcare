@@ -482,10 +482,24 @@
          <span class="status-label">Status servis</span>
          <span class="status-value">${escapeHTML(booking.status)}</span>
        </div>
-       <div class="status-row">
-         <span class="status-label">Status pembayaran</span>
-         <span class="status-value">${escapeHTML(paymentLabel)}</span>
-       </div>
+
+<div class="status-row">
+  <span class="status-label">Status pembayaran</span>
+  <span class="status-value">
+    <span class="payment-badge ${
+      paymentLabel === 'Lunas' ? 'payment-lunas' :
+      paymentLabel === 'Gagal' ? 'payment-gagal' :
+      paymentLabel === 'Refund' ? 'payment-refund' :
+      'payment-belum'
+    }">${escapeHTML(
+      paymentLabel === 'Lunas' ? 'LUNAS' :
+      paymentLabel === 'Gagal' ? 'GAGAL' :
+      paymentLabel === 'Refund' ? 'REFUND' :
+      'BELUM LUNAS'
+    )}</span>
+  </span>
+</div>
+
        <div class="status-row">
          <span class="status-label">Total biaya</span>
          <span class="status-value">Rp${Number(booking.total_price || booking.estimated_price || 0).toLocaleString('id-ID')}</span>
