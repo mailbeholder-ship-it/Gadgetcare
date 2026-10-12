@@ -1091,11 +1091,15 @@ function renderBookings(data){
           </td>
 
 
-          <td>
-            ${statusBadge(
-              b.status
-            )}
-          </td>
+          
+<td>
+  ${statusBadge(b.status)}
+</td>
+
+<td>
+  ${paymentStatusBadge(b.payment_status)}
+</td>
+
 
 
           <td>
