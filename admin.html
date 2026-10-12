@@ -1502,14 +1502,31 @@ async function saveDetail(){
   }
 
 
+/* SIMPAN STATUS PEMBAYARAN */
+const paymentStatus = document.getElementById("paymentStatusInput").value;
+
+const paymentUpdate = await supabaseClient
+  .from("bookings")
+  .update({
+    payment_status: paymentStatus
+  })
+  .eq("id", selectedBooking.id);
+
+if (paymentUpdate.error) {
+  console.error(paymentUpdate.error);
   alert(
-    "Data service berhasil disimpan."
+    "Status pembayaran gagal disimpan:\n" +
+    paymentUpdate.error.message
   );
+  return;
+}
 
+alert("Data service dan status pembayaran berhasil disimpan.");
 
-  closeDetailModal();
+closeDetailModal();
+await loadBookings();
 
-  await loadBookings();
+  
 
 }
 
