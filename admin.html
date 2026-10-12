@@ -1355,12 +1355,17 @@ function openDetail(id){
     0;
 
 
-  document.getElementById(
-    "statusInput"
-  ).value =
-    selectedBooking.status ||
-    "Menunggu";
+document.getElementById("statusInput").value =
+  selectedBooking.status || "Menunggu";
 
+const paymentValue = String(
+  selectedBooking.payment_status || "pending"
+).toLowerCase();
+
+document.getElementById("paymentStatusInput").value =
+  ["lunas", "settlement"].includes(paymentValue)
+    ? "lunas"
+    : "pending";
 
   document.getElementById(
     "detailModal"
