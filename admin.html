@@ -1200,6 +1200,21 @@ function statusBadge(status){
   `;
 
 }
+  
+
+function paymentStatusBadge(status) {
+  const value = String(status || "pending").toLowerCase();
+
+  if (value === "lunas" || value === "settlement") {
+    return '<span class="status status-selesai">LUNAS</span>';
+  }
+
+  if (["gagal", "deny", "cancel", "expire", "failure"].includes(value)) {
+    return '<span class="status status-batal">GAGAL</span>';
+  }
+
+  return '<span class="status status-menunggu">BELUM LUNAS</span>';
+}
 
 
 /* =========================
