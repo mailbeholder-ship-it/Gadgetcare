@@ -153,7 +153,34 @@
   background: #7f1d1d;
   border: 1px solid #ef4444;
 }
+
     
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.hero-buttons .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .hero-buttons {
+    gap: 10px;
+  }
+
+  .hero-buttons .btn {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -178,8 +205,22 @@
     <span class="badge">HOME SERVICE & REPAIR GADGET</span>
     <h1>Perbaikan Gadget<br><span class="orange">Datang ke Rumah Anda.</span></h1>
     <p>GadgetCare menyediakan layanan perbaikan gadget dengan teknisi yang siap datang ke lokasi Anda. Isi booking dan admin akan menghubungi Anda untuk konfirmasi.</p>
-    <a class="btn btn-orange" href="#booking">Booking Service</a>
-  </div>
+    
+<div class="hero-buttons">
+  <a class="btn btn-orange" href="#booking">
+    Booking Service
+  </a>
+
+  <a
+    class="btn btn-orange"
+    href="https://maps.app.goo.gl/hmPGHhguNYExe8sx7"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    📍Google Maps
+  </a>
+</div>
+
 </header>
 
 <section id="layanan">
