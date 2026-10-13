@@ -143,23 +143,36 @@ footer { color: var(--muted); text-align: center; padding: 25px 0 10px; font-siz
 <body>
 <div class="container">
 
-  <!-- LOGIN -->
-  <section id="loginSection" class="login-wrap">
-    <div class="panel">
-      <div class="brand">Gadget<span>Care</span></div>
-      <p class="subtitle">Masuk ke panel administrator</p>
-<form id="loginForm">
-  <input id="email" type="email" required>
-  <input id="password" type="password" required>
+  
+<!-- LOGIN -->
+<section id="loginSection" class="login-wrap">
+  <div class="panel">
+    <div class="brand">Gadget<span>Care</span></div>
+    <p class="subtitle">Masuk ke panel administrator</p>
 
-  <button type="submit">Login</button>
+    <form id="loginForm">
+      <input
+        id="email"
+        type="email"
+        placeholder="Email admin"
+        autocomplete="username"
+        required
+      >
 
-  <p id="loginMessage"></p>
-</form>
-      <div id="loginMessage" class="message" role="status"></div>
-    </div>
-  </section>
+      <input
+        id="password"
+        type="password"
+        placeholder="Kata sandi"
+        autocomplete="current-password"
+        required
+      >
 
+      <button type="submit">Login</button>
+    </form>
+
+    <div id="loginMessage" class="message" role="status"></div>
+  </div>
+</section>
   <!-- DASHBOARD -->
   <main id="adminSection" class="hidden">
     <header class="header">
