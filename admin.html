@@ -924,6 +924,96 @@ async function checkSession(){
 }
 
 
+/* PENGATURAN PELAYANAN GADGETCARE */
+
+async function loadStoreSettings() {
+  const message = document.getElementById("storeSettingsMessage");
+  message.textContent = "Memuat pengaturan...";
+
+  const { data, error } = await supabaseClient
+    .from("store_settings")
+    .select("*")
+    .eq("id", 1)
+    .maybeSingle();
+
+  if (error || !data) {
+    message.textContent =
+      "Gagal memuat pengaturan: " +
+      (error?.message || "Data pengaturan tidak ditemukan.");
+    return;
+  }
+
+  document.getElementById("storeClosed").value =
+    String(data.is_closed);
+
+  document.getElementById("openingTime").value =
+    String(data.opening_time).slice(0, 5);
+
+  document.getElementById("closingTime").value =
+    String(data.closing_time).slice(0, 5);
+
+  document.getElementById("closureMessage").value =
+    data.closure_message || "";
+
+  document.querySelectorAll(".openDay").forEach(box => {
+    box.checked = (data.open_days || []).includes(Number(box.value));
+  });
+
+  message.textContent = "Pengaturan berhasil dimuat.";
+}
+
+async function saveStoreSettings() {
+  const message = document.getElementById("storeSettingsMessage");
+
+  const openDays = Array.from(
+    document.querySelectorAll(".openDay:checked")
+  ).map(box => Number(box.value));
+
+  const openingTime = document.getElementById("openingTime").value;
+  const closingTime = document.getElementById("closingTime").value;
+  const closureMessage = document.getElementById("closureMessage").value.trim();
+
+  if (!openingTime || !closingTime) {
+    message.textContent = "Jam buka dan jam tutup wajib diisi.";
+    return;
+  }
+
+  if (openingTime >= closingTime) {
+    message.textContent =
+      "Jam tutup harus lebih akhir daripada jam buka.";
+    return;
+  }
+
+  if (openDays.length === 0) {
+    message.textContent = "Pilih minimal satu hari operasional.";
+    return;
+  }
+
+  message.textContent = "Menyimpan pengaturan...";
+
+  const { error } = await supabaseClient
+    .from("store_settings")
+    .update({
+      is_closed: document.getElementById("storeClosed").value === "true",
+      opening_time: openingTime,
+      closing_time: closingTime,
+      open_days: openDays,
+      closure_message: closureMessage ||
+        "Pelayanan sedang libur. Silakan booking kembali saat kami buka.",
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", 1);
+
+  if (error) {
+    console.error("Simpan pengaturan:", error);
+    message.textContent = "Gagal menyimpan: " + error.message;
+    return;
+  }
+
+  message.textContent = "Pengaturan berhasil disimpan.";
+}
+
+
 function showAdmin(){
 
   document.getElementById(
