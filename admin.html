@@ -1,21 +1,731 @@
-<!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin GadgetCare</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GadgetCare — Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-:root{--o:#ff5722;--line:#f0d9d0}*{box-sizing:border-box}body{margin:0;background:#fff8f5;color:#202124;font-family:Arial,sans-serif}.wrap{max-width:1100px;margin:auto;padding:20px}.brand{font-size:25px;font-weight:bold;color:var(--o)}.panel,.stat,.booking{background:white;border:1px solid var(--line);border-radius:14px;padding:16px}.panel{max-width:500px;margin:25px auto}.hidden{display:none!important}input,select{width:100%;padding:11px;border:1px solid #ddd;border-radius:9px;margin:6px 0 12px;font:inherit}label{font-size:13px;font-weight:bold}button,.btn{border:0;border-radius:9px;padding:11px 15px;background:var(--o);color:white;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}.secondary{background:#fff0e9;color:#a63b19}.danger{background:#a61b1b}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.num{font-size:26px;color:var(--o);font-weight:bold;margin-top:8px}.tools,.actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.tools input{flex:1;min-width:180px}.booking{margin:12px 0;overflow-wrap:anywhere}.code{font-weight:bold;font-size:18px;color:var(--o)}.details{line-height:1.7;margin:10px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.warning{background:#fff4da;padding:12px;border-radius:9px;font-size:13px;line-height:1.5}.message{margin-top:10px;overflow-wrap:anywhere}.muted{color:#667085}@media(max-width:650px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.wrap{padding:12px}}
-</style></head><body><div class="wrap"><header><div class="brand">GadgetCare Admin</div><p class="muted">Kelola booking, status perbaikan, dan biaya.</p></header>
-<section id="login" class="panel"><h2>Login Admin</h2><p class="muted">Gunakan akun admin Supabase.</p><form id="loginForm"><label>Email</label><input id="email" type="email" required><label>Password</label><input id="password" type="password" required><button id="loginBtn" style="width:100%">Login</button><div id="loginMsg" class="message"></div></form></section>
-<section id="dash" class="hidden"><div class="actions"><button id="refresh" class="secondary">Refresh</button><button id="logout" class="danger">Logout</button></div><div class="stats"><div class="stat">Total booking<div id="total" class="num">0</div></div><div class="stat">Menunggu<div id="wait" class="num">0</div></div><div class="stat">Diproses<div id="process" class="num">0</div></div><div class="stat">Selesai<div id="done" class="num">0</div></div></div><div class="tools"><input id="search" placeholder="Cari kode, nama, nomor HP"><select id="filter" style="max-width:220px"><option value="">Semua status</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option><option>Dibatalkan</option></select></div><div class="warning">Pastikan biaya akhir disepakati pelanggan sebelum meminta pembayaran. Jangan mengubah status pembayaran secara manual; status tersebut harus berasal dari webhook Midtrans yang tervalidasi.</div><div id="list">Memuat...</div></section></div>
+:root {
+  --bg: #0d0f13;
+  --panel: #171a21;
+  --panel2: #20242d;
+  --border: #303540;
+  --text: #f5f6fa;
+  --muted: #9da3af;
+  --orange: #ff5722;
+  --green: #42d392;
+  --blue: #64b5f6;
+  --yellow: #ffd166;
+  --red: #ff6b6b;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 22px;
+  background: radial-gradient(ellipse at top right,#302016 0%,transparent 40%),var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+button,input,select,textarea { font: inherit; }
+button { cursor: pointer; }
+.container { max-width: 1450px; margin: auto; }
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 15px; margin-bottom: 30px;
+}
+.brand { font-size: 24px; font-weight: 800; }
+.brand span { color: var(--orange); }
+.subtitle { color: var(--muted); margin-top: 7px; }
+h1 { font-size: clamp(25px,4vw,34px); margin: 0; }
+h2 { font-size: 19px; margin: 0 0 15px; }
+button {
+  border: 0; border-radius: 10px; padding: 11px 15px;
+  background: var(--orange); color: white; font-weight: 700;
+}
+button:hover { filter: brightness(1.12); }
+button.secondary { background: #343945; }
+button.danger { background: #a83232; }
+button.small { padding: 8px 10px; font-size: 13px; }
+.logout { white-space: nowrap; }
+.panel {
+  background: rgba(23,26,33,.96); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; margin-bottom: 22px;
+}
+.login-wrap { max-width: 430px; margin: 8vh auto; }
+label { display: block; color: var(--muted); font-size: 13px; margin: 12px 0 6px; }
+input,select,textarea {
+  width: 100%; padding: 12px; border-radius: 9px;
+  border: 1px solid #3a404c; background: #11141a; color: var(--text);
+}
+textarea { min-height: 85px; resize: vertical; }
+.login-wrap button { width: 100%; margin-top: 15px; }
+.message { margin-top: 12px; line-height: 1.5; color: var(--red); overflow-wrap: anywhere; }
+.stats {
+  display: grid; grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px; margin: 24px 0;
+}
+.stat {
+  padding: 20px; border-radius: 15px; border: 1px solid var(--border);
+  background: linear-gradient(145deg,#20232b,#15171d); min-width: 0;
+}
+.stat-title { color: var(--muted); font-size: 13px; font-weight: 700; }
+.stat-number {
+  margin-top: 10px; font-size: clamp(22px,3vw,31px);
+  font-weight: 800; overflow-wrap: anywhere;
+}
+.orange { color: var(--orange); }
+.green { color: var(--green); }
+.blue { color: var(--blue); }
+.yellow { color: var(--yellow); }
+.toolbar {
+  display: grid; grid-template-columns: minmax(180px,2fr) minmax(150px,1fr) auto;
+  gap: 10px; margin: 16px 0;
+}
+.toolbar input,.toolbar select { margin: 0; }
+.booking-list { display: grid; gap: 14px; }
+.booking {
+  border: 1px solid var(--border); background: #191c23;
+  border-radius: 13px; padding: 17px;
+}
+.booking-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; flex-wrap: wrap;
+}
+.booking-code { color: var(--orange); font-weight: 800; font-size: 17px; }
+.booking-info {
+  color: #d9dce3; line-height: 1.8; margin: 13px 0;
+  overflow-wrap: anywhere;
+}
+.booking-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.booking-actions button { font-size: 12px; padding: 9px 11px; }
+.status-pill {
+  display: inline-block; border-radius: 30px; padding: 6px 10px;
+  background: #303540; color: #fff; font-size: 12px;
+}
+.booking select { margin: 8px 0 12px; }
+.section-head {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap;
+}
+.grid2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 10; background: #000b;
+  display: flex; justify-content: center; align-items: flex-start;
+  overflow-y: auto; padding: 25px 12px;
+}
+.modal {
+  width: min(650px,100%); background: var(--panel);
+  border: 1px solid var(--border); border-radius: 16px; padding: 22px;
+}
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+hr { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+footer { color: var(--muted); text-align: center; padding: 25px 0 10px; font-size: 12px; }
+
+@media (max-width: 850px) {
+  .stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .toolbar { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  body { padding: 12px; }
+  .panel { padding: 15px; }
+  .stats { gap: 9px; }
+  .stat { padding: 14px; }
+  .stat-number { font-size: 21px; }
+  .grid2 { grid-template-columns: 1fr; }
+  .header { align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- LOGIN -->
+  <section id="loginSection" class="login-wrap">
+    <div class="panel">
+      <div class="brand">Gadget<span>Care</span></div>
+      <p class="subtitle">Masuk ke panel administrator</p>
+      <form id="loginForm">
+        <label for="email">Email admin</label>
+        <input id="email" type="email" autocomplete="username" required>
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+        <button type="submit">Masuk ke Dashboard</button>
+      </form>
+      <div id="loginMessage" class="message" role="status"></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <main id="adminSection" class="hidden">
+    <header class="header">
+      <div>
+        <div class="brand">Gadget<span>Care</span></div>
+        <p class="subtitle">Panel Admin · Kelola servis HP</p>
+      </div>
+      <button id="logoutButton" class="danger logout">Keluar</button>
+    </header>
+
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-title">📋 Total Booking</div>
+        <div class="stat-number orange" id="totalBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">⏳ Menunggu</div>
+        <div class="stat-number yellow" id="waitingBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">🔧 Sedang Diproses</div>
+        <div class="stat-number blue" id="processBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">✅ Selesai</div>
+        <div class="stat-number green" id="doneBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">💰 Pendapatan Hari Ini</div>
+        <div class="stat-number green" id="dailyRevenue">Rp0</div>
+        <p class="muted" style="font-size:12px;margin-top:8px">Pembayaran lunas hari ini</p>
+      </div>
+      <div class="stat">
+        <div class="stat-title">📈 Pendapatan Bulan Ini</div>
+        <div class="stat-number orange" id="monthlyRevenue">Rp0</div>
+        <p class="muted" style="font-size:12px;margin-top:8px">Pembayaran lunas bulan ini</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>Daftar Booking</h2>
+          <p class="muted">Cari pesanan, periksa detail, dan perbarui status.</p>
+        </div>
+        <button id="refreshButton" class="secondary">↻ Refresh</button>
+      </div>
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="Cari kode, nama, HP, perangkat...">
+        <select id="statusFilter">
+          <option value="">Semua status</option>
+          <option>Menunggu</option>
+          <option>Dikonfirmasi</option>
+          <option>Teknisi Berangkat</option>
+          <option>Sedang Diperbaiki</option>
+          <option>Selesai</option>
+        </select>
+        <select id="paymentFilter">
+          <option value="">Semua pembayaran</option>
+          <option value="lunas">Lunas</option>
+          <option value="belum">Belum lunas</option>
+        </select>
+      </div>
+      <div id="bookingList" class="booking-list">Memuat booking...</div>
+      <div id="bookingMessage" class="message"></div>
+    </section>
+
+    <section class="panel">
+      <h2>⚙️ Pengaturan Toko</h2>
+      <p class="muted">Atur jam operasional yang digunakan oleh halaman pelanggan.</p>
+      <div class="grid2">
+        <div>
+          <label for="storeClosed">Status toko</label>
+          <select id="storeClosed">
+            <option value="false">Buka sesuai jadwal</option>
+            <option value="true">Tutup sementara</option>
+          </select>
+        </div>
+        <div>
+          <label for="openDays">Hari buka (0 = Minggu, 6 = Sabtu)</label>
+          <input id="openDays" placeholder="1,2,3,4,5,6">
+        </div>
+        <div>
+          <label for="openingTime">Jam buka</label>
+          <input id="openingTime" type="time" value="08:00">
+        </div>
+        <div>
+          <label for="closingTime">Jam tutup</label>
+          <input id="closingTime" type="time" value="20:00">
+        </div>
+      </div>
+      <label for="closureMessage">Pesan saat tutup</label>
+      <textarea id="closureMessage" placeholder="Pelayanan sedang tutup. Silakan booking kembali sesuai jam operasional."></textarea>
+      <div class="modal-actions">
+        <button id="saveStoreButton">Simpan Pengaturan</button>
+        <button id="reloadStoreButton" class="secondary">Muat Ulang Pengaturan</button>
+      </div>
+      <div id="storeSettingsMessage" class="message"></div>
+    </section>
+  </main>
+  <footer>© 2026 GadgetCare · Admin Dashboard</footer>
+</div>
+
+<!-- MODAL DETAIL BOOKING -->
+<div id="detailModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <div class="section-head">
+      <h2>Detail Booking</h2>
+      <button id="closeModalButton" class="secondary small">Tutup</button>
+    </div>
+    <div id="detailSummary" class="booking-info"></div>
+    <label for="detailDescription">Keterangan teknisi</label>
+    <textarea id="detailDescription"></textarea>
+    <div class="grid2">
+      <div>
+        <label for="detailPrice">Total harga (Rp)</label>
+        <input id="detailPrice" type="number" min="0" step="1000" placeholder="Contoh: 150000">
+      </div>
+      <div>
+        <label for="detailPayment">Status pembayaran</label>
+        <select id="detailPayment">
+          <option value="belum_lunas">Belum lunas</option>
+          <option value="lunas">Lunas</option>
+        </select>
+      </div>
+      <div>
+        <label for="detailStatus">Status servis</label>
+        <select id="detailStatus">
+          <option>Menunggu</option>
+          <option>Dikonfirmasi</option>
+          <option>Teknisi Berangkat</option>
+          <option>Sedang Diperbaiki</option>
+          <option>Selesai</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button id="saveDetailButton">Simpan Perubahan</button>
+      <button id="whatsappButton" class="secondary">WhatsApp Pelanggan</button>
+      <button id="mapButton" class="secondary">Buka Peta</button>
+      <button id="receiptButton" class="secondary">Cetak Nota</button>
+    </div>
+    <div id="detailMessage" class="message"></div>
+  </div>
+</div>
+
 <script>
-const URL="https://sqpolxwdyypbxylgvihi.supabase.co",KEY="sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G",sb=window.supabase.createClient(URL,KEY),$=id=>document.getElementById(id);let rows=[];
-function esc(s){return String(s??"-").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function rp(n){return n==null?"Belum diatur":"Rp"+Number(n).toLocaleString("id-ID")}
-function show(){ $("login").classList.add("hidden");$("dash").classList.remove("hidden");load()}
-async function session(){const {data}=await sb.auth.getSession();if(data.session)show()}
-$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginBtn").disabled=true;$("loginMsg").textContent="Memeriksa...";try{let {error}=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;show()}catch(x){$("loginMsg").textContent="Login gagal: "+x.message}finally{$("loginBtn").disabled=false}};
-$("logout").onclick=async()=>{await sb.auth.signOut();location.reload()};$("refresh").onclick=load;$("search").oninput=render;$("filter").onchange=render;
-async function load(){ $("list").textContent="Memuat booking...";try{let {data,error}=await sb.from("bookings").select("*").order("created_at",{ascending:false}).limit(500);if(error)throw error;rows=data||[];$("total").textContent=rows.length;$("wait").textContent=rows.filter(x=>(x.status||"Menunggu")==="Menunggu").length;$("process").textContent=rows.filter(x=>["Dikonfirmasi","Teknisi Berangkat","Sedang Diperbaiki"].includes(x.status)).length;$("done").textContent=rows.filter(x=>x.status==="Selesai").length;render()}catch(x){$("list").textContent="Gagal memuat: "+x.message}}
-function render(){let q=$("search").value.toLowerCase(),st=$("filter").value,a=rows.filter(x=>(!st||x.status===st)&&[x.booking_code,x.customer_name,x.phone,x.device].some(v=>String(v||"").toLowerCase().includes(q)));if(!a.length){$("list").textContent="Tidak ada booking yang cocok.";return}
-$("list").innerHTML=a.map(x=>`<article class="booking"><div class="code">${esc(x.booking_code)}</div><p><b>Status:</b> ${esc(x.status||"Menunggu")} &nbsp; <b>Pembayaran:</b> ${esc(x.payment_status||"Belum ada")}</p><div class="details"><b>${esc(x.customer_name)}</b> · ${esc(x.phone)}<br>Perangkat: ${esc(x.device)}<br>Kerusakan: ${esc(x.damage)}<br>Keterangan: ${esc(x.description)}<br>Alamat: ${esc(x.address)}<br>Estimasi: ${rp(x.estimated_price)} · Total: ${rp(x.total_price)}<br>Metode: ${esc(x.payment_method)} · Order: ${esc(x.payment_order_id)}<br>Masuk: ${esc(x.created_at?new Date(x.created_at).toLocaleString("id-ID"):"-")}</div><div class="grid"><div><label>Status perbaikan</label><select id="st-${esc(x.id)}"><option ${x.status==="Menunggu"?"selected":""}>Menunggu</option><option ${x.status==="Dikonfirmasi"?"selected":""}>Dikonfirmasi</option><option ${x.status==="Teknisi Berangkat"?"selected":""}>Teknisi Berangkat</option><option ${x.status==="Sedang Diperbaiki"?"selected":""}>Sedang Diperbaiki</option><option ${x.status==="Selesai"?"selected":""}>Selesai</option><option ${x.status==="Dibatalkan"?"selected":""}>Dibatalkan</option></select></div><div><label>Total biaya (rupiah)</label><input id="price-${esc(x.id)}" type="number" min="0" step="1000" value="${x.total_price==null?"":Number(x.total_price)}" placeholder="Total tagihan"></div></div><div class="actions"><button onclick="save('${esc(x.id)}')">Simpan perubahan</button><a class="btn secondary" href="https://wa.me/${esc(String(x.phone||"").replace(/\D/g,"").replace(/^0/,"62"))}" target="_blank" rel="noopener">WhatsApp pelanggan</a></div><div id="msg-${esc(x.id)}" class="message"></div></article>`).join("")}
-async function save(id){let msg=$("msg-"+id),raw=$("price-"+id).value,upd={status:$("st-"+id).value};if(raw.trim()!==""){let n=Number(raw);if(!Number.isSafeInteger(n)||n<0){msg.textContent="Biaya harus berupa angka bulat non-negatif.";return}upd.total_price=n}msg.textContent="Menyimpan...";try{let {error}=await sb.from("bookings").update(upd).eq("id",id);if(error)throw error;msg.textContent="Tersimpan.";await load()}catch(e){msg.textContent="Gagal menyimpan: "+e.message}}
-session();
-</script></body></html>
+"use strict";
+
+/* Konfigurasi Supabase */
+const SUPABASE_URL = "https://sqpolxwdyypbxylgvihi.supabase.co";
+const SUPABASE_KEY = "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let allBookings = [];
+let selectedBooking = null;
+let storeSettings = null;
+
+const $ = id => document.getElementById(id);
+const money = value => new Intl.NumberFormat("id-ID", {
+  style: "currency", currency: "IDR", maximumFractionDigits: 0
+}).format(Number(value) || 0);
+
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[char]));
+}
+
+function localDateParts(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(date);
+  return Object.fromEntries(parts.map(p => [p.type, p.value]));
+}
+
+function isPaid(item) {
+  return String(item.payment_status || "").toLowerCase() === "lunas";
+}
+
+/*
+ * Pendapatan memakai total_price dan payment_status=lunas.
+ * Tanggal transaksi menggunakan paid_at jika tersedia.
+ * Jika belum ada paid_at, fallback ke created_at.
+ * Untuk laporan akuntansi yang presisi, simpan tanggal pembayaran saat lunas.
+ */
+function paymentDate(item) {
+  return item.paid_at || item.updated_at || item.created_at || null;
+}
+
+function updateStats() {
+  const data = allBookings;
+  $("totalBooking").textContent = data.length;
+  $("waitingBooking").textContent =
+    data.filter(x => x.status === "Menunggu").length;
+  $("processBooking").textContent =
+    data.filter(x => ["Dikonfirmasi", "Teknisi Berangkat", "Sedang Diperbaiki"].includes(x.status)).length;
+  $("doneBooking").textContent =
+    data.filter(x => x.status === "Selesai").length;
+
+  const today = localDateParts();
+  const monthKey = today.year + "-" + today.month;
+  let daily = 0, monthly = 0;
+
+  data.forEach(item => {
+    if (!isPaid(item)) return;
+    const amount = Number(item.total_price) || 0;
+    const rawDate = paymentDate(item);
+    if (!rawDate) return;
+    const parts = localDateParts(new Date(rawDate));
+    const dayKey = parts.year + "-" + parts.month + "-" + parts.day;
+    const thisMonthKey = parts.year + "-" + parts.month;
+    if (dayKey === today.year + "-" + today.month + "-" + today.day) daily += amount;
+    if (thisMonthKey === monthKey) monthly += amount;
+  });
+
+  $("dailyRevenue").textContent = money(daily);
+  $("monthlyRevenue").textContent = money(monthly);
+}
+
+function filteredBookings() {
+  const query = $("searchInput").value.trim().toLowerCase();
+  const status = $("statusFilter").value;
+  const payment = $("paymentFilter").value;
+
+  return allBookings.filter(item => {
+    const text = [
+      item.booking_code, item.customer_name, item.phone,
+      item.device, item.damage, item.address
+    ].join(" ").toLowerCase();
+
+    if (query && !text.includes(query)) return false;
+    if (status && item.status !== status) return false;
+    if (payment === "lunas" && !isPaid(item)) return false;
+    if (payment === "belum" && isPaid(item)) return false;
+    return true;
+  });
+}
+
+function renderBookings() {
+  const list = $("bookingList");
+  const data = filteredBookings();
+
+  if (!data.length) {
+    list.innerHTML = '<div class="booking">Tidak ada booking yang cocok.</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(item => {
+    const date = item.created_at
+      ? new Date(item.created_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
+      : "-";
+    const address = item.address || "";
+    const phone = String(item.phone || "").replace(/\D/g, "");
+    const waPhone = phone.startsWith("0") ? "62" + phone.slice(1) : phone;
+
+    return `
+      <article class="booking">
+        <div class="booking-top">
+          <div>
+            <div class="booking-code">${safe(item.booking_code || "Tanpa kode")}</div>
+            <p class="muted" style="margin-top:6px">${safe(date)}</p>
+          </div>
+          <span class="status-pill">${safe(item.status || "Menunggu")}</span>
+        </div>
+        <div class="booking-info">
+          👤 <b>Nama:</b> ${safe(item.customer_name || "-")}<br>
+          📱 <b>No. HP:</b> ${safe(item.phone || "-")}<br>
+          📲 <b>Perangkat:</b> ${safe(item.device || "-")}<br>
+          🔧 <b>Kerusakan:</b> ${safe(item.damage || "-")}<br>
+          📝 <b>Keterangan:</b> ${safe(item.description || "-")}<br>
+          📍 <b>Alamat:</b> ${safe(address || "-")}<br>
+          💵 <b>Total:</b> ${money(item.total_price)}<br>
+          💳 <b>Pembayaran:</b> ${isPaid(item) ? "Lunas" : "Belum lunas"}
+        </div>
+        <label>Ubah status servis</label>
+        <select data-status-id="${safe(item.id)}">
+          ${["Menunggu","Dikonfirmasi","Teknisi Berangkat","Sedang Diperbaiki","Selesai"].map(s =>
+            `<option ${item.status === s ? "selected" : ""}>${s}</option>`
+          ).join("")}
+        </select>
+        <div class="booking-actions">
+          <button data-detail-id="${safe(item.id)}">Detail / Harga / Pembayaran</button>
+          ${waPhone ? `<button class="secondary" data-wa="${safe(waPhone)}" data-code="${safe(item.booking_code || "")}">WhatsApp</button>` : ""}
+          ${address ? `<button class="secondary" data-map="${safe(address)}">Peta</button>` : ""}
+          <button class="secondary" data-receipt-id="${safe(item.id)}">Cetak Nota</button>
+        </div>
+      </article>`;
+  }).join("");
+
+  list.querySelectorAll("[data-status-id]").forEach(select => {
+    select.addEventListener("change", () => updateStatus(select.dataset.statusId, select.value));
+  });
+  list.querySelectorAll("[data-detail-id]").forEach(button => {
+    button.addEventListener("click", () => openDetail(button.dataset.detailId));
+  });
+  list.querySelectorAll("[data-wa]").forEach(button => {
+    button.addEventListener("click", () => {
+      const message = `Halo, terkait booking servis ${button.dataset.code} dari GadgetCare.`;
+      window.open(`https://wa.me/${button.dataset.wa}?text=${encodeURIComponent(message)}`, "_blank");
+    });
+  });
+  list.querySelectorAll("[data-map]").forEach(button => {
+    button.addEventListener("click", () => {
+      window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(button.dataset.map), "_blank");
+    });
+  });
+  list.querySelectorAll("[data-receipt-id]").forEach(button => {
+    button.addEventListener("click", () => printReceipt(button.dataset.receiptId));
+  });
+}
+
+async function loadBookings() {
+  $("bookingMessage").textContent = "Memuat data booking...";
+  $("bookingList").innerHTML = '<div class="booking">Memuat booking...</div>';
+
+  const { data, error } = await supabaseClient
+    .from("bookings")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    $("bookingMessage").textContent = "Gagal memuat booking: " + error.message;
+    $("bookingList").innerHTML = "";
+    return;
+  }
+
+  allBookings = data || [];
+  updateStats();
+  renderBookings();
+  $("bookingMessage").textContent = `Menampilkan ${filteredBookings().length} dari ${allBookings.length} booking.`;
+}
+
+async function updateStatus(id, status) {
+  const { error } = await supabaseClient
+    .from("bookings").update({ status }).eq("id", id);
+
+  if (error) {
+    alert("Gagal mengubah status: " + error.message);
+    await loadBookings();
+    return;
+  }
+  await loadBookings();
+}
+
+function openDetail(id) {
+  selectedBooking = allBookings.find(x => String(x.id) === String(id));
+  if (!selectedBooking) return;
+
+  const item = selectedBooking;
+  $("detailSummary").innerHTML = `
+    <b>Kode:</b> ${safe(item.booking_code || "-")}<br>
+    <b>Nama:</b> ${safe(item.customer_name || "-")}<br>
+    <b>Nomor HP:</b> ${safe(item.phone || "-")}<br>
+    <b>Perangkat:</b> ${safe(item.device || "-")}<br>
+    <b>Kerusakan:</b> ${safe(item.damage || "-")}<br>
+    <b>Alamat:</b> ${safe(item.address || "-")}<br>
+    <b>Dibuat:</b> ${safe(item.created_at || "-")}
+  `;
+  $("detailDescription").value = item.description || "";
+  $("detailPrice").value = item.total_price ?? "";
+  $("detailPayment").value = isPaid(item) ? "lunas" : "belum_lunas";
+  $("detailStatus").value = item.status || "Menunggu";
+  $("detailMessage").textContent = "";
+  $("detailModal").classList.remove("hidden");
+}
+
+function closeDetail() {
+  $("detailModal").classList.add("hidden");
+  selectedBooking = null;
+}
+
+async function saveDetail() {
+  if (!selectedBooking) return;
+  const id = selectedBooking.id;
+  const price = Number($("detailPrice").value);
+
+  if (!Number.isFinite(price) || price < 0) {
+    $("detailMessage").textContent = "Masukkan harga yang valid.";
+    return;
+  }
+
+  $("saveDetailButton").disabled = true;
+  $("detailMessage").textContent = "Menyimpan perubahan...";
+
+  // Update kolom umum yang dipakai tabel booking.
+  const { error: updateError } = await supabaseClient
+    .from("bookings")
+    .update({
+      description: $("detailDescription").value.trim(),
+      status: $("detailStatus").value,
+      total_price: price,
+      payment_status: $("detailPayment").value === "lunas" ? "lunas" : "belum_lunas"
+    })
+    .eq("id", id);
+
+  $("saveDetailButton").disabled = false;
+
+  if (updateError) {
+    $("detailMessage").textContent = "Gagal menyimpan: " + updateError.message;
+    return;
+  }
+
+  $("detailMessage").textContent = "Perubahan berhasil disimpan.";
+  await loadBookings();
+  selectedBooking = allBookings.find(x => String(x.id) === String(id)) || null;
+}
+
+function printReceipt(id) {
+  const item = allBookings.find(x => String(x.id) === String(id));
+  if (!item) return;
+
+  const receipt = `
+    <h2>GadgetCare — Nota Servis</h2>
+    <p>Kode booking: ${safe(item.booking_code || "-")}</p>
+    <p>Nama pelanggan: ${safe(item.customer_name || "-")}</p>
+    <p>Nomor HP: ${safe(item.phone || "-")}</p>
+    <p>Perangkat: ${safe(item.device || "-")}</p>
+    <p>Kerusakan: ${safe(item.damage || "-")}</p>
+    <p>Keterangan: ${safe(item.description || "-")}</p>
+    <p>Status servis: ${safe(item.status || "-")}</p>
+    <p>Status pembayaran: ${isPaid(item) ? "Lunas" : "Belum lunas"}</p>
+    <h3>Total: ${money(item.total_price)}</h3>
+    <p>Terima kasih telah menggunakan layanan GadgetCare.</p>`;
+  const win = window.open("", "_blank", "width=600,height=700");
+  if (!win) {
+    alert("Izinkan pop-up browser untuk mencetak nota.");
+    return;
+  }
+  win.document.write(`<!DOCTYPE html><html><head><title>Nota GadgetCare</title>
+    <meta charset="UTF-8"><style>body{font-family:Arial;padding:25px;line-height:1.7}</style>
+    </head><body>${receipt}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  win.document.close();
+}
+
+function openSelectedWhatsApp() {
+  if (!selectedBooking) return;
+  const phone = String(selectedBooking.phone || "").replace(/\D/g, "");
+  if (!phone) return alert("Nomor WhatsApp pelanggan tidak tersedia.");
+  const normalized = phone.startsWith("0") ? "62" + phone.slice(1) : phone;
+  const message = `Halo, terkait booking servis ${selectedBooking.booking_code || ""} dari GadgetCare.`;
+  window.open(`https://wa.me/${normalized}?text=${encodeURIComponent(message)}`, "_blank");
+}
+
+function openSelectedMap() {
+  if (!selectedBooking || !selectedBooking.address) {
+    return alert("Alamat pelanggan tidak tersedia.");
+  }
+  window.open("https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(selectedBooking.address), "_blank");
+}
+
+function printSelectedReceipt() {
+  if (selectedBooking) printReceipt(selectedBooking.id);
+}
+
+/* Pengaturan toko: tabel public.store_settings, satu baris id=1 */
+async function loadStoreSettings() {
+  $("storeSettingsMessage").textContent = "Memuat pengaturan...";
+  const { data, error } = await supabaseClient
+    .from("store_settings").select("*").eq("id", 1).maybeSingle();
+
+  if (error) {
+    $("storeSettingsMessage").textContent = "Gagal memuat pengaturan: " + error.message;
+    return;
+  }
+  if (!data) {
+    $("storeSettingsMessage").textContent = "Data pengaturan toko id=1 belum ditemukan.";
+    return;
+  }
+
+  storeSettings = data;
+  $("storeClosed").value = String(Boolean(data.is_closed));
+  $("openingTime").value = String(data.opening_time || "08:00").slice(0, 5);
+  $("closingTime").value = String(data.closing_time || "20:00").slice(0, 5);
+  $("openDays").value = Array.isArray(data.open_days) ? data.open_days.join(",") : "1,2,3,4,5,6";
+  $("closureMessage").value = data.closure_message || "";
+  $("storeSettingsMessage").textContent = "Pengaturan berhasil dimuat.";
+}
+
+async function saveStoreSettings() {
+  const openDays = $("openDays").value.split(",")
+    .map(x => Number(x.trim())).filter(x => Number.isInteger(x) && x >= 0 && x <= 6);
+  if (!openDays.length) {
+    $("storeSettingsMessage").textContent = "Isi hari buka dengan angka 0 sampai 6.";
+    return;
+  }
+  if ($("openingTime").value >= $("closingTime").value) {
+    $("storeSettingsMessage").textContent = "Jam tutup harus lebih akhir daripada jam buka.";
+    return;
+  }
+
+  const payload = {
+    id: 1,
+    is_closed: $("storeClosed").value === "true",
+    opening_time: $("openingTime").value,
+    closing_time: $("closingTime").value,
+    open_days: [...new Set(openDays)],
+    closure_message: $("closureMessage").value.trim(),
+    updated_at: new Date().toISOString()
+  };
+
+  $("saveStoreButton").disabled = true;
+  $("storeSettingsMessage").textContent = "Menyimpan pengaturan...";
+  const { error } = await supabaseClient.from("store_settings")
+    .upsert(payload, { onConflict: "id" });
+  $("saveStoreButton").disabled = false;
+
+  $("storeSettingsMessage").textContent = error
+    ? "Gagal menyimpan: " + error.message
+    : "Pengaturan toko berhasil disimpan.";
+  if (!error) await loadStoreSettings();
+}
+
+/* Login dan session */
+async function showAdmin() {
+  $("loginSection").classList.add("hidden");
+  $("adminSection").classList.remove("hidden");
+  await Promise.all([loadBookings(), loadStoreSettings()]);
+}
+
+async function checkSession() {
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (error) {
+    $("loginMessage").textContent = error.message;
+    return;
+  }
+  if (data.session) await showAdmin();
+}
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  $("loginMessage").textContent = "Memeriksa akun...";
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email: $("email").value.trim(),
+    password: $("password").value
+  });
+  if (error) {
+    $("loginMessage").textContent = "Login gagal: " + error.message;
+    return;
+  }
+  $("loginMessage").textContent = "";
+  await showAdmin();
+});
+
+$("logoutButton").addEventListener("click", async () => {
+  await supabaseClient.auth.signOut();
+  location.reload();
+});
+
+$("refreshButton").addEventListener("click", loadBookings);
+$("searchInput").addEventListener("input", renderBookings);
+$("statusFilter").addEventListener("change", renderBookings);
+$("paymentFilter").addEventListener("change", renderBookings);
+$("closeModalButton").addEventListener("click", closeDetail);
+$("saveDetailButton").addEventListener("click", saveDetail);
+$("whatsappButton").addEventListener("click", openSelectedWhatsApp);
+$("mapButton").addEventListener("click", openSelectedMap);
+$("receiptButton").addEventListener("click", printSelectedReceipt);
+$("saveStoreButton").addEventListener("click", saveStoreSettings);
+$("reloadStoreButton").addEventListener("click", loadStoreSettings);
+$("detailModal").addEventListener("click", event => {
+  if (event.target === $("detailModal")) closeDetail();
+});
+
+checkSession();
+</script>
+</body>
+</html>
