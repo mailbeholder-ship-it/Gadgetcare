@@ -359,7 +359,12 @@ function updateStats() {
     data.filter(x => ["Dikonfirmasi", "Teknisi Berangkat", "Sedang Diperbaiki"].includes(x.status)).length;
   $("doneBooking").textContent =
     data.filter(x => x.status === "Selesai").length;
+const { data, error } =
+  await supabaseClient.auth.getUser();
 
+console.log("UID admin:", data.user?.id);
+console.log("Error:", error);
+  
   const today = localDateParts();
   const monthKey = today.year + "-" + today.month;
   let daily = 0, monthly = 0;
