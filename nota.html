@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Nota Service - GadgetCare</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #eef0f2; color: #111; font-family: Arial, Helvetica, sans-serif; }
+    body { font-size: 13px; }
+    .container { width: 100%; max-width: 420px; margin: 18px auto; padding: 0 10px; }
+    .receipt { background: #fff; padding: 18px 16px; border-radius: 10px; box-shadow: 0 3px 18px rgba(0,0,0,.08); }
+    .loading, .error { text-align: center; padding: 40px 12px; line-height: 1.5; }
+    .error { color: #b42318; overflow-wrap: anywhere; }
+    .brand { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
+    .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .gadget { color: #111; }
+    .care { color: #111; }
+    .tagline { text-align: center; font-size: 10px; margin-top: 4px; }
+    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 7px 0 0; overflow-wrap: anywhere; }
+    .dash { border: 0; border-top: 1px dashed #111; margin: 12px 0; }
+    .receipt-title { text-align: center; font-size: 15px; font-weight: 800; letter-spacing: .5px; margin: 2px 0 6px; }
+    .booking-code { text-align: center; font-weight: 700; font-size: 12px; overflow-wrap: anywhere; }
+    .date { text-align: center; font-size: 10px; margin-top: 4px; }
+    .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 12px 0 7px; }
+    .line { display: grid; grid-template-columns: 84px minmax(0,1fr); gap: 7px; margin: 5px 0; line-height: 1.35; }
+    .label { color: #333; }
+    .value { font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+    .damage { border: 1px dashed #777; padding: 7px; font-size: 11px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .price-row { display: flex; justify-content: space-between; gap: 8px; margin: 7px 0; line-height: 1.35; }
+    .price-row span:last-child { text-align: right; overflow-wrap: anywhere; }
+    .total { border-top: 1px dashed #111; margin-top: 9px; padding-top: 9px; font-weight: 800; font-size: 15px; }
+    .payment-status { font-weight: 700; }
+    .thanks { text-align: center; font-weight: 800; font-size: 12px; margin-top: 12px; }
+    .thanks-note { text-align: center; font-size: 10px; line-height: 1.45; margin-top: 4px; }
+    .footer { text-align: center; font-size: 9px; line-height: 1.4; margin-top: 10px; overflow-wrap: anywhere; }
+    .buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
+    button { border: 0; border-radius: 7px; padding: 12px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; }
+    .print-btn { background: #111; }
+    .wa-btn { background: #128c4a; }
+    .close-btn { background: #626b75; }
+    @media (max-width: 360px) { .container { padding: 0; margin: 0; } .receipt { border-radius: 0; padding: 16px 12px; } }
+    @media print {
+      @page { size: 58mm auto; margin: 0; }
+      html, body { width: 58mm !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 10px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .container { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 !important; }
+      .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 3mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+      .brand { font-size: 17px !important; color: #000 !important; }
+      .brand img { width: 24px !important; height: 24px !important; filter: grayscale(100%); }
+      .gadget, .care, .label, .value, .tagline, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
+      .tagline, .store-address { font-size: 9px !important; }
+      .receipt-title { font-size: 13px !important; }
+      .booking-code { font-size: 10px !important; }
+      .dash { margin: 9px 0 !important; border-top: 1px dashed #000 !important; }
+      .section-title { font-size: 9px !important; margin-top: 10px !important; margin-bottom: 5px !important; }
+      .line { grid-template-columns: 21mm minmax(0,1fr) !important; gap: 2mm !important; margin: 4px 0 !important; font-size: 9px !important; line-height: 1.35 !important; }
+      .damage { padding: 5px !important; font-size: 9px !important; border-color: #555 !important; }
+      .price-row { font-size: 9px !important; margin: 5px 0 !important; }
+      .total { font-size: 12px !important; }
+      .thanks { font-size: 11px !important; }
+      .thanks-note { font-size: 9px !important; }
+      .footer { font-size: 8px !important; }
+      .buttons { display: none !important; }
+      .section, .damage, .price-row, .total, .thanks { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <article class="receipt">
+      <div id="content" class="loading">Memuat data nota...</div>
+    </article>
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://sqpolxwdyypbxylgvihi.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let currentBooking = null;
+
+    function getBookingCode() {
+      return new URLSearchParams(window.location.search).get("code");
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatRupiah(value) {
+      const amount = Number(value || 0);
+      return "Rp " + amount.toLocaleString("id-ID");
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString("id-ID", {
+        day: "2-digit", month: "short", year: "numeric",
+        hour: "2-digit", minute: "2-digit"
+      });
+    }
+
+    function showError(message, code) {
+      document.getElementById("content").innerHTML = `
+        <div class="error">
+          <strong>Nota tidak dapat dibuka</strong>
+          ${code ? `<p>Kode booking: <b>${escapeHtml(code)}</b></p>` : ""}
+          <p>${escapeHtml(message)}</p>
+          <p>Pastikan kode booking benar dan data dapat diakses.</p>
+        </div>`;
+    }
+
+    async function loadNota() {
+      const code = getBookingCode();
+      if (!code) {
+        showError("Kode booking tidak ditemukan di alamat halaman.", "");
+        return;
+      }
+
+      try {
+        const { data, error } = await supabaseClient.rpc("check_booking", {
+          p_booking_code: code
+        });
+
+        if (error) {
+          console.error("SUPABASE ERROR:", error);
+          showError("Data nota gagal dimuat: " + error.message, code);
+          return;
+        }
+
+        currentBooking = Array.isArray(data) ? data[0] : data;
+        if (!currentBooking) {
+          showError("Data booking tidak ditemukan.", code);
+          return;
+        }
+        renderNota(currentBooking);
+      } catch (error) {
+        console.error("Gagal memuat nota:", error);
+        showError("Terjadi kesalahan koneksi. Periksa internet lalu muat ulang halaman.", code);
+      }
+    }
+
+    function renderNota(b) {
+      const estimated = Number(b.estimated_price || 0);
+      const total = Number(b.total_price ?? b.estimated_price ?? 0);
+      const date = formatDate(b.created_at);
+      const payment = b.payment_status || "Belum diketahui";
+      const address = "Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366";
+
+      document.getElementById("content").innerHTML = `
+        <header>
+          <div class="brand">
+            <img src="./logo-gadgetcare.png" alt="Logo" onerror="this.style.display='none'">
+            <span><span class="gadget">Gadget</span><span class="care">Care</span></span>
+          </div>
+          <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
+          <div class="store-address">${escapeHtml(address)}</div>
+        </header>
+
+        <hr class="dash">
+        <div class="receipt-title">NOTA SERVICE</div>
+        <div class="booking-code">${escapeHtml(b.booking_code || "-")}</div>
+        <div class="date">${escapeHtml(date)}</div>
+        <hr class="dash">
+
+        <div class="section-title">Informasi Pelanggan</div>
+        <div class="line"><div class="label">Nama</div><div class="value">${escapeHtml(b.customer_name || "-")}</div></div>
+        <div class="line"><div class="label">WhatsApp</div><div class="value">${escapeHtml(b.phone || "-")}</div></div>
+        <div class="line"><div class="label">Alamat</div><div class="value">${escapeHtml(b.address || "-")}</div></div>
+
+        <hr class="dash">
+        <div class="section-title">Detail Perangkat</div>
+        <div class="line"><div class="label">Perangkat</div><div class="value">${escapeHtml(b.device || "-")}</div></div>
+        <div class="line"><div class="label">Kerusakan</div><div class="value">${escapeHtml(b.damage || "-")}</div></div>
+        <div class="line"><div class="label">Status Service</div><div class="value">${escapeHtml(b.status || "Menunggu")}</div></div>
+        <div class="line"><div class="label">Pembayaran</div><div class="value payment-status">${escapeHtml(payment)}</div></div>
+
+        <div class="section-title">Keterangan Kerusakan</div>
+        <div class="damage">${escapeHtml(b.description || "Belum ada keterangan kerusakan.")}</div>
+
+        <hr class="dash">
+        <div class="section-title">Rincian Biaya</div>
+        <div class="price-row"><span>Estimasi Harga</span><span>${formatRupiah(estimated)}</span></div>
+        <div class="price-row total"><span>TOTAL</span><span>${formatRupiah(total)}</span></div>
+
+        <div class="thanks">TERIMA KASIH</div>
+        <div class="thanks-note">Terima kasih telah mempercayakan perbaikan perangkat Anda kepada GadgetCare.</div>
+        <div class="footer">Simpan nota ini sebagai bukti service.<br>GadgetCare • Home Service</div>
+
+        <div class="buttons">
+          <button class="print-btn" type="button" onclick="window.print()">Cetak Nota 58 mm</button>
+          <button class="wa-btn" type="button" onclick="sendWhatsApp()">Kirim via WhatsApp</button>
+          <button class="close-btn" type="button" onclick="closeNota()">Tutup</button>
+        </div>`;
+    }
+
+    function sendWhatsApp() {
+      if (!currentBooking || !currentBooking.phone) {
+        alert("Nomor WhatsApp pelanggan tidak tersedia.");
+        return;
+      }
+
+      let number = String(currentBooking.phone).replace(/\D/g, "");
+      if (number.startsWith("0")) number = "62" + number.slice(1);
+      else if (number.startsWith("8")) number = "62" + number;
+      if (!number.startsWith("62")) {
+        alert("Format nomor WhatsApp tidak dikenali. Periksa nomor pelanggan.");
+        return;
+      }
+
+      const b = currentBooking;
+      const message = `Halo ${b.customer_name || ""}, berikut informasi service GadgetCare.
+
+Kode Booking: ${b.booking_code || "-"}
+Perangkat: ${b.device || "-"}
+Kerusakan: ${b.damage || "-"}
+Keterangan: ${b.description || "-"}
+Status Service: ${b.status || "Menunggu"}
+Estimasi Harga: ${formatRupiah(b.estimated_price)}
+Total: ${formatRupiah(b.total_price ?? b.estimated_price)}
+Status Pembayaran: ${b.payment_status || "Belum diketahui"}
+
+Terima kasih telah menggunakan GadgetCare.`;
+
+      window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(message), "_blank", "noopener");
+    }
+
+    function closeNota() {
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = "./index.html";
+    }
+
+    loadNota();
+  </script>
+</body>
+</html>
