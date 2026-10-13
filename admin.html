@@ -830,6 +830,9 @@ async function checkSession() {
   }
   if (data.session) await showAdmin();
 }
+  console.log("Script login dijalankan");
+
+console.log("Form ditemukan:", !!$("loginForm"));
 $("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
 
