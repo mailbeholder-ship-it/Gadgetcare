@@ -823,14 +823,43 @@ async function checkSession() {
   }
   if (data.session) await showAdmin();
 }
-
 $("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
-  $("loginMessage").textContent = "Memeriksa akun...";
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email: $("email").value.trim(),
-    password: $("password").value
-  });
+
+  const message = $("loginMessage");
+  const email = $("email");
+  const password = $("password");
+
+  if (!message || !email || !password) {
+    alert("Elemen login tidak ditemukan. Periksa ID HTML.");
+    return;
+  }
+
+  message.textContent = "Memeriksa akun...";
+
+  try {
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: email.value.trim(),
+        password: password.value
+      });
+
+    if (error) {
+      message.textContent = "Login gagal: " + error.message;
+      return;
+    }
+
+    message.textContent = "Login berhasil. Membuka admin...";
+
+    await showAdmin();
+
+  } catch (err) {
+    console.error("Kesalahan login:", err);
+    message.textContent =
+      "Terjadi kesalahan: " + (err.message || String(err));
+  }
+});
+
   if (error) {
     $("loginMessage").textContent = "Login gagal: " + error.message;
     return;
