@@ -148,13 +148,14 @@ footer { color: var(--muted); text-align: center; padding: 25px 0 10px; font-siz
     <div class="panel">
       <div class="brand">Gadget<span>Care</span></div>
       <p class="subtitle">Masuk ke panel administrator</p>
-      <form id="loginForm">
-        <label for="email">Email admin</label>
-        <input id="email" type="email" autocomplete="username" required>
-        <label for="password">Password</label>
-        <input id="password" type="password" autocomplete="current-password" required>
-        <button type="submit">login</button>
-      </form>
+<form id="loginForm">
+  <input id="email" type="email" required>
+  <input id="password" type="password" required>
+
+  <button type="submit">Login</button>
+
+  <p id="loginMessage"></p>
+</form>
       <div id="loginMessage" class="message" role="status"></div>
     </div>
   </section>
