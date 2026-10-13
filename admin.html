@@ -150,14 +150,7 @@ footer { color: var(--muted); text-align: center; padding: 25px 0 10px; font-siz
     <div class="brand">Gadget<span>Care</span></div>
     <p class="subtitle">Masuk ke panel administrator</p>
 
-    <form id="loginForm">
-      <input
-        id="email"
-        type="email"
-        placeholder="Email admin"
-        autocomplete="username"
-        required
-      >
+    <form id="loginForm" onsubmit="alert('Form login terpanggil'); return false;">
 
       <input
         id="password"
