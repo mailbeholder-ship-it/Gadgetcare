@@ -1175,20 +1175,14 @@ async function saveStoreSettings() {
 }
 
 
-function showAdmin(){
-
-  document.getElementById(
-    "loginSection"
-  ).style.display = "none";
-
-  document.getElementById(
-    "adminSection"
-  ).style.display = "block";
+function showAdmin() {
+  document.getElementById("loginSection").style.display = "none";
+  document.getElementById("adminSection").style.display = "block";
 
   loadBookings();
-  loadstoresettings();
-
+  loadStoreSettings();
 }
+
 
 
 /* =========================
