@@ -732,6 +732,81 @@
   }
 
 
+async function loadStoreStatus() {
+  const title = document.getElementById("storeStatusTitle");
+  const message = document.getElementById("storeStatusMessage");
+  const hours = document.getElementById("storeHours");
+  const form = document.getElementById("bookingForm");
+
+  try {
+    if (!supabaseClient) {
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+    }
+
+    const { data, error } = await supabaseClient
+      .from("store_settings")
+      .select("*")
+      .eq("id", 1)
+      .single();
+
+    if (error) throw error;
+
+    const now = new Date();
+    const jakarta = new Date(
+      now.toLocaleString("en-US", {
+        timeZone: "Asia/Jakarta"
+      })
+    );
+
+    const day = jakarta.getDay();
+    const minutes = jakarta.getHours() * 60 + jakarta.getMinutes();
+    const [oh, om] = data.opening_time.split(":").map(Number);
+    const [ch, cm] = data.closing_time.split(":").map(Number);
+
+    const isOpen =
+      !data.is_closed &&
+      data.open_days.includes(day) &&
+      minutes >= oh * 60 + om &&
+      minutes < ch * 60 + cm;
+
+    title.textContent = isOpen
+      ? "🟢 Pelayanan sedang buka"
+      : "🔴 Pelayanan sedang tutup";
+
+    message.textContent = isOpen
+      ? "Silakan isi formulir untuk memesan teknisi."
+      : (data.closure_message || "Pelayanan sedang libur.");
+
+    hours.textContent =
+      "Jam operasional: " +
+      data.opening_time.slice(0, 5) + "–" +
+      data.closing_time.slice(0, 5) + " WIB";
+
+    form.querySelectorAll(
+      "input:not([type=hidden]), select, textarea, button[type=submit]"
+    ).forEach(el => {
+      el.disabled = !isOpen;
+    });
+
+  } catch (err) {
+    console.error("Status pelayanan:", err);
+    title.textContent = "Status pelayanan tidak dapat dimuat";
+    message.textContent = "Silakan coba kembali beberapa saat lagi.";
+    hours.textContent = "";
+
+    form.querySelectorAll(
+      "input:not([type=hidden]), select, textarea, button[type=submit]"
+    ).forEach(el => {
+      el.disabled = true;
+    });
+  }
+}
+
+loadStoreStatus();
+  
 
 })();
 </script>
