@@ -3,2042 +3,729 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GadgetCare - Admin</title>
-
+<title>GadgetCare — Admin Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#0d0f13;
-  color:#fff;
+:root {
+  --bg: #0d0f13;
+  --panel: #171a21;
+  --panel2: #20242d;
+  --border: #303540;
+  --text: #f5f6fa;
+  --muted: #9da3af;
+  --orange: #ff5722;
+  --green: #42d392;
+  --blue: #64b5f6;
+  --yellow: #ffd166;
+  --red: #ff6b6b;
 }
-
-.header{
-  height:70px;
-  background:#15181e;
-  border-bottom:1px solid #292d35;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 25px;
-  position:sticky;
-  top:0;
-  z-index:100;
-}
-
-
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-decoration:none;
-  font-size:25px;
-  font-weight:800;
-  white-space:nowrap;
-}
-
-.brand img{
-  display:block;
-  width:52px;
-  height:52px;
-  object-fit:contain;
-  border-radius:6px;
-}
-
-.gadget{color:#fff}
-.care{color:#FF5722}
-
-.logout{
-  border:0;
-  background:#e53935;
-  color:#fff;
-  padding:10px 16px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.logout:hover{
-  background:#c62828;
-}
-
-.logout:focus-visible{
-  outline:2px solid #fff;
-  outline-offset:3px;
-}
-
-
-.container{
-  max-width:1450px;
-  margin:auto;
-  padding:25px;
-}
-
-.page-title{
-  margin:0 0 5px;
-  font-size:28px;
-}
-
-.page-subtitle{
-  color:#888;
-  margin-bottom:25px;
-}
-
-.login-box{
-  max-width:420px;
-  margin:80px auto;
-  background:#15181e;
-  border:1px solid #292d35;
-  border-radius:16px;
-  padding:30px;
-}
-
-.login-box h2{
-  text-align:center;
-  margin-top:0;
-}
-
-label{
-  display:block;
-  color:#bbb;
-  font-size:14px;
-  margin-bottom:6px;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid #353a44;
-  border-radius:8px;
-  background:#0d0f13;
-  color:#fff;
-  outline:none;
-  font-family:inherit;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-  border-color:#FF5722;
-}
-
-textarea{
-  resize:vertical;
-  min-height:120px;
-}
-
-.form-group{
-  margin-bottom:16px;
-}
-
-.primary{
-  width:100%;
-  border:0;
-  padding:13px;
-  border-radius:8px;
-  background:#FF5722;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.primary:hover{
-  background:#f4511e;
-}
-
-.message{
-  text-align:center;
-  margin-top:12px;
-  color:#ff7777;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.stat{
-  background:#15181e;
-  border:1px solid #292d35;
-  border-radius:12px;
-  padding:20px;
-}
-
-
-.stat-title{
-  color:#888;
-  font-size:13px;
-}
-
-.stat-number{
-  display:block;
-  font-size:28px;
-  font-weight:bold;
-  margin-top:8px;
-}
-
-.toolbar{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-}
-
-.toolbar input{
-  flex:1;
-}
-
-.toolbar select{
-  width:200px;
-}
-
-.refresh{
-  border:0;
-  background:#343942;
-  color:#fff;
-  padding:12px 16px;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.table-wrapper{
-  overflow-x:auto;
-  background:#15181e;
-  border:1px solid #292d35;
-  border-radius:12px;
-}
-
-table{
-  width:100%;
-  min-width:1250px;
-  border-collapse:collapse;
-}
-
-th,
-td{
-  padding:13px;
-  border-bottom:1px solid #292d35;
-  text-align:left;
-  vertical-align:top;
-}
-
-th{
-  background:#20242b;
-  color:#ff7043;
-  font-size:13px;
-}
-
-td{
-  font-size:13px;
-}
-
-tr:hover{
-  background:#1b1e24;
-}
-
-.code{
-  color:#FF5722;
-  font-weight:bold;
-  white-space:nowrap;
-}
-
-.description{
-  max-width:240px;
-  color:#bbb;
-  line-height:1.5;
-}
-
-.status{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:bold;
-  white-space:nowrap;
-}
-
-.status-menunggu{
-  color:#ffc107;
-  background:#493b14;
-}
-
-.status-diproses{
-  color:#42a5f5;
-  background:#153b56;
-}
-
-.status-selesai{
-  color:#4caf50;
-  background:#163d28;
-}
-
-.status-diambil{
-  color:#ce93d8;
-  background:#3c2551;
-}
-
-.status-batal{
-  color:#ff7070;
-  background:#4a2020;
-}
-
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-  min-width:210px;
-}
-
-.action{
-  border:0;
-  color:#fff;
-  padding:7px 9px;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:11px;
-  font-weight:bold;
-}
-
-.detail-btn{background:#607d8b}
-.price-btn{background:#FF5722}
-.status-btn{background:#536dfe}
-.wa-btn{background:#25d366}
-.map-btn{background:#4285f4}
-.nota-btn{background:#8e44ad}
-
-.empty{
-  text-align:center;
-  color:#777;
-  padding:40px;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.78);
-  z-index:1000;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.modal-box{
-  width:100%;
-  max-width:600px;
-  max-height:90vh;
-  overflow-y:auto;
-  background:#15181e;
-  border:1px solid #343942;
-  border-radius:16px;
-  padding:25px;
-}
-
-.modal-title{
-  margin-top:0;
-  margin-bottom:5px;
-}
-
-.modal-code{
-  color:#FF5722;
-  font-weight:bold;
-  margin-bottom:20px;
-}
-
-.detail-grid{
-  display:grid;
-  grid-template-columns:150px 1fr;
-  gap:10px;
-  margin-bottom:20px;
-}
-
-.detail-label{
-  color:#888;
-}
-
-.detail-value{
-  font-weight:600;
-  word-break:break-word;
-}
-
-.modal-actions{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.modal-actions button{
-  flex:1;
-  padding:12px;
-  border:0;
-  border-radius:8px;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.cancel-btn{
-  background:#343942;
-}
-
-.save-btn{
-  background:#FF5722;
-}
-
-.loading{
-  text-align:center;
-  color:#888;
-  padding:30px;
-}
-
-@media(max-width:900px){
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .toolbar{
-    flex-direction:column;
-  }
-
-  .toolbar select{
-    width:100%;
-  }
-}
-
-@media(max-width:600px){
-  .header{
-    padding:0 15px;
-  }
-
-  .container{
-    padding:15px;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .login-box{
-    margin:40px 15px;
-  }
-
-  .detail-grid{
-    grid-template-columns:110px 1fr;
-  }
-
-/* Paksa warna tombol Keluar */
-.header button.logout,
-button.logout,
-.logout{
-  background-color:#e53935 !important;
-  color:#ffffff !important;
-  border:1px solid #e53935 !important;
-  opacity:1 !important;
-  visibility:visible !important;
-  -webkit-appearance:none;
-  appearance:none;
-}
-
-.header button.logout:hover,
-button.logout:hover{
-  background-color:#c62828 !important;
-  color:#ffffff !important;
-  }
-    
-/* ===== DASHBOARD GADGETCARE MODERN ===== */
-
+* { box-sizing: border-box; }
 body {
-  background:
-    radial-gradient(ellipse at top right, #292016 0%, transparent 42%),
-    #0d0f13;
-}
-
-.header {
-  background: rgba(21, 24, 30, 0.96);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid #34302c;
-}
-
-.brand {
-  gap: 5px;
-}
-
-.container {
-  max-width: 1500px;
-  padding: 30px;
-}
-
-.page-title {
-  font-size: clamp(25px, 4vw, 34px);
-  letter-spacing: -0.8px;
-}
-
-.page-subtitle {
-  color: #969ba6;
-  margin-bottom: 28px;
-}
-
-.stat {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(145deg, #1b1e25, #14161b);
-  border: 1px solid #30333b;
-  border-radius: 16px;
+  margin: 0;
   padding: 22px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s, border-color 0.2s;
+  background: radial-gradient(ellipse at top right,#302016 0%,transparent 40%),var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
 }
-
-.stat:hover {
-  transform: translateY(-3px);
-  border-color: #ff5722;
+button,input,select,textarea { font: inherit; }
+button { cursor: pointer; }
+.container { max-width: 1450px; margin: auto; }
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 15px; margin-bottom: 30px;
 }
-
-.stat-title {
-  color: #a2a6af;
-  font-size: 13px;
-  font-weight: 600;
+.brand { font-size: 24px; font-weight: 800; }
+.brand span { color: var(--orange); }
+.subtitle { color: var(--muted); margin-top: 7px; }
+h1 { font-size: clamp(25px,4vw,34px); margin: 0; }
+h2 { font-size: 19px; margin: 0 0 15px; }
+button {
+  border: 0; border-radius: 10px; padding: 11px 15px;
+  background: var(--orange); color: white; font-weight: 700;
 }
-
+button:hover { filter: brightness(1.12); }
+button.secondary { background: #343945; }
+button.danger { background: #a83232; }
+button.small { padding: 8px 10px; font-size: 13px; }
+.logout { white-space: nowrap; }
+.panel {
+  background: rgba(23,26,33,.96); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; margin-bottom: 22px;
+}
+.login-wrap { max-width: 430px; margin: 8vh auto; }
+label { display: block; color: var(--muted); font-size: 13px; margin: 12px 0 6px; }
+input,select,textarea {
+  width: 100%; padding: 12px; border-radius: 9px;
+  border: 1px solid #3a404c; background: #11141a; color: var(--text);
+}
+textarea { min-height: 85px; resize: vertical; }
+.login-wrap button { width: 100%; margin-top: 15px; }
+.message { margin-top: 12px; line-height: 1.5; color: var(--red); overflow-wrap: anywhere; }
+.stats {
+  display: grid; grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 14px; margin: 24px 0;
+}
+.stat {
+  padding: 20px; border-radius: 15px; border: 1px solid var(--border);
+  background: linear-gradient(145deg,#20232b,#15171d); min-width: 0;
+}
+.stat-title { color: var(--muted); font-size: 13px; font-weight: 700; }
 .stat-number {
-  font-size: clamp(26px, 3vw, 34px);
-  color: #fff;
-  letter-spacing: -1px;
+  margin-top: 10px; font-size: clamp(22px,3vw,31px);
+  font-weight: 800; overflow-wrap: anywhere;
 }
-
-#totalBooking { color: #ff7043; }
-#waitingBooking { color: #ffc857; }
-#processBooking { color: #64b5f6; }
-#doneBooking { color: #69db91; }
-
+.orange { color: var(--orange); }
+.green { color: var(--green); }
+.blue { color: var(--blue); }
+.yellow { color: var(--yellow); }
 .toolbar {
-  align-items: center;
-  background: #15181e;
-  border: 1px solid #292d35;
-  padding: 14px;
-  border-radius: 14px;
+  display: grid; grid-template-columns: minmax(180px,2fr) minmax(150px,1fr) auto;
+  gap: 10px; margin: 16px 0;
 }
-
-.refresh {
-  background: #303640;
-  transition: background 0.2s;
+.toolbar input,.toolbar select { margin: 0; }
+.booking-list { display: grid; gap: 14px; }
+.booking {
+  border: 1px solid var(--border); background: #191c23;
+  border-radius: 13px; padding: 17px;
 }
-
-.refresh:hover {
-  background: #454c58;
+.booking-top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; flex-wrap: wrap;
 }
-
-.table-wrapper {
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+.booking-code { color: var(--orange); font-weight: 800; font-size: 17px; }
+.booking-info {
+  color: #d9dce3; line-height: 1.8; margin: 13px 0;
+  overflow-wrap: anywhere;
 }
-
-th {
-  background: #252932;
-  padding-top: 16px;
-  padding-bottom: 16px;
+.booking-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.booking-actions button { font-size: 12px; padding: 9px 11px; }
+.status-pill {
+  display: inline-block; border-radius: 30px; padding: 6px 10px;
+  background: #303540; color: #fff; font-size: 12px;
 }
-
-td {
-  padding-top: 15px;
-  padding-bottom: 15px;
+.booking select { margin: 8px 0 12px; }
+.section-head {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap;
 }
-
-.action {
-  transition: filter 0.2s, transform 0.2s;
+.grid2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 10; background: #000b;
+  display: flex; justify-content: center; align-items: flex-start;
+  overflow-y: auto; padding: 25px 12px;
 }
-
-.action:hover {
-  filter: brightness(1.15);
-  transform: translateY(-1px);
+.modal {
+  width: min(650px,100%); background: var(--panel);
+  border: 1px solid var(--border); border-radius: 16px; padding: 22px;
 }
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+hr { border: 0; border-top: 1px solid var(--border); margin: 20px 0; }
+footer { color: var(--muted); text-align: center; padding: 25px 0 10px; font-size: 12px; }
 
-#storeSettingsMessage {
-  line-height: 1.6;
+@media (max-width: 850px) {
+  .stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .toolbar { grid-template-columns: 1fr; }
 }
-
-input:disabled,
-select:disabled,
-textarea:disabled,
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+@media (max-width: 520px) {
+  body { padding: 12px; }
+  .panel { padding: 15px; }
+  .stats { gap: 9px; }
+  .stat { padding: 14px; }
+  .stat-number { font-size: 21px; }
+  .grid2 { grid-template-columns: 1fr; }
+  .header { align-items: flex-start; }
 }
-
-@media (max-width: 600px) {
-  .header {
-    height: 62px;
-    padding: 0 12px;
-  }
-
-  .brand img {
-    width: 38px;
-    height: 38px;
-  }
-
-  .brand {
-    font-size: 19px;
-  }
-
-  .logout {
-    padding: 9px 11px;
-  }
-
-  .container {
-    padding: 18px 12px;
-  }
-
-  .stats {
-    gap: 10px;
-  }
-
-  .stat {
-    padding: 16px 13px;
-    border-radius: 13px;
-  }
-
-  .toolbar {
-    padding: 10px;
-  }
-
-  .table-wrapper {
-    border-radius: 12px;
-  }
-}
-
 </style>
 </head>
-
 <body>
+<div class="container">
 
-<header class="header">
-
-<a href="./index.html" class="brand" aria-label="GadgetCare">
-  <img
-  src="./logo-gadgetcare.png"
-  alt="Logo GadgetCare"
-    >
-</a>
-  
-<a href="./index.html" class="brand">
-  <span class="gadget">Gadget</span><span class="care">Care</span>
-</a>
- 
-  <button class="logout" onclick="logout()">
-    Logout
-  </button>
-
-</header>
-
-
-<!-- LOGIN -->
-
-<section id="loginSection">
-
-  <div class="login-box">
-
-    <h2>Admin GadgetCare</h2>
-
-    <div class="form-group">
-      <label>Email</label>
-      <input
-        type="email"
-        id="email"
-        placeholder="Email admin"
-      >
+  <!-- LOGIN -->
+  <section id="loginSection" class="login-wrap">
+    <div class="panel">
+      <div class="brand">Gadget<span>Care</span></div>
+      <p class="subtitle">Masuk ke panel administrator</p>
+      <form id="loginForm">
+        <label for="email">Email admin</label>
+        <input id="email" type="email" autocomplete="username" required>
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+        <button type="submit">Masuk ke Dashboard</button>
+      </form>
+      <div id="loginMessage" class="message" role="status"></div>
     </div>
+  </section>
 
-    <div class="form-group">
-      <label>Password</label>
-      <input
-        type="password"
-        id="password"
-        placeholder="Password"
-      >
-    </div>
+  <!-- DASHBOARD -->
+  <main id="adminSection" class="hidden">
+    <header class="header">
+      <div>
+        <div class="brand">Gadget<span>Care</span></div>
+        <p class="subtitle">Panel Admin · Kelola servis HP</p>
+      </div>
+      <button id="logoutButton" class="danger logout">Keluar</button>
+    </header>
 
-    <button class="primary" onclick="login()">
-      Login
-    </button>
+    <section class="stats">
+      <div class="stat">
+        <div class="stat-title">📋 Total Booking</div>
+        <div class="stat-number orange" id="totalBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">⏳ Menunggu</div>
+        <div class="stat-number yellow" id="waitingBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">🔧 Sedang Diproses</div>
+        <div class="stat-number blue" id="processBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">✅ Selesai</div>
+        <div class="stat-number green" id="doneBooking">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-title">💰 Pendapatan Hari Ini</div>
+        <div class="stat-number green" id="dailyRevenue">Rp0</div>
+        <p class="muted" style="font-size:12px;margin-top:8px">Pembayaran lunas hari ini</p>
+      </div>
+      <div class="stat">
+        <div class="stat-title">📈 Pendapatan Bulan Ini</div>
+        <div class="stat-number orange" id="monthlyRevenue">Rp0</div>
+        <p class="muted" style="font-size:12px;margin-top:8px">Pembayaran lunas bulan ini</p>
+      </div>
+    </section>
 
-    <div id="loginMessage" class="message"></div>
+    <section class="panel">
+      <div class="section-head">
+        <div>
+          <h2>Daftar Booking</h2>
+          <p class="muted">Cari pesanan, periksa detail, dan perbarui status.</p>
+        </div>
+        <button id="refreshButton" class="secondary">↻ Refresh</button>
+      </div>
+      <div class="toolbar">
+        <input id="searchInput" type="search" placeholder="Cari kode, nama, HP, perangkat...">
+        <select id="statusFilter">
+          <option value="">Semua status</option>
+          <option>Menunggu</option>
+          <option>Dikonfirmasi</option>
+          <option>Teknisi Berangkat</option>
+          <option>Sedang Diperbaiki</option>
+          <option>Selesai</option>
+        </select>
+        <select id="paymentFilter">
+          <option value="">Semua pembayaran</option>
+          <option value="lunas">Lunas</option>
+          <option value="belum">Belum lunas</option>
+        </select>
+      </div>
+      <div id="bookingList" class="booking-list">Memuat booking...</div>
+      <div id="bookingMessage" class="message"></div>
+    </section>
 
-  </div>
-
-</section>
-
-
-<!-- ADMIN -->
-
-<section id="adminSection" style="display:none">
-
-  <div class="container">
-
-    <h1 class="page-title">
-      Dashboard Admin
-    </h1>
-
-    <div class="page-subtitle">
-      Kelola booking service GadgetCare
-    </div>
-
-<!-- PENGATURAN PELAYANAN -->
-<div class="stat" style="margin-bottom:22px">
-  <h2 style="margin-top:0;color:#ff5722">⚙️ Pengaturan Pelayanan</h2>
-  <p style="color:#aaa">Atur jadwal buka dan tutup booking pelanggan.</p>
-
-  <div class="form-group">
-    <label for="storeClosed">Status Pelayanan</label>
-    <select id="storeClosed">
-      <option value="false">🟢 Buka</option>
-      <option value="true">🔴 Libur / Tutup</option>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="openingTime">Jam Buka</label>
-    <input type="time" id="openingTime" value="08:00">
-  </div>
-
-  <div class="form-group">
-    <label for="closingTime">Jam Tutup</label>
-    <input type="time" id="closingTime" value="17:00">
-  </div>
-
-  <div class="form-group">
-    <label>Hari Operasional</label>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-      <label><input type="checkbox" class="openDay" value="1" checked style="width:auto"> Senin</label>
-      <label><input type="checkbox" class="openDay" value="2" checked style="width:auto"> Selasa</label>
-      <label><input type="checkbox" class="openDay" value="3" checked style="width:auto"> Rabu</label>
-      <label><input type="checkbox" class="openDay" value="4" checked style="width:auto"> Kamis</label>
-      <label><input type="checkbox" class="openDay" value="5" checked style="width:auto"> Jumat</label>
-      <label><input type="checkbox" class="openDay" value="6" checked style="width:auto"> Sabtu</label>
-      <label><input type="checkbox" class="openDay" value="0" style="width:auto"> Minggu</label>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label for="closureMessage">Pesan saat Libur</label>
-    <textarea id="closureMessage" style="min-height:85px">Pelayanan sedang libur. Silakan booking kembali saat kami buka.</textarea>
-  </div>
-
-  <button class="primary" type="button" onclick="saveStoreSettings()">
-    💾 Simpan Pengaturan
-  </button>
-
-  <p id="storeSettingsMessage" role="status" style="color:#ffb08f"></p>
+    <section class="panel">
+      <h2>⚙️ Pengaturan Toko</h2>
+      <p class="muted">Atur jam operasional yang digunakan oleh halaman pelanggan.</p>
+      <div class="grid2">
+        <div>
+          <label for="storeClosed">Status toko</label>
+          <select id="storeClosed">
+            <option value="false">Buka sesuai jadwal</option>
+            <option value="true">Tutup sementara</option>
+          </select>
+        </div>
+        <div>
+          <label for="openDays">Hari buka (0 = Minggu, 6 = Sabtu)</label>
+          <input id="openDays" placeholder="1,2,3,4,5,6">
+        </div>
+        <div>
+          <label for="openingTime">Jam buka</label>
+          <input id="openingTime" type="time" value="08:00">
+        </div>
+        <div>
+          <label for="closingTime">Jam tutup</label>
+          <input id="closingTime" type="time" value="20:00">
+        </div>
+      </div>
+      <label for="closureMessage">Pesan saat tutup</label>
+      <textarea id="closureMessage" placeholder="Pelayanan sedang tutup. Silakan booking kembali sesuai jam operasional."></textarea>
+      <div class="modal-actions">
+        <button id="saveStoreButton">Simpan Pengaturan</button>
+        <button id="reloadStoreButton" class="secondary">Muat Ulang Pengaturan</button>
+      </div>
+      <div id="storeSettingsMessage" class="message"></div>
+    </section>
+  </main>
+  <footer>© 2026 GadgetCare · Admin Dashboard</footer>
 </div>
 
-
-    <!-- STATS -->
-
-    <div class="stats">
-
-      <div class="stat">
-        <span class="stat-title">
-          Total Booking
-        </span>
-        <strong
-          class="stat-number"
-          id="totalBooking"
-        >0</strong>
+<!-- MODAL DETAIL BOOKING -->
+<div id="detailModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <div class="section-head">
+      <h2>Detail Booking</h2>
+      <button id="closeModalButton" class="secondary small">Tutup</button>
+    </div>
+    <div id="detailSummary" class="booking-info"></div>
+    <label for="detailDescription">Keterangan teknisi</label>
+    <textarea id="detailDescription"></textarea>
+    <div class="grid2">
+      <div>
+        <label for="detailPrice">Total harga (Rp)</label>
+        <input id="detailPrice" type="number" min="0" step="1000" placeholder="Contoh: 150000">
       </div>
-
-      <div class="stat">
-        <span class="stat-title">
-          Menunggu
-        </span>
-        <strong
-          class="stat-number"
-          id="waitingBooking"
-        >0</strong>
+      <div>
+        <label for="detailPayment">Status pembayaran</label>
+        <select id="detailPayment">
+          <option value="belum_lunas">Belum lunas</option>
+          <option value="lunas">Lunas</option>
+        </select>
       </div>
-
-      <div class="stat">
-        <span class="stat-title">
-          Diproses
-        </span>
-        <strong
-          class="stat-number"
-          id="processBooking"
-        >0</strong>
+      <div>
+        <label for="detailStatus">Status servis</label>
+        <select id="detailStatus">
+          <option>Menunggu</option>
+          <option>Dikonfirmasi</option>
+          <option>Teknisi Berangkat</option>
+          <option>Sedang Diperbaiki</option>
+          <option>Selesai</option>
+        </select>
       </div>
-
-      <div class="stat">
-        <span class="stat-title">
-          Selesai
-        </span>
-        <strong
-          class="stat-number"
-          id="doneBooking"
-        >0</strong>
-      </div>
-
     </div>
-
-
-    <!-- TOOLBAR -->
-
-    <div class="toolbar">
-
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Cari kode, nama, nomor HP, perangkat..."
-        oninput="filterBookings()"
-      >
-
-      <select
-        id="statusFilter"
-        onchange="filterBookings()"
-      >
-        <option value="">Semua Status</option>
-        <option value="Menunggu">Menunggu</option>
-        <option value="Diproses">Diproses</option>
-        <option value="Selesai">Selesai</option>
-        <option value="Sudah Diambil">Sudah Diambil</option>
-        <option value="Dibatalkan">Dibatalkan</option>
-      </select>
-
-      <button
-        class="refresh"
-        onclick="loadBookings()"
-      >
-        🔄 Refresh
-      </button>
-
-    </div>
-
-
-    <!-- TABLE -->
-
-    <div class="table-wrapper">
-
-      <table>
-
-        <thead>
-
-          
-<tr>
-  <th>Kode</th>
-  <th>Pelanggan</th>
-  <th>No. HP</th>
-  <th>Perangkat</th>
-  <th>Kerusakan</th>
-  <th>Keterangan Kerusakan</th>
-  <th>Alamat</th>
-  <th>Status Servis</th>
-  <th>Pembayaran</th>
-  <th>Total</th>
-  <th>Tanggal</th>
-  <th>Aksi</th>
-</tr>
-
-
-        </thead>
-
-        <tbody id="bookingTable">
-
-          <tr>
-            <td colspan="11" class="loading">
-              Memuat data...
-            </td>
-          </tr>
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- DETAIL / EDIT MODAL -->
-
-<div
-  id="detailModal"
-  class="modal"
->
-
-  <div class="modal-box">
-
-    <h2 class="modal-title">
-      Detail Service
-    </h2>
-
-    <div
-      id="detailBookingCode"
-      class="modal-code"
-    ></div>
-
-
-    <div
-      id="detailData"
-      class="detail-grid"
-    ></div>
-
-
-    <div class="form-group">
-
-      <label>
-        Keterangan Kerusakan
-      </label>
-
-      <textarea
-        id="descriptionInput"
-        placeholder="Masukkan hasil pengecekan atau keterangan kerusakan..."
-      ></textarea>
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Harga Service
-      </label>
-
-      <input
-        type="number"
-        id="priceInput"
-        min="0"
-        placeholder="Contoh: 150000"
-      >
-
-    </div>
-
-
-    <div class="form-group">
-
-      <label>
-        Status Service
-      </label>
-
-      <select id="statusInput">
-
-        <option value="Menunggu">
-          Menunggu
-        </option>
-
-        <option value="Diproses">
-          Diproses
-        </option>
-
-        <option value="Selesai">
-          Selesai
-        </option>
-
-        <option value="Sudah Diambil">
-          Sudah Diambil
-        </option>
-
-        <option value="Dibatalkan">
-          Dibatalkan
-        </option>
-
-      </select>
-
-    </div>
-
-<div class="form-group">
-  <label>Status Pembayaran</label>
-  <select id="paymentStatusInput">
-    <option value="pending">Belum Lunas</option>
-    <option value="lunas">Lunas</option>
-  </select>
-</div>
-
-
     <div class="modal-actions">
-
-      <button
-        class="cancel-btn"
-        onclick="closeDetailModal()"
-      >
-        Batal
-      </button>
-
-      <button
-        class="save-btn"
-        onclick="saveDetail()"
-      >
-        💾 Simpan Perubahan
-      </button>
-
+      <button id="saveDetailButton">Simpan Perubahan</button>
+      <button id="whatsappButton" class="secondary">WhatsApp Pelanggan</button>
+      <button id="mapButton" class="secondary">Buka Peta</button>
+      <button id="receiptButton" class="secondary">Cetak Nota</button>
     </div>
-
+    <div id="detailMessage" class="message"></div>
   </div>
-
 </div>
-
 
 <script>
+"use strict";
 
-const SUPABASE_URL =
-  "https://sqpolxwdyypbxylgvihi.supabase.co";
+/* Konfigurasi Supabase */
+const SUPABASE_URL = "https://sqpolxwdyypbxylgvihi.supabase.co";
+const SUPABASE_KEY = "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const SUPABASE_KEY =
-  "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-let bookings = [];
+let allBookings = [];
 let selectedBooking = null;
+let storeSettings = null;
 
+const $ = id => document.getElementById(id);
+const money = value => new Intl.NumberFormat("id-ID", {
+  style: "currency", currency: "IDR", maximumFractionDigits: 0
+}).format(Number(value) || 0);
 
-/* =========================
-   LOGIN
-========================= */
-
-async function login(){
-
-  const email =
-    document.getElementById("email")
-      .value
-      .trim();
-
-  const password =
-    document.getElementById("password")
-      .value;
-
-  const message =
-    document.getElementById("loginMessage");
-
-  message.textContent = "";
-
-  if(!email || !password){
-
-    message.textContent =
-      "Email dan password wajib diisi.";
-
-    return;
-  }
-
-  const {error} =
-    await supabaseClient.auth
-      .signInWithPassword({
-        email,
-        password
-      });
-
-  if(error){
-
-    console.error(error);
-
-    message.textContent =
-      "Login gagal: " + error.message;
-
-    return;
-  }
-
-  showAdmin();
-
+function safe(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  }[char]));
 }
 
-
-/* =========================
-   SESSION
-========================= */
-
-async function checkSession(){
-
-  const {data} =
-    await supabaseClient.auth
-      .getSession();
-
-  if(data.session){
-
-    showAdmin();
-
-  }else{
-
-    document.getElementById(
-      "loginSection"
-    ).style.display = "block";
-
-    document.getElementById(
-      "adminSection"
-    ).style.display = "none";
-
-  }
-
+function localDateParts(date = new Date()) {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric", month: "2-digit", day: "2-digit"
+  }).formatToParts(date);
+  return Object.fromEntries(parts.map(p => [p.type, p.value]));
 }
 
+function isPaid(item) {
+  return String(item.payment_status || "").toLowerCase() === "lunas";
+}
 
-/* PENGATURAN PELAYANAN GADGETCARE */
+/*
+ * Pendapatan memakai total_price dan payment_status=lunas.
+ * Tanggal transaksi menggunakan paid_at jika tersedia.
+ * Jika belum ada paid_at, fallback ke created_at.
+ * Untuk laporan akuntansi yang presisi, simpan tanggal pembayaran saat lunas.
+ */
+function paymentDate(item) {
+  return item.paid_at || item.updated_at || item.created_at || null;
+}
 
-async function loadStoreSettings() {
-  const message = document.getElementById("storeSettingsMessage");
-  message.textContent = "Memuat pengaturan...";
+function updateStats() {
+  const data = allBookings;
+  $("totalBooking").textContent = data.length;
+  $("waitingBooking").textContent =
+    data.filter(x => x.status === "Menunggu").length;
+  $("processBooking").textContent =
+    data.filter(x => ["Dikonfirmasi", "Teknisi Berangkat", "Sedang Diperbaiki"].includes(x.status)).length;
+  $("doneBooking").textContent =
+    data.filter(x => x.status === "Selesai").length;
 
-  const { data, error } = await supabaseClient
-    .from("store_settings")
-    .select("*")
-    .eq("id", 1)
-    .maybeSingle();
+  const today = localDateParts();
+  const monthKey = today.year + "-" + today.month;
+  let daily = 0, monthly = 0;
 
-  if (error || !data) {
-    message.textContent =
-      "Gagal memuat pengaturan: " +
-      (error?.message || "Data pengaturan tidak ditemukan.");
-    return;
-  }
-
-  document.getElementById("storeClosed").value =
-    String(data.is_closed);
-
-  document.getElementById("openingTime").value =
-    String(data.opening_time).slice(0, 5);
-
-  document.getElementById("closingTime").value =
-    String(data.closing_time).slice(0, 5);
-
-  document.getElementById("closureMessage").value =
-    data.closure_message || "";
-
-  document.querySelectorAll(".openDay").forEach(box => {
-    box.checked = (data.open_days || []).includes(Number(box.value));
+  data.forEach(item => {
+    if (!isPaid(item)) return;
+    const amount = Number(item.total_price) || 0;
+    const rawDate = paymentDate(item);
+    if (!rawDate) return;
+    const parts = localDateParts(new Date(rawDate));
+    const dayKey = parts.year + "-" + parts.month + "-" + parts.day;
+    const thisMonthKey = parts.year + "-" + parts.month;
+    if (dayKey === today.year + "-" + today.month + "-" + today.day) daily += amount;
+    if (thisMonthKey === monthKey) monthly += amount;
   });
 
-  message.textContent = "Pengaturan berhasil dimuat.";
+  $("dailyRevenue").textContent = money(daily);
+  $("monthlyRevenue").textContent = money(monthly);
+}
+
+function filteredBookings() {
+  const query = $("searchInput").value.trim().toLowerCase();
+  const status = $("statusFilter").value;
+  const payment = $("paymentFilter").value;
+
+  return allBookings.filter(item => {
+    const text = [
+      item.booking_code, item.customer_name, item.phone,
+      item.device, item.damage, item.address
+    ].join(" ").toLowerCase();
+
+    if (query && !text.includes(query)) return false;
+    if (status && item.status !== status) return false;
+    if (payment === "lunas" && !isPaid(item)) return false;
+    if (payment === "belum" && isPaid(item)) return false;
+    return true;
+  });
+}
+
+function renderBookings() {
+  const list = $("bookingList");
+  const data = filteredBookings();
+
+  if (!data.length) {
+    list.innerHTML = '<div class="booking">Tidak ada booking yang cocok.</div>';
+    return;
+  }
+
+  list.innerHTML = data.map(item => {
+    const date = item.created_at
+      ? new Date(item.created_at).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })
+      : "-";
+    const address = item.address || "";
+    const phone = String(item.phone || "").replace(/\D/g, "");
+    const waPhone = phone.startsWith("0") ? "62" + phone.slice(1) : phone;
+
+    return `
+      <article class="booking">
+        <div class="booking-top">
+          <div>
+            <div class="booking-code">${safe(item.booking_code || "Tanpa kode")}</div>
+            <p class="muted" style="margin-top:6px">${safe(date)}</p>
+          </div>
+          <span class="status-pill">${safe(item.status || "Menunggu")}</span>
+        </div>
+        <div class="booking-info">
+          👤 <b>Nama:</b> ${safe(item.customer_name || "-")}<br>
+          📱 <b>No. HP:</b> ${safe(item.phone || "-")}<br>
+          📲 <b>Perangkat:</b> ${safe(item.device || "-")}<br>
+          🔧 <b>Kerusakan:</b> ${safe(item.damage || "-")}<br>
+          📝 <b>Keterangan:</b> ${safe(item.description || "-")}<br>
+          📍 <b>Alamat:</b> ${safe(address || "-")}<br>
+          💵 <b>Total:</b> ${money(item.total_price)}<br>
+          💳 <b>Pembayaran:</b> ${isPaid(item) ? "Lunas" : "Belum lunas"}
+        </div>
+        <label>Ubah status servis</label>
+        <select data-status-id="${safe(item.id)}">
+          ${["Menunggu","Dikonfirmasi","Teknisi Berangkat","Sedang Diperbaiki","Selesai"].map(s =>
+            `<option ${item.status === s ? "selected" : ""}>${s}</option>`
+          ).join("")}
+        </select>
+        <div class="booking-actions">
+          <button data-detail-id="${safe(item.id)}">Detail / Harga / Pembayaran</button>
+          ${waPhone ? `<button class="secondary" data-wa="${safe(waPhone)}" data-code="${safe(item.booking_code || "")}">WhatsApp</button>` : ""}
+          ${address ? `<button class="secondary" data-map="${safe(address)}">Peta</button>` : ""}
+          <button class="secondary" data-receipt-id="${safe(item.id)}">Cetak Nota</button>
+        </div>
+      </article>`;
+  }).join("");
+
+  list.querySelectorAll("[data-status-id]").forEach(select => {
+    select.addEventListener("change", () => updateStatus(select.dataset.statusId, select.value));
+  });
+  list.querySelectorAll("[data-detail-id]").forEach(button => {
+    button.addEventListener("click", () => openDetail(button.dataset.detailId));
+  });
+  list.querySelectorAll("[data-wa]").forEach(button => {
+    button.addEventListener("click", () => {
+      const message = `Halo, terkait booking servis ${button.dataset.code} dari GadgetCare.`;
+      window.open(`https://wa.me/${button.dataset.wa}?text=${encodeURIComponent(message)}`, "_blank");
+    });
+  });
+  list.querySelectorAll("[data-map]").forEach(button => {
+    button.addEventListener("click", () => {
+      window.open("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(button.dataset.map), "_blank");
+    });
+  });
+  list.querySelectorAll("[data-receipt-id]").forEach(button => {
+    button.addEventListener("click", () => printReceipt(button.dataset.receiptId));
+  });
+}
+
+async function loadBookings() {
+  $("bookingMessage").textContent = "Memuat data booking...";
+  $("bookingList").innerHTML = '<div class="booking">Memuat booking...</div>';
+
+  const { data, error } = await supabaseClient
+    .from("bookings")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    $("bookingMessage").textContent = "Gagal memuat booking: " + error.message;
+    $("bookingList").innerHTML = "";
+    return;
+  }
+
+  allBookings = data || [];
+  updateStats();
+  renderBookings();
+  $("bookingMessage").textContent = `Menampilkan ${filteredBookings().length} dari ${allBookings.length} booking.`;
+}
+
+async function updateStatus(id, status) {
+  const { error } = await supabaseClient
+    .from("bookings").update({ status }).eq("id", id);
+
+  if (error) {
+    alert("Gagal mengubah status: " + error.message);
+    await loadBookings();
+    return;
+  }
+  await loadBookings();
+}
+
+function openDetail(id) {
+  selectedBooking = allBookings.find(x => String(x.id) === String(id));
+  if (!selectedBooking) return;
+
+  const item = selectedBooking;
+  $("detailSummary").innerHTML = `
+    <b>Kode:</b> ${safe(item.booking_code || "-")}<br>
+    <b>Nama:</b> ${safe(item.customer_name || "-")}<br>
+    <b>Nomor HP:</b> ${safe(item.phone || "-")}<br>
+    <b>Perangkat:</b> ${safe(item.device || "-")}<br>
+    <b>Kerusakan:</b> ${safe(item.damage || "-")}<br>
+    <b>Alamat:</b> ${safe(item.address || "-")}<br>
+    <b>Dibuat:</b> ${safe(item.created_at || "-")}
+  `;
+  $("detailDescription").value = item.description || "";
+  $("detailPrice").value = item.total_price ?? "";
+  $("detailPayment").value = isPaid(item) ? "lunas" : "belum_lunas";
+  $("detailStatus").value = item.status || "Menunggu";
+  $("detailMessage").textContent = "";
+  $("detailModal").classList.remove("hidden");
+}
+
+function closeDetail() {
+  $("detailModal").classList.add("hidden");
+  selectedBooking = null;
+}
+
+async function saveDetail() {
+  if (!selectedBooking) return;
+  const id = selectedBooking.id;
+  const price = Number($("detailPrice").value);
+
+  if (!Number.isFinite(price) || price < 0) {
+    $("detailMessage").textContent = "Masukkan harga yang valid.";
+    return;
+  }
+
+  $("saveDetailButton").disabled = true;
+  $("detailMessage").textContent = "Menyimpan perubahan...";
+
+  // Update kolom umum yang dipakai tabel booking.
+  const { error: updateError } = await supabaseClient
+    .from("bookings")
+    .update({
+      description: $("detailDescription").value.trim(),
+      status: $("detailStatus").value,
+      total_price: price,
+      payment_status: $("detailPayment").value === "lunas" ? "lunas" : "belum_lunas"
+    })
+    .eq("id", id);
+
+  $("saveDetailButton").disabled = false;
+
+  if (updateError) {
+    $("detailMessage").textContent = "Gagal menyimpan: " + updateError.message;
+    return;
+  }
+
+  $("detailMessage").textContent = "Perubahan berhasil disimpan.";
+  await loadBookings();
+  selectedBooking = allBookings.find(x => String(x.id) === String(id)) || null;
+}
+
+function printReceipt(id) {
+  const item = allBookings.find(x => String(x.id) === String(id));
+  if (!item) return;
+
+  const receipt = `
+    <h2>GadgetCare — Nota Servis</h2>
+    <p>Kode booking: ${safe(item.booking_code || "-")}</p>
+    <p>Nama pelanggan: ${safe(item.customer_name || "-")}</p>
+    <p>Nomor HP: ${safe(item.phone || "-")}</p>
+    <p>Perangkat: ${safe(item.device || "-")}</p>
+    <p>Kerusakan: ${safe(item.damage || "-")}</p>
+    <p>Keterangan: ${safe(item.description || "-")}</p>
+    <p>Status servis: ${safe(item.status || "-")}</p>
+    <p>Status pembayaran: ${isPaid(item) ? "Lunas" : "Belum lunas"}</p>
+    <h3>Total: ${money(item.total_price)}</h3>
+    <p>Terima kasih telah menggunakan layanan GadgetCare.</p>`;
+  const win = window.open("", "_blank", "width=600,height=700");
+  if (!win) {
+    alert("Izinkan pop-up browser untuk mencetak nota.");
+    return;
+  }
+  win.document.write(`<!DOCTYPE html><html><head><title>Nota GadgetCare</title>
+    <meta charset="UTF-8"><style>body{font-family:Arial;padding:25px;line-height:1.7}</style>
+    </head><body>${receipt}<script>window.onload=()=>window.print()<\/script></body></html>`);
+  win.document.close();
+}
+
+function openSelectedWhatsApp() {
+  if (!selectedBooking) return;
+  const phone = String(selectedBooking.phone || "").replace(/\D/g, "");
+  if (!phone) return alert("Nomor WhatsApp pelanggan tidak tersedia.");
+  const normalized = phone.startsWith("0") ? "62" + phone.slice(1) : phone;
+  const message = `Halo, terkait booking servis ${selectedBooking.booking_code || ""} dari GadgetCare.`;
+  window.open(`https://wa.me/${normalized}?text=${encodeURIComponent(message)}`, "_blank");
+}
+
+function openSelectedMap() {
+  if (!selectedBooking || !selectedBooking.address) {
+    return alert("Alamat pelanggan tidak tersedia.");
+  }
+  window.open("https://www.google.com/maps/search/?api=1&query=" +
+    encodeURIComponent(selectedBooking.address), "_blank");
+}
+
+function printSelectedReceipt() {
+  if (selectedBooking) printReceipt(selectedBooking.id);
+}
+
+/* Pengaturan toko: tabel public.store_settings, satu baris id=1 */
+async function loadStoreSettings() {
+  $("storeSettingsMessage").textContent = "Memuat pengaturan...";
+  const { data, error } = await supabaseClient
+    .from("store_settings").select("*").eq("id", 1).maybeSingle();
+
+  if (error) {
+    $("storeSettingsMessage").textContent = "Gagal memuat pengaturan: " + error.message;
+    return;
+  }
+  if (!data) {
+    $("storeSettingsMessage").textContent = "Data pengaturan toko id=1 belum ditemukan.";
+    return;
+  }
+
+  storeSettings = data;
+  $("storeClosed").value = String(Boolean(data.is_closed));
+  $("openingTime").value = String(data.opening_time || "08:00").slice(0, 5);
+  $("closingTime").value = String(data.closing_time || "20:00").slice(0, 5);
+  $("openDays").value = Array.isArray(data.open_days) ? data.open_days.join(",") : "1,2,3,4,5,6";
+  $("closureMessage").value = data.closure_message || "";
+  $("storeSettingsMessage").textContent = "Pengaturan berhasil dimuat.";
 }
 
 async function saveStoreSettings() {
-  const message = document.getElementById("storeSettingsMessage");
-
-  const openDays = Array.from(
-    document.querySelectorAll(".openDay:checked")
-  ).map(box => Number(box.value));
-
-  const openingTime = document.getElementById("openingTime").value;
-  const closingTime = document.getElementById("closingTime").value;
-  const closureMessage = document.getElementById("closureMessage").value.trim();
-
-  if (!openingTime || !closingTime) {
-    message.textContent = "Jam buka dan jam tutup wajib diisi.";
+  const openDays = $("openDays").value.split(",")
+    .map(x => Number(x.trim())).filter(x => Number.isInteger(x) && x >= 0 && x <= 6);
+  if (!openDays.length) {
+    $("storeSettingsMessage").textContent = "Isi hari buka dengan angka 0 sampai 6.";
+    return;
+  }
+  if ($("openingTime").value >= $("closingTime").value) {
+    $("storeSettingsMessage").textContent = "Jam tutup harus lebih akhir daripada jam buka.";
     return;
   }
 
-  if (openingTime >= closingTime) {
-    message.textContent =
-      "Jam tutup harus lebih akhir daripada jam buka.";
-    return;
-  }
+  const payload = {
+    id: 1,
+    is_closed: $("storeClosed").value === "true",
+    opening_time: $("openingTime").value,
+    closing_time: $("closingTime").value,
+    open_days: [...new Set(openDays)],
+    closure_message: $("closureMessage").value.trim(),
+    updated_at: new Date().toISOString()
+  };
 
-  if (openDays.length === 0) {
-    message.textContent = "Pilih minimal satu hari operasional.";
-    return;
-  }
+  $("saveStoreButton").disabled = true;
+  $("storeSettingsMessage").textContent = "Menyimpan pengaturan...";
+  const { error } = await supabaseClient.from("store_settings")
+    .upsert(payload, { onConflict: "id" });
+  $("saveStoreButton").disabled = false;
 
-  message.textContent = "Menyimpan pengaturan...";
+  $("storeSettingsMessage").textContent = error
+    ? "Gagal menyimpan: " + error.message
+    : "Pengaturan toko berhasil disimpan.";
+  if (!error) await loadStoreSettings();
+}
 
-  const { error } = await supabaseClient
-    .from("store_settings")
-    .update({
-      is_closed: document.getElementById("storeClosed").value === "true",
-      opening_time: openingTime,
-      closing_time: closingTime,
-      open_days: openDays,
-      closure_message: closureMessage ||
-        "Pelayanan sedang libur. Silakan booking kembali saat kami buka.",
-      updated_at: new Date().toISOString()
-    })
-    .eq("id", 1);
+/* Login dan session */
+async function showAdmin() {
+  $("loginSection").classList.add("hidden");
+  $("adminSection").classList.remove("hidden");
+  await Promise.all([loadBookings(), loadStoreSettings()]);
+}
 
+async function checkSession() {
+  const { data, error } = await supabaseClient.auth.getSession();
   if (error) {
-    console.error("Simpan pengaturan:", error);
-    message.textContent = "Gagal menyimpan: " + error.message;
+    $("loginMessage").textContent = error.message;
     return;
   }
-
-  message.textContent = "Pengaturan berhasil disimpan.";
+  if (data.session) await showAdmin();
 }
 
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  $("loginMessage").textContent = "Memeriksa akun...";
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email: $("email").value.trim(),
+    password: $("password").value
+  });
+  if (error) {
+    $("loginMessage").textContent = "Login gagal: " + error.message;
+    return;
+  }
+  $("loginMessage").textContent = "";
+  await showAdmin();
+});
 
-function showAdmin() {
-  document.getElementById("loginSection").style.display = "none";
-  document.getElementById("adminSection").style.display = "block";
-
-  loadBookings();
-  loadStoreSettings();
-}
-
-
-
-/* =========================
-   LOGOUT
-========================= */
-
-async function logout(){
-
+$("logoutButton").addEventListener("click", async () => {
   await supabaseClient.auth.signOut();
-
   location.reload();
-
-}
-
-
-/* =========================
-   LOAD BOOKINGS
-========================= */
-
-async function loadBookings(){
-
-  const tbody =
-    document.getElementById(
-      "bookingTable"
-    );
-
-  tbody.innerHTML = `
-    <tr>
-      <td colspan="11" class="loading">
-        Memuat data booking...
-      </td>
-    </tr>
-  `;
-
-
-  const {data,error} =
-    await supabaseClient
-      .from("bookings")
-      .select("*")
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error){
-
-    console.error(error);
-
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="11" class="empty">
-          Gagal mengambil data:
-          ${escapeHtml(error.message)}
-        </td>
-      </tr>
-    `;
-
-    return;
-  }
-
-
-  bookings = data || [];
-
-  updateStats();
-
-  filterBookings();
-
-}
-
-
-/* =========================
-   STATISTICS
-========================= */
-
-function updateStats(){
-
-  document.getElementById(
-    "totalBooking"
-  ).textContent =
-    bookings.length;
-
-
-  document.getElementById(
-    "waitingBooking"
-  ).textContent =
-    bookings.filter(
-      b => b.status === "Menunggu"
-    ).length;
-
-
-  document.getElementById(
-    "processBooking"
-  ).textContent =
-    bookings.filter(
-      b => b.status === "Diproses"
-    ).length;
-
-
-  document.getElementById(
-    "doneBooking"
-  ).textContent =
-    bookings.filter(
-      b => b.status === "Selesai"
-    ).length;
-
-}
-
-
-/* =========================
-   FILTER
-========================= */
-
-function filterBookings(){
-
-  const search =
-    document.getElementById(
-      "searchInput"
-    ).value
-      .toLowerCase();
-
-
-  const status =
-    document.getElementById(
-      "statusFilter"
-    ).value;
-
-
-  const result =
-    bookings.filter(b => {
-
-      const text = `
-        ${b.booking_code || ""}
-        ${b.customer_name || ""}
-        ${b.phone || ""}
-        ${b.device || ""}
-        ${b.damage || ""}
-        ${b.description || ""}
-        ${b.address || ""}
-      `.toLowerCase();
-
-
-      return (
-        text.includes(search) &&
-        (
-          !status ||
-          b.status === status
-        )
-      );
-
-    });
-
-
-  renderBookings(result);
-
-}
-
-
-/* =========================
-   RENDER
-========================= */
-
-function renderBookings(data){
-
-  const tbody =
-    document.getElementById(
-      "bookingTable"
-    );
-
-
-  if(!data.length){
-
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="11" class="empty">
-          Tidak ada booking.
-        </td>
-      </tr>
-    `;
-
-    return;
-  }
-
-
-  tbody.innerHTML =
-    data.map(b => {
-
-      const price =
-        Number(
-          b.total_price ||
-          b.estimated_price ||
-          0
-        )
-        .toLocaleString("id-ID");
-
-
-      const date =
-        b.created_at
-          ? new Date(
-              b.created_at
-            ).toLocaleString("id-ID")
-          : "-";
-
-
-      return `
-
-        <tr>
-
-          <td>
-            <span class="code">
-              ${escapeHtml(
-                b.booking_code || "-"
-              )}
-            </span>
-          </td>
-
-
-          <td>
-            ${escapeHtml(
-              b.customer_name || "-"
-            )}
-          </td>
-
-
-          <td>
-            ${escapeHtml(
-              b.phone || "-"
-            )}
-          </td>
-
-
-          <td>
-            ${escapeHtml(
-              b.device || "-"
-            )}
-          </td>
-
-
-          <td>
-            ${escapeHtml(
-              b.damage || "-"
-            )}
-          </td>
-
-
-          <td>
-            <div class="description">
-              ${escapeHtml(
-                b.description ||
-                "Belum ada keterangan"
-              )}
-            </div>
-          </td>
-
-
-          <td>
-            ${escapeHtml(
-              b.address || "-"
-            )}
-          </td>
-
-
-          
-<td>
-  ${statusBadge(b.status)}
-</td>
-
-
-<td>
-  ${paymentStatusBadge(b.payment_status)}
-</td>
-
-
-          <td>
-            Rp ${price}
-          </td>
-
-
-          <td>
-            ${date}
-          </td>
-
-
-          <td>
-
-            <div class="actions">
-
-              <button
-                class="action detail-btn"
-                onclick="openDetail('${escapeJs(b.id)}')"
-              >
-                📝 Detail
-              </button>
-
-
-              <button
-                class="action wa-btn"
-                onclick="openWhatsApp('${escapeJs(b.phone)}')"
-              >
-                💬 WA
-              </button>
-
-
-              <button
-                class="action map-btn"
-                onclick="openMap(
-                  '${escapeJs(b.latitude)}',
-                  '${escapeJs(b.longitude)}',
-                  '${escapeJs(b.address)}'
-                )"
-              >
-                📍 Map
-              </button>
-
-
-              <button
-                class="action nota-btn"
-                onclick="openNota('${escapeJs(b.booking_code)}')"
-              >
-                🧾 Nota
-              </button>
-
-            </div>
-
-          </td>
-
-        </tr>
-
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================
-   STATUS BADGE
-========================= */
-
-function statusBadge(status){
-
-  const value =
-    status || "Menunggu";
-
-  let cls =
-    "status-menunggu";
-
-
-  if(value === "Diproses")
-    cls = "status-diproses";
-
-
-  if(value === "Selesai")
-    cls = "status-selesai";
-
-
-  if(value === "Sudah Diambil")
-    cls = "status-diambil";
-
-
-  if(value === "Dibatalkan")
-    cls = "status-batal";
-
-
-  return `
-    <span class="status ${cls}">
-      ${escapeHtml(value)}
-    </span>
-  `;
-
-}
-  
-
-function paymentStatusBadge(status) {
-  const value = String(status || "pending").toLowerCase();
-
-  if (value === "lunas" || value === "settlement") {
-    return '<span class="status status-selesai">LUNAS</span>';
-  }
-
-  if (["gagal", "deny", "cancel", "expire", "failure"].includes(value)) {
-    return '<span class="status status-batal">GAGAL</span>';
-  }
-
-  return '<span class="status status-menunggu">BELUM LUNAS</span>';
-}
-
-
-/* =========================
-   DETAIL MODAL
-========================= */
-
-function openDetail(id){
-
-  selectedBooking =
-    bookings.find(
-      b => b.id === id
-    );
-
-
-  if(!selectedBooking){
-
-    alert(
-      "Data booking tidak ditemukan."
-    );
-
-    return;
-  }
-
-
-  document.getElementById(
-    "detailBookingCode"
-  ).textContent =
-    selectedBooking.booking_code ||
-    "-";
-
-
-  document.getElementById(
-    "detailData"
-  ).innerHTML = `
-
-    <div class="detail-label">
-      Nama Pelanggan
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(
-        selectedBooking.customer_name || "-"
-      )}
-    </div>
-
-
-    <div class="detail-label">
-      WhatsApp
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(
-        selectedBooking.phone || "-"
-      )}
-    </div>
-
-
-    <div class="detail-label">
-      Perangkat
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(
-        selectedBooking.device || "-"
-      )}
-    </div>
-
-
-    <div class="detail-label">
-      Kerusakan
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(
-        selectedBooking.damage || "-"
-      )}
-    </div>
-
-
-    <div class="detail-label">
-      Alamat
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(
-        selectedBooking.address || "-"
-      )}
-    </div>
-
-    <div class="detail-label">
-      Status Pembayaran
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(selectedBooking.payment_status || "Belum Dibayar")}
-    </div>
-
-    <div class="detail-label">
-      Metode Pembayaran
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(selectedBooking.payment_method || "-")}
-    </div>
-
-    <div class="detail-label">
-      Waktu Pembayaran
-    </div>
-
-    <div class="detail-value">
-      ${escapeHtml(selectedBooking.payment_paid_at
-        ? new Date(selectedBooking.payment_paid_at).toLocaleString("id-ID")
-        : "-")}
-    </div>
-
-  `;
-
-
-  document.getElementById(
-    "descriptionInput"
-  ).value =
-    selectedBooking.description || "";
-
-
-  document.getElementById(
-    "priceInput"
-  ).value =
-    selectedBooking.total_price ||
-    selectedBooking.estimated_price ||
-    0;
-
-
-document.getElementById("statusInput").value =
-  selectedBooking.status || "Menunggu";
-
-const paymentValue = String(
-  selectedBooking.payment_status || "pending"
-).toLowerCase();
-
-document.getElementById("paymentStatusInput").value =
-  ["lunas", "settlement"].includes(paymentValue)
-    ? "lunas"
-    : "pending";
-
-  document.getElementById(
-    "detailModal"
-  ).style.display = "flex";
-
-}
-
-
-function closeDetailModal(){
-
-  document.getElementById(
-    "detailModal"
-  ).style.display = "none";
-
-  selectedBooking = null;
-
-}
-
-
-/* =========================
-   SAVE DETAIL
-========================= */
-
-async function saveDetail(){
-
-  if(!selectedBooking){
-
-    return;
-  }
-
-
-  const description =
-    document.getElementById(
-      "descriptionInput"
-    ).value.trim();
-
-
-  const price =
-    Number(
-      document.getElementById(
-        "priceInput"
-      ).value
-    );
-
-
-  const status =
-    document.getElementById(
-      "statusInput"
-    ).value;
-
-
-  if(isNaN(price) || price < 0){
-
-    alert(
-      "Harga tidak valid."
-    );
-
-    return;
-  }
-
-
-  /* SIMPAN KETERANGAN */
-
-  const descriptionUpdate =
-    await supabaseClient
-      .from("bookings")
-      .update({
-        description:description
-      })
-      .eq(
-        "id",
-        selectedBooking.id
-      );
-
-
-  if(descriptionUpdate.error){
-
-    console.error(
-      descriptionUpdate.error
-    );
-
-    alert(
-      "Keterangan gagal disimpan:\n" +
-      descriptionUpdate.error.message
-    );
-
-    return;
-  }
-
-
-  /* SIMPAN STATUS */
-
-  const statusUpdate =
-    await supabaseClient
-      .from("bookings")
-      .update({
-        status:status
-      })
-      .eq(
-        "id",
-        selectedBooking.id
-      );
-
-
-  if(statusUpdate.error){
-
-    console.error(
-      statusUpdate.error
-    );
-
-    alert(
-      "Status gagal disimpan:\n" +
-      statusUpdate.error.message
-    );
-
-    return;
-  }
-
-
-  /* SIMPAN HARGA */
-
-  const priceUpdate =
-    await supabaseClient.rpc(
-      "update_booking_price",
-      {
-        p_booking_id:
-          selectedBooking.id,
-
-        p_price:
-          price
-      }
-    );
-
-
-  if(priceUpdate.error){
-
-    console.error(
-      priceUpdate.error
-    );
-
-    alert(
-      "Harga gagal disimpan:\n" +
-      priceUpdate.error.message
-    );
-
-    return;
-  }
-
-
-/* SIMPAN STATUS PEMBAYARAN */
-const paymentStatus = document.getElementById("paymentStatusInput").value;
-
-const paymentUpdate = await supabaseClient
-  .from("bookings")
-  .update({
-    payment_status: paymentStatus
-  })
-  .eq("id", selectedBooking.id);
-
-if (paymentUpdate.error) {
-  console.error(paymentUpdate.error);
-  alert(
-    "Status pembayaran gagal disimpan:\n" +
-    paymentUpdate.error.message
-  );
-  return;
-}
-
-alert("Data service dan status pembayaran berhasil disimpan.");
-
-closeDetailModal();
-await loadBookings();
-
-  
-
-}
-
-
-/* =========================
-   WHATSAPP
-========================= */
-
-function openWhatsApp(phone){
-
-  if(!phone){
-
-    alert(
-      "Nomor WhatsApp tidak tersedia."
-    );
-
-    return;
-  }
-
-
-  let number =
-    String(phone)
-      .replace(/\D/g,"");
-
-
-  if(number.startsWith("0")){
-
-    number =
-      "62" +
-      number.substring(1);
-
-  }
-
-
-  window.open(
-    "https://wa.me/" +
-    number,
-    "_blank"
-  );
-
-}
-
-
-/* =========================
-   MAP
-========================= */
-
-function openMap(
-  latitude,
-  longitude,
-  address
-){
-
-  if(
-    latitude &&
-    longitude &&
-    latitude !== "null" &&
-    longitude !== "null"
-  ){
-
-    window.open(
-      "https://www.google.com/maps?q=" +
-      encodeURIComponent(
-        latitude + "," + longitude
-      ),
-      "_blank"
-    );
-
-    return;
-  }
-
-
-  if(address){
-
-    window.open(
-      "https://www.google.com/maps/search/?api=1&query=" +
-      encodeURIComponent(address),
-      "_blank"
-    );
-
-    return;
-  }
-
-
-  alert(
-    "Lokasi tidak tersedia."
-  );
-
-}
-
-
-/* =========================
-   NOTA
-========================= */
-
-function openNota(code){
-
-  if(!code){
-
-    alert(
-      "Kode booking tidak ditemukan."
-    );
-
-    return;
-  }
-
-
-  const url =
-    "./nota.html?code=" +
-    encodeURIComponent(code);
-
-
-  window.open(
-    url,
-    "_blank"
-  );
-
-}
-
-
-/* =========================
-   ESCAPE
-========================= */
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-function escapeJs(value){
-
-  return String(value ?? "")
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'")
-    .replace(/\n/g,"\\n")
-    .replace(/\r/g,"\\r");
-
-}
-
-
-/* =========================
-   START
-========================= */
+});
+
+$("refreshButton").addEventListener("click", loadBookings);
+$("searchInput").addEventListener("input", renderBookings);
+$("statusFilter").addEventListener("change", renderBookings);
+$("paymentFilter").addEventListener("change", renderBookings);
+$("closeModalButton").addEventListener("click", closeDetail);
+$("saveDetailButton").addEventListener("click", saveDetail);
+$("whatsappButton").addEventListener("click", openSelectedWhatsApp);
+$("mapButton").addEventListener("click", openSelectedMap);
+$("receiptButton").addEventListener("click", printSelectedReceipt);
+$("saveStoreButton").addEventListener("click", saveStoreSettings);
+$("reloadStoreButton").addEventListener("click", loadStoreSettings);
+$("detailModal").addEventListener("click", event => {
+  if (event.target === $("detailModal")) closeDetail();
+});
 
 checkSession();
-
 </script>
-
 </body>
 </html>
