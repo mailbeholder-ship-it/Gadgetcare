@@ -848,7 +848,7 @@ $("loginForm").addEventListener("submit", async event => {
   message.textContent = "Memeriksa akun...";
 
   try {
-    const { data, error } =
+    const { error } =
       await supabaseClient.auth.signInWithPassword({
         email: email.value.trim(),
         password: password.value
@@ -859,23 +859,13 @@ $("loginForm").addEventListener("submit", async event => {
       return;
     }
 
-    message.textContent = "Login berhasil. Membuka admin...";
-
+    message.textContent = "";
     await showAdmin();
-
   } catch (err) {
     console.error("Kesalahan login:", err);
     message.textContent =
       "Terjadi kesalahan: " + (err.message || String(err));
   }
-});
-
-  if (error) {
-    $("loginMessage").textContent = "Login gagal: " + error.message;
-    return;
-  }
-  $("loginMessage").textContent = "";
-  await showAdmin();
 });
 
 $("logoutButton").addEventListener("click", async () => {
