@@ -532,6 +532,54 @@ button.logout:hover{
       Kelola booking service GadgetCare
     </div>
 
+<!-- PENGATURAN PELAYANAN -->
+<div class="stat" style="margin-bottom:22px">
+  <h2 style="margin-top:0;color:#ff5722">⚙️ Pengaturan Pelayanan</h2>
+  <p style="color:#aaa">Atur jadwal buka dan tutup booking pelanggan.</p>
+
+  <div class="form-group">
+    <label for="storeClosed">Status Pelayanan</label>
+    <select id="storeClosed">
+      <option value="false">🟢 Buka</option>
+      <option value="true">🔴 Libur / Tutup</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="openingTime">Jam Buka</label>
+    <input type="time" id="openingTime" value="08:00">
+  </div>
+
+  <div class="form-group">
+    <label for="closingTime">Jam Tutup</label>
+    <input type="time" id="closingTime" value="17:00">
+  </div>
+
+  <div class="form-group">
+    <label>Hari Operasional</label>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <label><input type="checkbox" class="openDay" value="1" checked style="width:auto"> Senin</label>
+      <label><input type="checkbox" class="openDay" value="2" checked style="width:auto"> Selasa</label>
+      <label><input type="checkbox" class="openDay" value="3" checked style="width:auto"> Rabu</label>
+      <label><input type="checkbox" class="openDay" value="4" checked style="width:auto"> Kamis</label>
+      <label><input type="checkbox" class="openDay" value="5" checked style="width:auto"> Jumat</label>
+      <label><input type="checkbox" class="openDay" value="6" checked style="width:auto"> Sabtu</label>
+      <label><input type="checkbox" class="openDay" value="0" style="width:auto"> Minggu</label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="closureMessage">Pesan saat Libur</label>
+    <textarea id="closureMessage" style="min-height:85px">Pelayanan sedang libur. Silakan booking kembali saat kami buka.</textarea>
+  </div>
+
+  <button class="primary" type="button" onclick="saveStoreSettings()">
+    💾 Simpan Pengaturan
+  </button>
+
+  <p id="storeSettingsMessage" role="status" style="color:#ffb08f"></p>
+</div>
+
 
     <!-- STATS -->
 
