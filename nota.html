@@ -1,836 +1,245 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
-<title>Nota Service - GadgetCare</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  background:#e8e8e8;
-  color:#222;
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-.container{
-  max-width:780px;
-  margin:30px auto;
-  padding:15px;
-}
-
-.nota{
-  background:#fff;
-  border-radius:12px;
-  padding:35px;
-  box-shadow:0 5px 25px rgba(0,0,0,.12);
-}
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-  border-bottom:3px solid #FF5722;
-  padding-bottom:20px;
-}
-
-.brand{
-  font-size:31px;
-  font-weight:800;
-}
-
-.gadget{
-  color:#222;
-}
-
-.care{
-  color:#FF5722;
-}
-
-.subtitle{
-  color:#777;
-  margin-top:5px;
-}
-
-.invoice{
-  text-align:right;
-}
-
-.invoice-title{
-  font-size:23px;
-  font-weight:bold;
-}
-
-.invoice-code{
-  color:#FF5722;
-  font-weight:bold;
-  margin-top:7px;
-}
-
-.section{
-  margin-top:25px;
-}
-
-.section-title{
-  color:#FF5722;
-  font-size:13px;
-  font-weight:bold;
-  text-transform:uppercase;
-  margin-bottom:12px;
-}
-
-.info-grid{
-  display:grid;
-  grid-template-columns:150px 1fr;
-  gap:10px;
-}
-
-.label{
-  color:#777;
-}
-
-.value{
-  font-weight:600;
-  word-break:break-word;
-}
-
-.damage-box{
-  background:#f5f5f5;
-  border-left:4px solid #FF5722;
-  border-radius:8px;
-  padding:17px;
-  line-height:1.6;
-  white-space:pre-wrap;
-}
-
-.status{
-  display:inline-block;
-  background:#fff3e0;
-  color:#e64a19;
-  border-radius:20px;
-  padding:7px 12px;
-  font-size:13px;
-  font-weight:bold;
-}
-
-.price-box{
-  margin-top:25px;
-  padding:20px;
-  background:#15181e;
-  border-radius:10px;
-  color:#fff;
-}
-
-.price-row{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:7px 0;
-}
-
-.total{
-  border-top:1px solid #555;
-  margin-top:8px;
-  padding-top:15px;
-  font-size:22px;
-  font-weight:bold;
-}
-
-.total span:last-child{
-  color:#FF5722;
-}
-
-.footer{
-  text-align:center;
-  color:#777;
-  border-top:1px solid #ddd;
-  margin-top:30px;
-  padding-top:20px;
-  font-size:13px;
-  line-height:1.6;
-}
-
-.buttons{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.buttons button{
-  flex:1;
-  border:0;
-  padding:13px;
-  border-radius:8px;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.print-btn{
-  background:#FF5722;
-}
-
-.wa-btn{
-  background:#25d366;
-}
-
-.close-btn{
-  background:#555;
-}
-
-.loading{
-  text-align:center;
-  padding:80px 20px;
-  color:#777;
-}
-
-.error{
-  text-align:center;
-  padding:70px 20px;
-  color:#d32f2f;
-}
-
-.error-code{
-  color:#FF5722;
-  font-size:20px;
-  font-weight:bold;
-}
-
-@media(max-width:600px){
-
-  .container{
-    margin:0;
-    padding:0;
-  }
-
-  .nota{
-    min-height:100vh;
-    border-radius:0;
-    padding:20px;
-  }
-
-  .header{
-    flex-direction:column;
-  }
-
-  .invoice{
-    text-align:left;
-  }
-
-  .info-grid{
-    grid-template-columns:110px 1fr;
-  }
-
-  .buttons{
-    flex-direction:column;
-  }
-
-}
-
-@media print{
-
-  body{
-    background:#fff;
-  }
-
-  .container{
-    margin:0;
-    padding:0;
-    max-width:none;
-  }
-
-  .nota{
-    box-shadow:none;
-    border-radius:0;
-  }
-
-  .buttons{
-    display:none;
-  }
-
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Nota Service - GadgetCare</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #eef0f2; color: #111; font-family: Arial, Helvetica, sans-serif; }
+    body { font-size: 13px; }
+    .container { width: 100%; max-width: 420px; margin: 18px auto; padding: 0 10px; }
+    .receipt { background: #fff; padding: 18px 16px; border-radius: 10px; box-shadow: 0 3px 18px rgba(0,0,0,.08); }
+    .loading, .error { text-align: center; padding: 40px 12px; line-height: 1.5; }
+    .error { color: #b42318; overflow-wrap: anywhere; }
+    .brand { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
+    .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .gadget { color: #111; }
+    .care { color: #111; }
+    .tagline { text-align: center; font-size: 10px; margin-top: 4px; }
+    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 7px 0 0; overflow-wrap: anywhere; }
+    .dash { border: 0; border-top: 1px dashed #111; margin: 12px 0; }
+    .receipt-title { text-align: center; font-size: 15px; font-weight: 800; letter-spacing: .5px; margin: 2px 0 6px; }
+    .booking-code { text-align: center; font-weight: 700; font-size: 12px; overflow-wrap: anywhere; }
+    .date { text-align: center; font-size: 10px; margin-top: 4px; }
+    .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 12px 0 7px; }
+    .line { display: grid; grid-template-columns: 84px minmax(0,1fr); gap: 7px; margin: 5px 0; line-height: 1.35; }
+    .label { color: #333; }
+    .value { font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+    .damage { border: 1px dashed #777; padding: 7px; font-size: 11px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .price-row { display: flex; justify-content: space-between; gap: 8px; margin: 7px 0; line-height: 1.35; }
+    .price-row span:last-child { text-align: right; overflow-wrap: anywhere; }
+    .total { border-top: 1px dashed #111; margin-top: 9px; padding-top: 9px; font-weight: 800; font-size: 15px; }
+    .payment-status { font-weight: 700; }
+    .thanks { text-align: center; font-weight: 800; font-size: 12px; margin-top: 12px; }
+    .thanks-note { text-align: center; font-size: 10px; line-height: 1.45; margin-top: 4px; }
+    .footer { text-align: center; font-size: 9px; line-height: 1.4; margin-top: 10px; overflow-wrap: anywhere; }
+    .buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
+    button { border: 0; border-radius: 7px; padding: 12px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; }
+    .print-btn { background: #111; }
+    .wa-btn { background: #128c4a; }
+    .close-btn { background: #626b75; }
+    @media (max-width: 360px) { .container { padding: 0; margin: 0; } .receipt { border-radius: 0; padding: 16px 12px; } }
+    @media print {
+      @page { size: 58mm auto; margin: 0; }
+      html, body { width: 58mm !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 10px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .container { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 !important; }
+      .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 3mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+      .brand { font-size: 17px !important; color: #000 !important; }
+      .brand img { width: 24px !important; height: 24px !important; filter: grayscale(100%); }
+      .gadget, .care, .label, .value, .tagline, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
+      .tagline, .store-address { font-size: 9px !important; }
+      .receipt-title { font-size: 13px !important; }
+      .booking-code { font-size: 10px !important; }
+      .dash { margin: 9px 0 !important; border-top: 1px dashed #000 !important; }
+      .section-title { font-size: 9px !important; margin-top: 10px !important; margin-bottom: 5px !important; }
+      .line { grid-template-columns: 21mm minmax(0,1fr) !important; gap: 2mm !important; margin: 4px 0 !important; font-size: 9px !important; line-height: 1.35 !important; }
+      .damage { padding: 5px !important; font-size: 9px !important; border-color: #555 !important; }
+      .price-row { font-size: 9px !important; margin: 5px 0 !important; }
+      .total { font-size: 12px !important; }
+      .thanks { font-size: 11px !important; }
+      .thanks-note { font-size: 9px !important; }
+      .footer { font-size: 8px !important; }
+      .buttons { display: none !important; }
+      .section, .damage, .price-row, .total, .thanks { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
 </head>
-
-
 <body>
+  <main class="container">
+    <article class="receipt">
+      <div id="content" class="loading">Memuat data nota...</div>
+    </article>
+  </main>
 
-<div class="container">
+  <script>
+    const SUPABASE_URL = "https://sqpolxwdyypbxylgvihi.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let currentBooking = null;
 
-  <div class="nota">
+    function getBookingCode() {
+      return new URLSearchParams(window.location.search).get("code");
+    }
 
-    <div id="content">
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-      <div class="loading">
-        Memuat data nota...
-      </div>
+    function formatRupiah(value) {
+      const amount = Number(value || 0);
+      return "Rp " + amount.toLocaleString("id-ID");
+    }
 
-    </div>
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString("id-ID", {
+        day: "2-digit", month: "short", year: "numeric",
+        hour: "2-digit", minute: "2-digit"
+      });
+    }
 
-  </div>
+    function showError(message, code) {
+      document.getElementById("content").innerHTML = `
+        <div class="error">
+          <strong>Nota tidak dapat dibuka</strong>
+          ${code ? `<p>Kode booking: <b>${escapeHtml(code)}</b></p>` : ""}
+          <p>${escapeHtml(message)}</p>
+          <p>Pastikan kode booking benar dan data dapat diakses.</p>
+        </div>`;
+    }
 
-</div>
-
-
-<script>
-
-const SUPABASE_URL =
-  "https://sqpolxwdyypbxylgvihi.supabase.co";
-
-const SUPABASE_KEY =
-  "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
-
-const supabaseClient =
-  supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-
-let currentBooking = null;
-
-
-/* =========================
-   GET CODE
-========================= */
-
-function getBookingCode(){
-
-  const params =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  return params.get("code");
-
-}
-
-
-/* =========================
-   LOAD
-========================= */
-
-async function loadNota(){
-
-  const code =
-    getBookingCode();
-
-
-  const content =
-    document.getElementById(
-      "content"
-    );
-
-
-  if(!code){
-
-    showError(
-      "Kode booking tidak ditemukan.",
-      ""
-    );
-
-    return;
-  }
-
-
-  const {data,error} =
-    await supabaseClient.rpc(
-      "check_booking",
-      {
-        p_booking_code:code
+    async function loadNota() {
+      const code = getBookingCode();
+      if (!code) {
+        showError("Kode booking tidak ditemukan di alamat halaman.", "");
+        return;
       }
-    );
 
+      try {
+        const { data, error } = await supabaseClient.rpc("check_booking", {
+          p_booking_code: code
+        });
 
-  if(error){
+        if (error) {
+          console.error("SUPABASE ERROR:", error);
+          showError("Data nota gagal dimuat: " + error.message, code);
+          return;
+        }
 
-    console.error(
-      "SUPABASE ERROR:",
-      error
-    );
+        currentBooking = Array.isArray(data) ? data[0] : data;
+        if (!currentBooking) {
+          showError("Data booking tidak ditemukan.", code);
+          return;
+        }
+        renderNota(currentBooking);
+      } catch (error) {
+        console.error("Gagal memuat nota:", error);
+        showError("Terjadi kesalahan koneksi. Periksa internet lalu muat ulang halaman.", code);
+      }
+    }
 
+    function renderNota(b) {
+      const estimated = Number(b.estimated_price || 0);
+      const total = Number(b.total_price ?? b.estimated_price ?? 0);
+      const date = formatDate(b.created_at);
+      const payment = b.payment_status || "Belum diketahui";
+      const address = "Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366";
 
-    showError(
-      error.message,
-      code
-    );
-
-    return;
-  }
-
-
-  if(!data){
-
-    showError(
-      "Data booking tidak ditemukan.",
-      code
-    );
-
-    return;
-  }
-
-
-  currentBooking =
-    Array.isArray(data)
-      ? data[0]
-      : data;
-
-
-  if(!currentBooking){
-
-    showError(
-      "Data booking tidak ditemukan.",
-      code
-    );
-
-    return;
-  }
-
-
-  renderNota(
-    currentBooking
-  );
-
-}
-
-
-/* =========================
-   ERROR
-========================= */
-
-function showError(
-  message,
-  code
-){
-
-  document.getElementById(
-    "content"
-  ).innerHTML = `
-
-    <div class="error">
-
-      <h2>
-        Tidak dapat membuka nota
-      </h2>
-
-      ${
-        code
-        ? `
-          <p>
-            Kode booking:
-          </p>
-
-          <div class="error-code">
-            ${escapeHtml(code)}
+      document.getElementById("content").innerHTML = `
+        <header>
+          <div class="brand">
+            <img src="./logo-gadgetcare.png" alt="Logo" onerror="this.style.display='none'">
+            <span><span class="gadget">Gadget</span><span class="care">Care</span></span>
           </div>
-        `
-        : ""
+          <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
+          <div class="store-address">${escapeHtml(address)}</div>
+        </header>
+
+        <hr class="dash">
+        <div class="receipt-title">NOTA SERVICE</div>
+        <div class="booking-code">${escapeHtml(b.booking_code || "-")}</div>
+        <div class="date">${escapeHtml(date)}</div>
+        <hr class="dash">
+
+        <div class="section-title">Informasi Pelanggan</div>
+        <div class="line"><div class="label">Nama</div><div class="value">${escapeHtml(b.customer_name || "-")}</div></div>
+        <div class="line"><div class="label">WhatsApp</div><div class="value">${escapeHtml(b.phone || "-")}</div></div>
+        <div class="line"><div class="label">Alamat</div><div class="value">${escapeHtml(b.address || "-")}</div></div>
+
+        <hr class="dash">
+        <div class="section-title">Detail Perangkat</div>
+        <div class="line"><div class="label">Perangkat</div><div class="value">${escapeHtml(b.device || "-")}</div></div>
+        <div class="line"><div class="label">Kerusakan</div><div class="value">${escapeHtml(b.damage || "-")}</div></div>
+        <div class="line"><div class="label">Status Service</div><div class="value">${escapeHtml(b.status || "Menunggu")}</div></div>
+        <div class="line"><div class="label">Pembayaran</div><div class="value payment-status">${escapeHtml(payment)}</div></div>
+
+        <div class="section-title">Keterangan Kerusakan</div>
+        <div class="damage">${escapeHtml(b.description || "Belum ada keterangan kerusakan.")}</div>
+
+        <hr class="dash">
+        <div class="section-title">Rincian Biaya</div>
+        <div class="price-row"><span>Estimasi Harga</span><span>${formatRupiah(estimated)}</span></div>
+        <div class="price-row total"><span>TOTAL</span><span>${formatRupiah(total)}</span></div>
+
+        <div class="thanks">TERIMA KASIH</div>
+        <div class="thanks-note">Terima kasih telah mempercayakan perbaikan perangkat Anda kepada GadgetCare.</div>
+        <div class="footer">Simpan nota ini sebagai bukti service.<br>GadgetCare • Home Service</div>
+
+        <div class="buttons">
+          <button class="print-btn" type="button" onclick="window.print()">Cetak Nota 58 mm</button>
+          <button class="wa-btn" type="button" onclick="sendWhatsApp()">Kirim via WhatsApp</button>
+          <button class="close-btn" type="button" onclick="closeNota()">Tutup</button>
+        </div>`;
+    }
+
+    function sendWhatsApp() {
+      if (!currentBooking || !currentBooking.phone) {
+        alert("Nomor WhatsApp pelanggan tidak tersedia.");
+        return;
       }
 
-      <p>
-        ${escapeHtml(message)}
-      </p>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================
-   RENDER
-========================= */
-
-function renderNota(b){
-
-  const content =
-    document.getElementById(
-      "content"
-    );
-
-
-  const estimated =
-    Number(
-      b.estimated_price || 0
-    );
-
-
-  const total =
-    Number(
-      b.total_price ||
-      b.estimated_price ||
-      0
-    );
-
-
-  const date =
-    b.created_at
-      ? new Date(
-          b.created_at
-        ).toLocaleString(
-          "id-ID",
-          {
-            dateStyle:"medium",
-            timeStyle:"short"
-          }
-        )
-      : "-";
-
-
-  content.innerHTML = `
-
-    <!-- HEADER -->
-
-    <div class="header">
-
-      <div>
-
-        <div class="brand">
-
-          <span class="gadget">
-            Gadget
-          </span><span class="care">
-            Care
-          </span>
-
-        </div>
-
-        <div class="subtitle">
-          Service Handphone
-        </div>
-
-      </div>
-
-
-      <div class="invoice">
-
-        <div class="invoice-title">
-          NOTA SERVICE
-        </div>
-
-        <div class="invoice-code">
-          ${escapeHtml(
-            b.booking_code || "-"
-          )}
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- PELANGGAN -->
-
-    <div class="section">
-
-      <div class="section-title">
-        Informasi Pelanggan
-      </div>
-
-
-      <div class="info-grid">
-
-        <div class="label">
-          Nama
-        </div>
-
-        <div class="value">
-          ${escapeHtml(
-            b.customer_name || "-"
-          )}
-        </div>
-
-
-        <div class="label">
-          WhatsApp
-        </div>
-
-        <div class="value">
-          ${escapeHtml(
-            b.phone || "-"
-          )}
-        </div>
-
-
-        <div class="label">
-          Alamat
-        </div>
-
-        <div class="value">
-          ${escapeHtml(
-            b.address || "-"
-          )}
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- PERANGKAT -->
-
-    <div class="section">
-
-      <div class="section-title">
-        Detail Perangkat
-      </div>
-
-
-      <div class="info-grid">
-
-        <div class="label">
-          Perangkat
-        </div>
-
-        <div class="value">
-          ${escapeHtml(
-            b.device || "-"
-          )}
-        </div>
-
-
-        <div class="label">
-          Kerusakan
-        </div>
-
-        <div class="value">
-          ${escapeHtml(
-            b.damage || "-"
-          )}
-        </div>
-
-
-        <div class="label">
-          Tanggal
-        </div>
-
-        <div class="value">
-          ${date}
-        </div>
-
-
-        <div class="label">
-          Status
-        </div>
-
-        <div class="value">
-
-          <span class="status">
-            ${escapeHtml(
-              b.status || "Menunggu"
-            )}
-          </span>
-
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- KETERANGAN KERUSAKAN -->
-
-    <div class="section">
-
-      <div class="section-title">
-        Keterangan Kerusakan
-      </div>
-
-
-      <div class="damage-box">
-
-        ${escapeHtml(
-          b.description ||
-          "Belum ada keterangan kerusakan."
-        )}
-
-      </div>
-
-    </div>
-
-
-    <!-- HARGA -->
-
-    <div class="price-box">
-
-      <div class="price-row">
-
-        <span>
-          Estimasi Harga
-        </span>
-
-        <span>
-          Rp ${estimated.toLocaleString("id-ID")}
-        </span>
-
-      </div>
-
-
-      <div class="price-row total">
-
-        <span>
-          TOTAL
-        </span>
-
-        <span>
-          Rp ${total.toLocaleString("id-ID")}
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <!-- FOOTER -->
-
-    <div class="footer">
-
-      Terima kasih telah menggunakan
-      <b>GadgetCare</b>.
-
-      <br>
-
-      Simpan nota ini sebagai bukti service.
-
-    </div>
-
-
-    <!-- BUTTON -->
-
-    <div class="buttons">
-
-      <button
-        class="print-btn"
-        onclick="window.print()"
-      >
-        🖨️ Cetak Nota
-      </button>
-
-
-      <button
-        class="wa-btn"
-        onclick="sendWhatsApp()"
-      >
-        💬 WhatsApp
-      </button>
-
-
-      <button
-        class="close-btn"
-        onclick="window.close()"
-      >
-        ✕ Tutup
-      </button>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================
-   WHATSAPP
-========================= */
-
-function sendWhatsApp(){
-
-  if(
-    !currentBooking ||
-    !currentBooking.phone
-  ){
-
-    alert(
-      "Nomor WhatsApp tidak tersedia."
-    );
-
-    return;
-  }
-
-
-  let number =
-    String(
-      currentBooking.phone
-    )
-      .replace(/\D/g,"");
-
-
-  if(number.startsWith("0")){
-
-    number =
-      "62" +
-      number.substring(1);
-
-  }
-
-
-  const message =
-
-`Halo ${currentBooking.customer_name || ""},
-
-Berikut informasi service GadgetCare.
-
-Kode Booking: ${currentBooking.booking_code || "-"}
-Perangkat: ${currentBooking.device || "-"}
-Kerusakan: ${currentBooking.damage || "-"}
-Keterangan: ${currentBooking.description || "-"}
-Status: ${currentBooking.status || "-"}
-Total: Rp ${Number(currentBooking.total_price || currentBooking.estimated_price || 0).toLocaleString("id-ID")}
+      let number = String(currentBooking.phone).replace(/\D/g, "");
+      if (number.startsWith("0")) number = "62" + number.slice(1);
+      else if (number.startsWith("8")) number = "62" + number;
+      if (!number.startsWith("62")) {
+        alert("Format nomor WhatsApp tidak dikenali. Periksa nomor pelanggan.");
+        return;
+      }
+
+      const b = currentBooking;
+      const message = `Halo ${b.customer_name || ""}, berikut informasi service GadgetCare.
+
+Kode Booking: ${b.booking_code || "-"}
+Perangkat: ${b.device || "-"}
+Kerusakan: ${b.damage || "-"}
+Keterangan: ${b.description || "-"}
+Status Service: ${b.status || "Menunggu"}
+Estimasi Harga: ${formatRupiah(b.estimated_price)}
+Total: ${formatRupiah(b.total_price ?? b.estimated_price)}
+Status Pembayaran: ${b.payment_status || "Belum diketahui"}
 
 Terima kasih telah menggunakan GadgetCare.`;
 
+      window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(message), "_blank", "noopener");
+    }
 
-  window.open(
-    "https://wa.me/" +
-    number +
-    "?text=" +
-    encodeURIComponent(message),
-    "_blank"
-  );
+    function closeNota() {
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = "./index.html";
+    }
 
-}
-
-
-/* =========================
-   ESCAPE
-========================= */
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================
-   START
-========================= */
-
-loadNota();
-
-</script>
-
+    loadNota();
+  </script>
 </body>
 </html>
