@@ -158,6 +158,44 @@
         throw new Error(detail || 'Database menolak booking. Periksa struktur tabel dan kebijakan RLS.');
       }
       showAlert('success',`Booking berhasil disimpan! Kode booking Anda: ${payload.booking_code}. Simpan kode ini untuk cek status. Admin akan menghubungi Anda untuk konfirmasi harga dan jadwal.`);
+      const codeBox = document.createElement('div');
+      codeBox.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding:12px;border:1px solid #ff572255;border-radius:10px;background:#0b1016';
+      const codeText = document.createElement('strong');
+      codeText.textContent = payload.booking_code;
+      codeText.style.cssText = 'font-size:18px;letter-spacing:1px;overflow-wrap:anywhere';
+      const copyButton = document.createElement('button');
+      copyButton.type = 'button';
+      copyButton.className = 'btn btn-dark';
+      copyButton.textContent = '📋 Salin Kode Booking';
+      copyButton.addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(payload.booking_code);
+          } else {
+            const temp = document.createElement('textarea');
+            temp.value = payload.booking_code;
+            temp.setAttribute('readonly', '');
+            temp.style.position = 'fixed';
+            temp.style.opacity = '0';
+            document.body.appendChild(temp);
+            temp.select();
+            const copied = document.execCommand('copy');
+            temp.remove();
+            if (!copied) throw new Error('Penyalinan otomatis tidak didukung browser.');
+          }
+          copyButton.textContent = '✅ Kode Tersalin!';
+        } catch (copyError) {
+          copyButton.textContent = 'Salin manual: pilih kode';
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(codeText);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      });
+      codeBox.appendChild(codeText);
+      codeBox.appendChild(copyButton);
+      bookingAlert.appendChild(codeBox);
       $('bookingCode').value = payload.booking_code;
       $('paymentBookingCode').value = payload.booking_code;
       $('paymentPhone').value = phone;
