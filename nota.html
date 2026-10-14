@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#ffffff">
   <title>Nota Service - GadgetCare</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <style>
     :root { color-scheme: light; }
     * { box-sizing: border-box; }
@@ -198,17 +200,16 @@
 
         <div class="buttons">
           <button class="print-btn" type="button" onclick="window.print()">Cetak Nota 58 mm</button>
-          <button class="wa-btn" type="button" onclick="sendWhatsApp()">Kirim via WhatsApp</button>
+          <button class="wa-btn" type="button" onclick="sendWhatsApp()">Kirim Nota PDF via WhatsApp</button>
           <button class="close-btn" type="button" onclick="closeNota()">Tutup</button>
         </div>`;
     }
 
-    function sendWhatsApp() {
+    async function sendWhatsApp() {
       if (!currentBooking || !currentBooking.phone) {
         alert("Nomor WhatsApp pelanggan tidak tersedia.");
         return;
       }
-
       let number = String(currentBooking.phone).replace(/\D/g, "");
       if (number.startsWith("0")) number = "62" + number.slice(1);
       else if (number.startsWith("8")) number = "62" + number;
@@ -216,9 +217,8 @@
         alert("Format nomor WhatsApp tidak dikenali. Periksa nomor pelanggan.");
         return;
       }
-
       const b = currentBooking;
-      const message = `Halo ${b.customer_name || ""}, berikut informasi service GadgetCare.
+      const message = `Halo ${b.customer_name || ""}, berikut nota service GadgetCare dalam bentuk PDF.
 
 Kode Booking: ${b.booking_code || "-"}
 Perangkat: ${b.device || "-"}
@@ -230,10 +230,36 @@ Total: ${formatRupiah(b.total_price ?? b.estimated_price)}
 Status Pembayaran: ${b.payment_status || "Belum diketahui"}
 
 Terima kasih telah menggunakan GadgetCare.`;
-
-      window.open("https://wa.me/" + number + "?text=" + encodeURIComponent(message), "_blank", "noopener");
+      const waUrl = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
+      const receipt = document.querySelector(".receipt");
+      try {
+        if (typeof window.html2canvas !== "function" || !window.jspdf || !window.jspdf.jsPDF) throw new Error("Pustaka PDF belum tersedia.");
+        const canvas = await window.html2canvas(receipt, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+        const { jsPDF } = window.jspdf;
+        const heightMm = Math.max(100, canvas.height * 58 / canvas.width);
+        const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: [58, heightMm] });
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 58, heightMm);
+        const blob = pdf.output("blob");
+        const filename = "Nota-GadgetCare-" + String(b.booking_code || "booking").replace(/[^a-z0-9_-]/gi, "") + ".pdf";
+        const file = new File([blob], filename, { type: "application/pdf" });
+        if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+          await navigator.share({ files: [file], title: "Nota GadgetCare", text: message });
+          return;
+        }
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        alert("Nota PDF diunduh. WhatsApp akan dibuka; lampirkan file PDF yang baru diunduh sebelum mengirim.");
+        window.location.href = waUrl;
+      } catch (error) {
+        console.error("PDF/share error:", error);
+        window.open(waUrl, "_blank", "noopener");
+        alert("Browser tidak mendukung berbagi PDF otomatis. WhatsApp dibuka dengan pesan; simpan nota sebagai PDF lalu lampirkan secara manual.");
+      }
     }
-
     function closeNota() {
       if (window.history.length > 1) window.history.back();
       else window.location.href = "./index.html";
