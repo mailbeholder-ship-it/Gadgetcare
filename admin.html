@@ -10,6 +10,9 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.6 Arial,sans-serif;background:var(--bg);color:#fff}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;background:var(--orange);color:#fff;font-weight:700;padding:12px 17px;transition:opacity .2s,transform .2s}button:hover{opacity:.9}button:active{transform:translateY(1px)}button:disabled{opacity:.6;cursor:wait}.secondary{background:#151c24;color:#fff;border:1px solid #2a3540}.danger{background:#b83b35}.shell{width:min(1100px,92%);margin:auto}.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:12px}.brand{font-size:23px;font-weight:800;display:flex;align-items:center;gap:9px}.logo{width:42px;height:42px;object-fit:contain}.brand h1{margin:0;font-size:23px;line-height:1.2}.brand p{margin:2px 0 0;color:var(--muted);font-size:13px;font-weight:400}.nav{position:sticky;top:0;z-index:20;background:#0b0f14f5;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0}.nav-label{font-size:13px;color:#cbd5e1}.login{max-width:440px;margin:7vh auto 50px;padding:26px}.login .logo{width:54px;height:54px}.login-title{display:flex;align-items:center;gap:12px}.divider{height:1px;background:var(--line);margin:18px 0}.panel,.stat,.booking{background:var(--panel);border:1px solid #202a34;border-radius:14px;padding:22px}.panel{margin:18px 0}.login p{color:var(--muted)}input,select,textarea{width:100%;padding:12px;border:1px solid #293440;border-radius:8px;background:#0b1016;color:#fff;margin-top:6px}input:focus,select:focus,textarea:focus{outline:1px solid var(--orange);border-color:var(--orange)}label{display:block;color:#c9d0d8;font-size:14px;margin:8px 0}.login button{width:100%;margin-top:12px}.message{margin:10px 0;overflow-wrap:anywhere;color:var(--red)}.success{color:var(--green)}.hero{padding:38px 0 30px;background:radial-gradient(circle at 80% 20%,#ff572224,transparent 32%),var(--bg)}.hero-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}.badge{display:inline-block;padding:5px 12px;border:1px solid #ff572255;border-radius:22px;color:var(--orange);background:#ff572218;font-size:12px}.hero h1{font-size:clamp(28px,5vw,42px);line-height:1.12;margin:13px 0}.hero p{color:var(--muted);margin:0}.top-actions{display:flex;gap:9px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0}.stat .label{color:var(--muted);font-size:13px}.stat strong{display:block;font-size:clamp(20px,3vw,28px);color:var(--orange);margin-top:8px;overflow-wrap:anywhere}.stat .hint{font-size:12px;color:var(--muted);margin-top:5px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.section-head h2{margin:0 0 5px;font-size:25px}.toolbar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin:18px 0}.toolbar input,.toolbar select{margin:0}.booking{margin:12px 0;padding:18px}.booking-code{font-size:18px;color:var(--orange);font-weight:700;overflow-wrap:anywhere}.pill{display:inline-block;border-radius:30px;background:#ff57221f;color:var(--orange);font-size:12px;padding:4px 9px;margin:6px 5px 0 0}.details{line-height:1.8;overflow-wrap:anywhere;margin:10px 0 14px}.editgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;position:relative;z-index:1}.editgrid label,.editgrid input,.editgrid select{position:relative;z-index:2;pointer-events:auto;touch-action:manipulation}.editgrid input,.editgrid select{display:block;min-height:46px;cursor:pointer;opacity:1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions button{flex:1;min-width:115px}.revenue-note{font-size:12px;color:var(--muted);margin-top:8px}.empty{padding:24px;text-align:center;border:1px dashed #35404b;border-radius:10px;color:var(--muted)}footer{border-top:1px solid #202832;padding:25px 0;color:#87919c;font-size:13px;text-align:center;margin-top:25px}
 @media(max-width:760px){.shell{width:92%}.nav-inner{flex-wrap:wrap}.nav-label{width:100%}.stats{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.editgrid{grid-template-columns:1fr 1fr}.panel{padding:15px}.hero{padding:30px 0 20px}.hero-inner{align-items:flex-start}.section-head h2{font-size:22px}}
 @media(max-width:420px){.editgrid{grid-template-columns:1fr}.actions button{min-width:100%}.login{padding:18px}.brand h1{font-size:20px}}
+
+/* Mobile dashboard navigation addition */
+.gc-bottom-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;position:sticky;top:0;z-index:50;padding:8px;background:#171717;border:1px solid #3b3029;border-radius:14px;margin:12px 0}.gc-bottom-nav button{background:transparent;color:#ddd;padding:8px 2px;font-size:11px;display:flex;flex-direction:column;gap:5px;align-items:center;white-space:normal}.gc-bottom-nav button b{font-size:19px}.gc-bottom-nav button.active{color:var(--orange);background:#332116}.gc-view{display:none}.gc-view.active{display:block}.gc-extra-card{background:#202020;border:1px solid #45403c;border-radius:14px;padding:16px;margin:12px 0}.gc-extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gc-extra-stat{border-left:4px solid var(--orange);border-radius:10px;padding:14px;background:#292522}.gc-extra-stat strong{display:block;font-size:24px;margin-top:8px}.gc-orange-btn{background:var(--orange)!important;color:#fff!important}.gc-map{height:300px;border-radius:12px;overflow:hidden;background:#282828}.gc-extra-field{width:100%;margin:6px 0 14px;padding:12px;border-radius:9px;border:1px solid #555;background:#151515;color:#fff}@media(max-width:420px){.gc-bottom-nav button{font-size:9px}.gc-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -22,12 +25,33 @@
 </section>
 <section id="dashboard" class="hidden">
 <header class="hero"><div class="hero-inner"><div><span class="badge">DASHBOARD ADMIN</span><h1>Kelola Servis <span style="color:var(--orange)">GadgetCare</span></h1><p>Pantau booking dan estimasi pendapatan usaha Anda.</p></div><div class="top-actions"><button id="refreshButton" class="secondary">↻ Refresh</button><button id="logoutButton" class="danger">Keluar</button></div></div></header>
+<nav class="gc-bottom-nav" aria-label="Menu admin">
+<button type="button" class="active" data-gc-view="home"><b>⌂</b>Beranda</button>
+<button type="button" data-gc-view="income"><b>▣</b>Pendapatan</button>
+<button type="button" data-gc-view="contacts"><b>✉</b>Kontak Masuk</button>
+<button type="button" data-gc-view="planning"><b>▤</b>Perencanaan</button>
+<button type="button" data-gc-view="profile"><b>♙</b>Profil Saya</button>
+</nav>
+<div class="gc-view active" data-gc-panel="home">
+<div class="gc-extra-card"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><strong id="gcWorkLabel">Anda sedang libur</strong><p class="muted small" id="gcWorkHint">Status kerja pada perangkat ini.</p></div><button type="button" id="gcWorkToggle" class="gc-orange-btn">Aktifkan</button></div></div>
+<div class="gc-extra-grid"><div class="gc-extra-stat">Order masuk<strong id="gcIncoming">0</strong></div><div class="gc-extra-stat">Perlu konfirmasi<strong id="gcConfirm">0</strong></div><div class="gc-extra-stat">Sedang diperbaiki<strong id="gcRepair">0</strong></div><div class="gc-extra-stat">Selesai<strong id="gcDone">0</strong></div></div>
+<div class="gc-extra-card"><h2>Lokasi Saya</h2><p class="muted small" id="gcLocationStatus">Lokasi belum diaktifkan.</p><div id="gcMap" class="gc-map"></div><button type="button" id="gcLocate" class="gc-orange-btn" style="margin-top:10px">Perbarui Lokasi GPS</button></div>
+</div>
+<div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p></div></div>
+<div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
+<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p><button type="button" id="gcShowBookings" class="gc-orange-btn">Buka daftar booking</button></div></div>
+<div class="gc-view" data-gc-panel="profile"><div class="gc-extra-card"><h2>Profil Saya</h2><label>Nama admin<input id="gcProfileName" class="gc-extra-field" placeholder="Nama admin"></label><label>Nomor WhatsApp<input id="gcProfilePhone" class="gc-extra-field" inputmode="tel" placeholder="08xxxxxxxxxx"></label><label>Nama usaha<input id="gcProfileBusiness" class="gc-extra-field" value="GadgetCare"></label><button type="button" id="gcSaveProfile" class="gc-orange-btn">Simpan Profil</button><p class="muted small">Profil ini disimpan lokal pada browser/perangkat ini.</p></div></div>
+<div class="gc-view active" data-gc-panel="home">
 <div class="stats">
 <div class="stat"><div class="label">Total Booking</div><strong id="total">0</strong><div class="hint">Semua booking yang terbaca</div></div>
 <div class="stat"><div class="label">Estimasi Pendapatan Hari Ini</div><strong id="revenueToday">Rp0</strong><div class="hint" id="todayCount">0 booking hari ini</div></div>
 <div class="stat"><div class="label">Estimasi Pendapatan Bulan Ini</div><strong id="revenueMonth">Rp0</strong><div class="hint" id="monthCount">0 booking bulan ini</div></div>
 </div>
+</div>
+<div class="gc-view" data-gc-panel="income">
 <p class="revenue-note">Perhitungan memakai total harga jika tersedia; jika belum, memakai estimasi harga. Ini nilai potensi dari booking, bukan otomatis pendapatan yang sudah dibayar.</p>
+</div>
+<div class="gc-view active" data-gc-panel="home">
 <section class="panel" id="hoursPanel">
 <div class="section-head"><div><h2>🕒 Pengaturan Jam Operasional</h2><p class="muted small">Atur hari dan jam buka yang akan ditampilkan di halaman pelanggan.</p></div></div>
 <form id="hoursForm">
@@ -42,9 +66,10 @@
 <button id="saveHoursButton" type="submit" style="margin-top:12px">Simpan Pengaturan Operasional</button>
 <p id="hoursMessage" class="message" role="status" aria-live="polite"></p>
 </form></section>
-<section class="panel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
+<section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
 <div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
 <p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section>
+</div>
 </section>
 <footer>© 2026 <strong>GadgetCare</strong> — Home Service & Repair Gadget</footer>
 </main>
@@ -93,5 +118,73 @@ $("bookingList").querySelectorAll(".booking").forEach(card=>{const b=bookings.fi
 $("search").addEventListener("input",renderBookings);$("statusFilter").addEventListener("change",renderBookings);$("paymentFilter").addEventListener("change",renderBookings);$("refreshButton").addEventListener("click",loadBookings);
 db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT")showLogin()});
 (async()=>{const {data,error}=await db.auth.getSession();if(error){message("loginMessage",error.message);return}if(data.session)await showDashboard()})();
+
+// ===== GadgetCare mobile dashboard add-on =====
+document.querySelectorAll("[data-gc-view]").forEach(btn=>btn.addEventListener("click",()=>{
+  const page=btn.dataset.gcView;
+  document.querySelectorAll("[data-gc-view]").forEach(x=>x.classList.toggle("active",x===btn));
+  document.querySelectorAll("[data-gc-panel]").forEach(x=>x.classList.toggle("active",x.dataset.gcPanel===page));
+  if(page==="planning") $("gcBookingPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  if(page==="contacts") gcRenderContacts();
+  if(page==="income") gcRenderExtraStats();
+}));
+const GC_WORK_KEY="gadgetcare_work_status";
+let gcWorkStatus=localStorage.getItem(GC_WORK_KEY)||"Libur";
+function gcRenderWork(){
+  const active=gcWorkStatus==="Aktif";
+  $("gcWorkLabel").textContent=active?"Anda sedang aktif.":"Anda sedang libur.";
+  $("gcWorkHint").textContent=active?"Status kerja aktif pada perangkat ini.":"Anda sedang libur.";
+  $("gcWorkToggle").textContent=active?"Jadikan Libur":"Aktifkan";
+}
+$("gcWorkToggle").addEventListener("click",()=>{gcWorkStatus=gcWorkStatus==="Aktif"?"Libur":"Aktif";localStorage.setItem(GC_WORK_KEY,gcWorkStatus);gcRenderWork()});
+function gcRenderExtraStats(){
+  const count=status=>bookings.filter(b=>String(b.status||"").toLowerCase()===status.toLowerCase()).length;
+  $("gcIncoming").textContent=count("Menunggu");
+  $("gcConfirm").textContent=count("Dikonfirmasi");
+  $("gcRepair").textContent=count("Sedang Diperbaiki");
+  $("gcDone").textContent=count("Selesai");
+  const paid=bookings.filter(b=>String(b.payment_status||"").toLowerCase()==="dibayar");
+  const revenue=paid.reduce((sum,b)=>sum+Number(b.total_price??b.estimated_price??0),0);
+  $("gcRevenue").textContent=money(revenue);
+  $("gcIncomeDetail").textContent=paid.length+" transaksi berstatus Dibayar.";
+}
+function gcRenderContacts(){
+  const seen=new Map();
+  bookings.forEach(b=>{const phone=String(b.phone||"").trim();if(phone&&!seen.has(phone))seen.set(phone,b)});
+  $("gcContactList").innerHTML=[...seen.values()].map(b=>'<div class="gc-extra-card"><strong>'+esc(b.customer_name||"Pelanggan")+'</strong><p class="muted small">'+esc(b.phone)+' · '+esc(b.booking_code||"")+'</p><a class="gc-orange-btn" style="display:inline-block;padding:10px;border-radius:8px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/'+esc(String(b.phone).replace(/\D/g,"").replace(/^0/,"62"))+'">Buka WhatsApp</a></div>').join("")||'<p class="muted">Belum ada nomor pelanggan dari booking.</p>';
+}
+$("gcShowBookings").addEventListener("click",()=>{$("search").scrollIntoView({behavior:"smooth",block:"center"});$("search").focus()});
+$("gcSaveProfile").addEventListener("click",()=>{
+  localStorage.setItem("gadgetcare_profile",JSON.stringify({name:$("gcProfileName").value.trim(),phone:$("gcProfilePhone").value.trim(),business:$("gcProfileBusiness").value.trim()}));
+  alert("Profil disimpan di browser/perangkat ini.");
+});
+try{const p=JSON.parse(localStorage.getItem("gadgetcare_profile")||"{}");$("gcProfileName").value=p.name||"";$("gcProfilePhone").value=p.phone||"";$("gcProfileBusiness").value=p.business||"GadgetCare"}catch(e){}
+gcRenderWork();
+let gcMap=null,gcMarker=null,gcCircle=null,gcWatch=null;
+function gcInitMap(){
+  if(!window.L||gcMap)return;
+  gcMap=L.map("gcMap").setView([-6.9,107.6],10);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(gcMap);
+}
+$("gcLocate").addEventListener("click",()=>{
+  if(!navigator.geolocation){$("gcLocationStatus").textContent="Browser tidak mendukung GPS.";return}
+  $("gcLocationStatus").textContent="Meminta izin GPS...";
+  if(!window.L){
+    if(!document.querySelector('link[data-gc-leaflet]')){const css=document.createElement("link");css.rel="stylesheet";css.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";css.dataset.gcLeaflet="1";document.head.appendChild(css)}
+    const script=document.createElement("script");script.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";script.onload=()=>{gcInitMap();gcStartGps()};script.onerror=()=>{$("gcLocationStatus").textContent="Pustaka peta gagal dimuat."};document.head.appendChild(script);
+  }else{gcInitMap();gcStartGps()}
+});
+function gcStartGps(){
+  if(!navigator.geolocation)return;
+  if(gcWatch!==null)navigator.geolocation.clearWatch(gcWatch);
+  gcWatch=navigator.geolocation.watchPosition(pos=>{
+    gcInitMap();if(!gcMap)return;
+    const pt=[pos.coords.latitude,pos.coords.longitude],acc=pos.coords.accuracy;
+    if(!gcMarker){gcMarker=L.marker(pt).addTo(gcMap).bindPopup("Lokasi saya");gcCircle=L.circle(pt,{radius:acc,color:"#ff7a00"}).addTo(gcMap);gcMap.setView(pt,16)}
+    else{gcMarker.setLatLng(pt);gcCircle.setLatLng(pt);gcCircle.setRadius(acc)}
+    $("gcLocationStatus").textContent="GPS aktif · akurasi ±"+Math.round(acc)+" meter.";
+  },err=>{$("gcLocationStatus").textContent=({1:"Izin lokasi ditolak.",2:"Lokasi tidak tersedia.",3:"GPS kehabisan waktu."})[err.code]||"GPS gagal."},{enableHighAccuracy:true,maximumAge:3000,timeout:15000});
+}
+// Refresh ringkasan setelah daftar booking dimuat, tanpa mengganti logika lama.
 </script>
 </body></html>
