@@ -64,7 +64,7 @@
 <label>Jam buka<input id="openTime" type="time" value="09:00" required></label>
 <label>Jam tutup<input id="closeTime" type="time" value="17:00" required></label>
 </div>
-<div style="margin-top:16px"><strong>Status operasional</strong><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><button id="setHolidayButton" type="button" class="danger">🔴 Libur / Tutup</button><button id="setOpenButton" type="button" class="secondary">🟢 Tidak Libur / Buka</button></div><p id="operationalStatusText" class="muted small">Pilih status lalu simpan.</p></div><input id="manualClosed" type="checkbox" style="display:none" aria-hidden="true">
+<input id="manualClosed" type="checkbox" style="display:none" aria-hidden="true">
 <button id="saveHoursButton" type="submit" style="margin-top:12px">Simpan Pengaturan Operasional</button>
 <p id="hoursMessage" class="message" role="status" aria-live="polite"></p>
 </form></section>
@@ -92,7 +92,7 @@ async function loadHours(){
   if(error){message("hoursMessage","Belum bisa memuat pengaturan. Pastikan SQL site_settings sudah dijalankan di Supabase. "+error.message);return}
   const hours=data?.opening_hours||{days:[1,2,3,4,5,6],open_time:"09:00",close_time:"17:00"};
   document.querySelectorAll(".dayCheck").forEach(c=>c.checked=(hours.days||[]).includes(Number(c.value)));
-  $("openTime").value=hours.open_time||"09:00";$("closeTime").value=hours.close_time||"17:00";$("manualClosed").checked=!!data?.is_closed;updateOperationalButtons();
+  $("openTime").value=hours.open_time||"09:00";$("closeTime").value=hours.close_time||"17:00";$("manualClosed").checked=!!data?.is_closed;gcWorkStatus=data?.is_closed?"Libur":"Aktif";gcRenderWork();
   message("hoursMessage",data?"Pengaturan berhasil dimuat.":"Belum ada pengaturan tersimpan. Atur jam lalu tekan Simpan.",true);
 }
 $("hoursForm").addEventListener("submit",async e=>{
@@ -108,7 +108,7 @@ $("hoursForm").addEventListener("submit",async e=>{
  }catch(err){message("hoursMessage","Gagal menyimpan: "+err.message)}
  finally{btn.disabled=false}
 });
-function updateOperationalButtons(){ $("operationalStatusText").textContent=$("manualClosed").checked?"Status dipilih: LIBUR / TUTUP SEMENTARA.":"Status dipilih: TIDAK LIBUR / BUKA sesuai jadwal."; } $("setHolidayButton").addEventListener("click",()=>{$("manualClosed").checked=true;updateOperationalButtons()}); $("setOpenButton").addEventListener("click",()=>{$("manualClosed").checked=false;updateOperationalButtons()});
+
 function amount(b){const v=b.total_price??b.estimated_price;return Number.isFinite(Number(v))?Number(v):0}
 function updateRevenue(){const now=new Date(),todayKey=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0"),monthKey=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");const today=bookings.filter(b=>String(b.created_at||"").slice(0,10)===todayKey);const month=bookings.filter(b=>String(b.created_at||"").slice(0,7)===monthKey);$("total").textContent=bookings.length;$("revenueToday").textContent=money(today.reduce((s,b)=>s+amount(b),0));$("revenueMonth").textContent=money(month.reduce((s,b)=>s+amount(b),0));$("todayCount").textContent=today.length+" booking hari ini";$("monthCount").textContent=month.length+" booking bulan ini"}
 async function loadBookings(){message("bookingMessage","Memuat data…");const {data,error}=await db.from("bookings").select("id,booking_code,customer_name,phone,device,damage,description,address,latitude,longitude,status,estimated_price,total_price,created_at,payment_status,payment_method,payment_order_id").order("created_at",{ascending:false}).limit(1000);if(error){bookings=[];updateRevenue();renderBookings();if(typeof gcRenderExtraStats==="function")gcRenderExtraStats();message("bookingMessage","Gagal memuat booking: "+error.message);return}bookings=data||[];updateRevenue();renderBookings();if(typeof gcRenderExtraStats==="function")gcRenderExtraStats();message("bookingMessage",bookings.length+" booking berhasil dimuat.",true)}
@@ -128,15 +128,27 @@ document.querySelectorAll("[data-gc-view]").forEach(btn=>btn.addEventListener("c
   if(page==="contacts") gcRenderContacts();
   if(page==="income") gcRenderExtraStats();
 }));
-const GC_WORK_KEY="gadgetcare_work_status";
-let gcWorkStatus=localStorage.getItem(GC_WORK_KEY)||"Libur";
+let gcWorkStatus="Libur";
 function gcRenderWork(){
   const active=gcWorkStatus==="Aktif";
   $("gcWorkLabel").textContent=active?"Anda sedang aktif.":"Anda sedang libur.";
-  $("gcWorkHint").textContent=active?"Status kerja aktif pada perangkat ini.":"Anda sedang libur.";
+  $("gcWorkHint").textContent=active?"Status aktif dan booking pelanggan dibuka sesuai jadwal.":"Anda sedang libur. Booking pelanggan dinonaktifkan.";
   $("gcWorkToggle").textContent=active?"Jadikan Libur":"Aktifkan";
+  $("manualClosed").checked=!active;
 }
-$("gcWorkToggle").addEventListener("click",()=>{gcWorkStatus=gcWorkStatus==="Aktif"?"Libur":"Aktif";localStorage.setItem(GC_WORK_KEY,gcWorkStatus);gcRenderWork()});
+$("gcWorkToggle").addEventListener("click",async()=>{
+  const btn=$("gcWorkToggle");btn.disabled=true;
+  const nextClosed=gcWorkStatus==="Aktif";
+  try{
+    const {error}=await db.from("site_settings").upsert({id:"main",is_closed:nextClosed,updated_at:new Date().toISOString()},{onConflict:"id"});
+    if(error)throw error;
+    gcWorkStatus=nextClosed?"Libur":"Aktif";
+    $("manualClosed").checked=nextClosed;
+    gcRenderWork();
+    message("hoursMessage",nextClosed?"Status libur tersimpan. Booking pada web pelanggan ditutup.":"Status aktif tersimpan. Booking pada web pelanggan dibuka sesuai jadwal.",true);
+  }catch(err){message("hoursMessage","Gagal mengubah status: "+err.message);alert("Status tidak tersimpan ke Supabase: "+err.message)}
+  finally{btn.disabled=false}
+});
 function gcRenderExtraStats(){
   const count=status=>bookings.filter(b=>String(b.status||"").toLowerCase()===status.toLowerCase()).length;
   $("gcIncoming").textContent=count("Menunggu");
