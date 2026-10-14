@@ -37,7 +37,7 @@
 <div class="gc-extra-grid"><div class="gc-extra-stat">Order masuk<strong id="gcIncoming">0</strong></div><div class="gc-extra-stat">Perlu konfirmasi<strong id="gcConfirm">0</strong></div><div class="gc-extra-stat">Sedang diperbaiki<strong id="gcRepair">0</strong></div><div class="gc-extra-stat">Selesai<strong id="gcDone">0</strong></div></div>
 <div class="gc-extra-card"><h2>Lokasi Saya</h2><p class="muted small" id="gcLocationStatus">Lokasi belum diaktifkan.</p><div id="gcMap" class="gc-map"></div><button type="button" id="gcLocate" class="gc-orange-btn" style="margin-top:10px">Perbarui Lokasi GPS</button></div>
 </div>
-<div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p></div></div>
+<div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p><h3 style="margin-top:22px">Riwayat Transaksi</h3><p class="muted small">Booking dengan status pembayaran Dibayar.</p><div id="gcTransactionHistory"><p class="muted small">Memuat riwayat...</p></div></div></div>
 <div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
 <div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
 <div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
@@ -155,10 +155,20 @@ function gcRenderExtraStats(){
   $("gcConfirm").textContent=count("Dikonfirmasi");
   $("gcRepair").textContent=count("Sedang Diperbaiki");
   $("gcDone").textContent=count("Selesai");
-  const paid=bookings.filter(b=>String(b.payment_status||"").toLowerCase()==="dibayar");
+  const paid=bookings.filter(b=>String(b.payment_status||"").trim().toLowerCase()==="dibayar");
   const revenue=paid.reduce((sum,b)=>sum+Number(b.total_price??b.estimated_price??0),0);
   $("gcRevenue").textContent=money(revenue);
   $("gcIncomeDetail").textContent=paid.length+" transaksi berstatus Dibayar.";
+  const history=$("gcTransactionHistory");
+  if(!history)return;
+  const sorted=[...paid].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+  history.innerHTML=sorted.length?sorted.map(b=>{
+    const name=esc(b.customer_name||b.name||"Pelanggan");
+    const code=esc(b.booking_code||"-");
+    const total=money(Number(b.total_price??b.estimated_price??0));
+    const date=b.created_at?new Date(b.created_at).toLocaleDateString("id-ID"):"Tanggal tidak tersedia";
+    return '<div class="gc-extra-card" style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><strong>'+name+'</strong><div class="muted small" style="margin-top:5px">Kode booking: '+code+'</div><div class="muted small">'+esc(date)+'</div></div><strong style="color:var(--orange)">'+esc(total)+'</strong></div></div>';
+  }).join(""):'<div class="gc-extra-card"><p class="muted small">Belum ada transaksi dengan status pembayaran Dibayar.</p></div>';
 }
 function gcRenderContacts(){
   const seen=new Map();
