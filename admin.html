@@ -39,7 +39,9 @@
 </div>
 <div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p></div></div>
 <div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
-<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p><button type="button" id="gcShowBookings" class="gc-orange-btn">Buka daftar booking</button></div></div>
+<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
+<div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
+<p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section></div>
 <div class="gc-view" data-gc-panel="profile"><div class="gc-extra-card"><h2>Profil Saya</h2><label>Nama admin<input id="gcProfileName" class="gc-extra-field" placeholder="Nama admin"></label><label>Nomor WhatsApp<input id="gcProfilePhone" class="gc-extra-field" inputmode="tel" placeholder="08xxxxxxxxxx"></label><label>Nama usaha<input id="gcProfileBusiness" class="gc-extra-field" value="GadgetCare"></label><button type="button" id="gcSaveProfile" class="gc-orange-btn">Simpan Profil</button><p class="muted small">Profil ini disimpan lokal pada browser/perangkat ini.</p></div></div>
 <div class="gc-view active" data-gc-panel="home">
 <div class="stats">
@@ -66,9 +68,7 @@
 <button id="saveHoursButton" type="submit" style="margin-top:12px">Simpan Pengaturan Operasional</button>
 <p id="hoursMessage" class="message" role="status" aria-live="polite"></p>
 </form></section>
-<section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
-<div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
-<p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section>
+
 </div>
 </section>
 <footer>© 2026 <strong>GadgetCare</strong> — Home Service & Repair Gadget</footer>
@@ -153,7 +153,7 @@ function gcRenderContacts(){
   bookings.forEach(b=>{const phone=String(b.phone||"").trim();if(phone&&!seen.has(phone))seen.set(phone,b)});
   $("gcContactList").innerHTML=[...seen.values()].map(b=>'<div class="gc-extra-card"><strong>'+esc(b.customer_name||"Pelanggan")+'</strong><p class="muted small">'+esc(b.phone)+' · '+esc(b.booking_code||"")+'</p><a class="gc-orange-btn" style="display:inline-block;padding:10px;border-radius:8px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/'+esc(String(b.phone).replace(/\D/g,"").replace(/^0/,"62"))+'">Buka WhatsApp</a></div>').join("")||'<p class="muted">Belum ada nomor pelanggan dari booking.</p>';
 }
-$("gcShowBookings").addEventListener("click",()=>{$("search").scrollIntoView({behavior:"smooth",block:"center"});$("search").focus()});
+
 $("gcSaveProfile").addEventListener("click",()=>{
   localStorage.setItem("gadgetcare_profile",JSON.stringify({name:$("gcProfileName").value.trim(),phone:$("gcProfilePhone").value.trim(),business:$("gcProfileBusiness").value.trim()}));
   alert("Profil disimpan di browser/perangkat ini.");
