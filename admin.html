@@ -170,8 +170,10 @@ function gcRenderExtraStats(){
     const name=esc(b.customer_name||b.name||"Pelanggan");
     const code=esc(b.booking_code||"-");
     const total=money(Number(b.total_price??b.estimated_price??0));
-    const date=b.created_at?new Date(b.created_at).toLocaleDateString("id-ID"):"Tanggal tidak tersedia";
-    return '<div class="gc-extra-card" style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><strong>'+name+'</strong><div class="muted small" style="margin-top:5px">Kode booking: '+code+'</div><div class="muted small">'+esc(date)+'</div></div><strong style="color:var(--orange)">'+esc(total)+'</strong></div></div>';
+    const transactionDate=b.paid_at||b.payment_at||b.updated_at||b.created_at;
+    const date=transactionDate?new Date(transactionDate).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"Tanggal tidak tersedia";
+    const time=transactionDate?new Date(transactionDate).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false,timeZone:"Asia/Jakarta"})+" WIB":"Jam tidak tersedia";
+    return '<div class="gc-extra-card" style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><strong>'+name+'</strong><div class="muted small" style="margin-top:5px">Kode booking: '+code+'</div><div class="muted small">Tanggal transaksi: '+esc(date)+'</div><div class="muted small">Jam transaksi: '+esc(time)+'</div></div><strong style="color:var(--orange)">'+esc(total)+'</strong></div></div>';
   }).join(""):'<div class="gc-extra-card"><p class="muted small">Belum ada transaksi dengan status pembayaran Dibayar.</p></div>';
 }
 function gcRenderContacts(){
