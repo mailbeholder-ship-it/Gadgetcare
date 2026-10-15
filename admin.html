@@ -12,7 +12,7 @@
 @media(max-width:420px){.editgrid{grid-template-columns:1fr}.actions button{min-width:100%}.login{padding:18px}.brand h1{font-size:20px}}
 
 /* Mobile dashboard navigation addition */
-.gc-bottom-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;position:sticky;top:0;z-index:50;padding:8px;background:#171717;border:1px solid #3b3029;border-radius:14px;margin:12px 0}.gc-bottom-nav button{background:transparent;color:#ddd;padding:8px 2px;font-size:11px;display:flex;flex-direction:column;gap:5px;align-items:center;white-space:normal}.gc-bottom-nav button .nav-icon-img{width:22px;height:22px;object-fit:contain;display:block}.gc-bottom-nav button.active{color:var(--orange);background:#332116}.gc-view{display:none}.gc-view.active{display:block}.gc-extra-card{background:#202020;border:1px solid #45403c;border-radius:14px;padding:16px;margin:12px 0}.gc-extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gc-extra-stat{border-left:4px solid var(--orange);border-radius:10px;padding:14px;background:#292522}.gc-extra-stat strong{display:block;font-size:24px;margin-top:8px}.gc-orange-btn{background:var(--orange)!important;color:#fff!important}.gc-map{height:300px;border-radius:12px;overflow:hidden;background:#282828}.gc-extra-field{width:100%;margin:6px 0 14px;padding:12px;border-radius:99px;border:1px solid #555;background:#151515;color:#fff}@media(max-width:420px){.gc-bottom-nav button{font-size:9px}.gc-bottom-nav button .nav-icon-img{width:18px;height:18px}.gc-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.gc-bottom-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;position:sticky;top:0;z-index:50;padding:8px;background:#171717;border:1px solid #3b3029;border-radius:14px;margin:12px 0}.gc-bottom-nav button{background:transparent;color:#ddd;padding:8px 2px;font-size:11px;display:flex;flex-direction:column;gap:5px;align-items:center;white-space:normal}.gc-bottom-nav button .nav-icon-img{width:22px;height:22px;object-fit:contain;display:block}.gc-bottom-nav button.active{color:var(--orange);background:#332116}.gc-view{display:none}.gc-view.active{display:block}.gc-extra-card{background:#202020;border:1px solid #45403c;border-radius:14px;padding:16px;margin:12px 0}.gc-extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gc-extra-stat{border-left:4px solid var(--orange);border-radius:10px;padding:14px;background:#292522}.gc-extra-stat strong{display:block;font-size:24px;margin-top:8px}.gc-orange-btn{background:var(--orange)!important;color:#fff!important}.gc-map{height:300px;border-radius:12px;overflow:hidden;background:#282828}.gc-extra-field{width:100%;margin:6px 0 14px;padding:12px;border-radius:12px;border:1px solid #555;background:#151515;color:#fff}@media(max-width:420px){.gc-bottom-nav button{font-size:9px}.gc-bottom-nav button .nav-icon-img{width:18px;height:18px}.gc-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -37,26 +37,30 @@
 <div class="gc-extra-grid"><div class="gc-extra-stat">Order masuk<strong id="gcIncoming">0</strong></div><div class="gc-extra-stat">Perlu konfirmasi<strong id="gcConfirm">0</strong></div><div class="gc-extra-stat">Sedang diperbaiki<strong id="gcRepair">0</strong></div><div class="gc-extra-stat">Selesai<strong id="gcDone">0</strong></div></div>
 <div class="gc-extra-card"><h2>Lokasi Saya</h2><p class="muted small" id="gcLocationStatus">Lokasi belum diaktifkan.</p><div id="gcMap" class="gc-map"></div><button type="button" id="gcLocate" class="gc-orange-btn" style="margin-top:10px">Perbarui Lokasi GPS</button></div>
 </div>
+<div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p><h3 style="margin-top:22px">Riwayat Transaksi</h3><p class="muted small">Booking dengan status pembayaran Dibayar.</p><div id="gcTransactionHistory"><p class="muted small">Memuat riwayat...</p></div></div></div>
+<div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
+<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
+<div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
+<p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section></div>
+
+<!-- Profile Panel Improved -->
 <div class="gc-view" data-gc-panel="profile">
   <div class="gc-extra-card">
-    
-    <!-- 1. Header Ringkasan Profil -->
     <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
-      <div style="width: 64px; height: 64px; border-radius: 50%; background: #26313c; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; font-size: 26px; overflow: hidden;">
+      <div style="width: 64px; height: 64px; border-radius: 50%; background: #26313c; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; font-size: 26px; overflow: hidden; flex-shrink: 0;">
         <img src="./fixio-logo2.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
       </div>
       <div>
-        <h2 style="margin: 0; font-size: 20px;" id="gcProfileHeaderName">Nama Admin</h2>
+        <h2 style="margin: 0; font-size: 20px;" id="gcProfileHeaderName">Admin FixioGadget</h2>
         <span class="pill" style="margin-top: 4px;">Super Admin</span>
         <p class="muted small" style="margin: 4px 0 0;" id="gcProfileHeaderEmail">admin@fixiogadget.com</p>
       </div>
     </div>
 
-    <!-- 2. Form Data Profil Admin & Toko -->
     <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Informasi Admin & Usaha</h3>
     
     <label>Nama Admin
-      <input id="gcProfileName" class="gc-extra-field" placeholder="Masukkan nama lengkap Anda">
+      <input id="gcProfileName" class="gc-extra-field" placeholder="Nama lengkap admin">
     </label>
 
     <label>Nomor WhatsApp Admin
@@ -68,7 +72,7 @@
     </label>
 
     <label>Alamat Workshop / Counter
-      <textarea id="gcProfileAddress" class="gc-extra-field" rows="2" style="border-radius: 12px; resize: vertical;" placeholder="Jl. Raya Tanjungsari No..."></textarea>
+      <textarea id="gcProfileAddress" class="gc-extra-field" rows="2" style="resize: vertical;" placeholder="Alamat lengkap lokasi usaha..."></textarea>
     </label>
 
     <label>Catatan Garansi / Footer Nota
@@ -76,12 +80,11 @@
     </label>
 
     <button type="button" id="gcSaveProfile" class="gc-orange-btn" style="width: 100%; margin-top: 8px;">Simpan Perubahan Profil</button>
-    <p class="muted small" style="margin-top: 8px; text-align: center;">Data disimpan secara lokal di perangkat ini.</p>
+    <p class="muted small" style="margin-top: 8px; text-align: center;">Profil ini disimpan lokal pada browser/perangkat ini.</p>
 
     <div class="divider"></div>
 
-    <!-- 3. Fitur Keamanan Akun -->
-    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Keamanan & Akun</h3>
+    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Keamanan Akun</h3>
     <form id="gcChangePasswordForm" style="display: flex; flex-direction: column; gap: 8px;">
       <label>Password Baru
         <input id="gcNewPassword" type="password" placeholder="Minimal 6 karakter" required minlength="6">
@@ -89,10 +92,16 @@
       <button type="submit" id="gcBtnChangePassword" class="secondary" style="margin-top: 6px;">Ganti Password Admin</button>
       <p id="gcPasswordMsg" class="message" role="status"></p>
     </form>
-
   </div>
 </div>
-  
+
+<div class="gc-view active" data-gc-panel="home">
+<div class="stats">
+<div class="stat"><div class="label">Total Booking</div><strong id="total">0</strong><div class="hint">Semua booking yang terbaca</div></div>
+<div class="stat"><div class="label">Estimasi Pendapatan Hari Ini</div><strong id="revenueToday">Rp0</strong><div class="hint" id="todayCount">0 booking hari ini</div></div>
+<div class="stat"><div class="label">Estimasi Pendapatan Bulan Ini</div><strong id="revenueMonth">Rp0</strong><div class="hint" id="monthCount">0 booking bulan ini</div></div>
+</div>
+</div>
 <div class="gc-view" data-gc-panel="income">
 <p class="revenue-note">Perhitungan memakai total harga jika tersedia; jika belum, memakai estimasi harga. Ini nilai potensi dari booking, bukan otomatis pendapatan yang sudah dibayar.</p>
 </div>
@@ -117,76 +126,6 @@
 <footer>© 2026 <strong>FixioGadget</strong> — Home Service & Repair Gadget</footer>
 </main>
 <script>
-  // 1. Muat Profil Lokal & Email Supabase Auth
-async function initProfileData() {
-  // Ambil user aktif dari Supabase
-  const { data: { user } } = await db.auth.getUser();
-  if (user) {
-    if ($("gcProfileHeaderEmail")) $("gcProfileHeaderEmail").textContent = user.email;
-  }
-
-  // Ambil profil lokal
-  try {
-    const p = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}");
-    if ($("gcProfileName")) $("gcProfileName").value = p.name || "";
-    if ($("gcProfilePhone")) $("gcProfilePhone").value = p.phone || "";
-    if ($("gcProfileBusiness")) $("gcProfileBusiness").value = p.business || "FixioGadget";
-    if ($("gcProfileAddress")) $("gcProfileAddress").value = p.address || "";
-    if ($("gcProfileFooterNote")) $("gcProfileFooterNote").value = p.footerNote || "";
-    
-    if ($("gcProfileHeaderName")) {
-      $("gcProfileHeaderName").textContent = p.name || "Admin FixioGadget";
-    }
-  } catch (e) {}
-}
-
-// Call fungsi init saat halaman/dashboard dimuat
-initProfileData();
-
-// 2. Event Listener Simpan Profil
-$("gcSaveProfile")?.addEventListener("click", () => {
-  const profileData = {
-    name: $("gcProfileName").value.trim(),
-    phone: $("gcProfilePhone").value.trim(),
-    business: $("gcProfileBusiness").value.trim(),
-    address: $("gcProfileAddress")?.value.trim() || "",
-    footerNote: $("gcProfileFooterNote")?.value.trim() || ""
-  };
-
-  localStorage.setItem("fixiogadget_profile", JSON.stringify(profileData));
-  
-  if ($("gcProfileHeaderName")) {
-    $("gcProfileHeaderName").textContent = profileData.name || "Admin FixioGadget";
-  }
-
-  alert("Profil berhasil diperbarui!");
-});
-
-// 3. Event Listener Ganti Password
-$("gcChangePasswordForm")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const btn = $("gcBtnChangePassword");
-  const msg = $("gcPasswordMsg");
-  const newPass = $("gcNewPassword").value;
-
-  btn.disabled = true;
-  msg.textContent = "Memproses perubahan password...";
-  msg.className = "message";
-
-  try {
-    const { error } = await db.auth.updateUser({ password: newPass });
-    if (error) throw error;
-
-    msg.textContent = "Password berhasil diperbarui!";
-    msg.classList.add("success");
-    $("gcNewPassword").value = "";
-  } catch (err) {
-    msg.textContent = "Gagal memperbarui password: " + err.message;
-  } finally {
-    btn.disabled = false;
-  }
-});
-
 const SUPABASE_URL="https://sqpolxwdyypbxylgvihi.supabase.co";
 const SUPABASE_KEY="sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -197,7 +136,7 @@ function message(id,text,success=false){$(id).textContent=text;$(id).classList.t
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;message("loginMessage","Memeriksa akun…");try{const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;message("loginMessage","");await showDashboard()}catch(err){message("loginMessage","Login gagal: "+err.message)}finally{$("loginButton").disabled=false}});
 $("logoutButton").addEventListener("click",async()=>{const {error}=await db.auth.signOut();if(error)message("bookingMessage","Gagal logout: "+error.message);else showLogin()});
 function showLogin(){$("loginSection").classList.remove("hidden");$("dashboard").classList.add("hidden")}
-async function showDashboard(){$("loginSection").classList.add("hidden");$("dashboard").classList.remove("hidden");await Promise.all([loadBookings(),loadHours()])}
+async function showDashboard(){$("loginSection").classList.add("hidden");$("dashboard").classList.remove("hidden");await Promise.all([loadBookings(),loadHours(),initProfileData()])}
 const dayNames=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 async function loadHours(){
   message("hoursMessage","Memuat pengaturan operasional…");
@@ -295,11 +234,59 @@ function gcRenderContacts(){
   $("gcContactList").innerHTML=[...seen.values()].map(b=>'<div class="gc-extra-card"><strong>'+esc(b.customer_name||"Pelanggan")+'</strong><p class="muted small">'+esc(b.phone)+' · '+esc(b.booking_code||"")+'</p><a class="gc-orange-btn" style="display:inline-block;padding:10px;border-radius:8px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/'+esc(String(b.phone).replace(/\D/g,"").replace(/^0/,"62"))+'">Buka WhatsApp</a></div>').join("")||'<p class="muted">Belum ada nomor pelanggan dari booking.</p>';
 }
 
-$("gcSaveProfile").addEventListener("click",()=>{
-  localStorage.setItem("fixiogadget_profile",JSON.stringify({name:$("gcProfileName").value.trim(),phone:$("gcProfilePhone").value.trim(),business:$("gcProfileBusiness").value.trim()}));
-  alert("Profil disimpan di browser/perangkat ini.");
+// ===== Profil & Keamanan Admin Logic =====
+async function initProfileData(){
+  try{
+    const {data:{user}}=await db.auth.getUser();
+    if(user&&$("gcProfileHeaderEmail")) $("gcProfileHeaderEmail").textContent=user.email;
+  }catch(e){}
+
+  try{
+    const p=JSON.parse(localStorage.getItem("fixiogadget_profile")||"{}");
+    if($("gcProfileName")) $("gcProfileName").value=p.name||"";
+    if($("gcProfilePhone")) $("gcProfilePhone").value=p.phone||"";
+    if($("gcProfileBusiness")) $("gcProfileBusiness").value=p.business||"FixioGadget";
+    if($("gcProfileAddress")) $("gcProfileAddress").value=p.address||"";
+    if($("gcProfileFooterNote")) $("gcProfileFooterNote").value=p.footerNote||"";
+    if($("gcProfileHeaderName")) $("gcProfileHeaderName").textContent=p.name||"Admin FixioGadget";
+  }catch(e){}
+}
+
+$("gcSaveProfile")?.addEventListener("click",()=>{
+  const profileData={
+    name:$("gcProfileName").value.trim(),
+    phone:$("gcProfilePhone").value.trim(),
+    business:$("gcProfileBusiness").value.trim(),
+    address:$("gcProfileAddress")?$("gcProfileAddress").value.trim():"",
+    footerNote:$("gcProfileFooterNote")?$("gcProfileFooterNote").value.trim():""
+  };
+  localStorage.setItem("fixiogadget_profile",JSON.stringify(profileData));
+  if($("gcProfileHeaderName")) $("gcProfileHeaderName").textContent=profileData.name||"Admin FixioGadget";
+  alert("Profil berhasil diperbarui!");
 });
-try{const p=JSON.parse(localStorage.getItem("fixiogadget_profile")||"{}");$("gcProfileName").value=p.name||"";$("gcProfilePhone").value=p.phone||"";$("gcProfileBusiness").value=p.business||"FixioGadget"}catch(e){}
+
+$("gcChangePasswordForm")?.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const btn=$("gcBtnChangePassword");
+  const msg=$("gcPasswordMsg");
+  const newPass=$("gcNewPassword").value;
+  btn.disabled=true;
+  msg.textContent="Memproses perubahan password...";
+  msg.className="message";
+
+  try{
+    const {error}=await db.auth.updateUser({password:newPass});
+    if(error)throw error;
+    msg.textContent="Password berhasil diperbarui!";
+    msg.classList.add("success");
+    $("gcNewPassword").value="";
+  }catch(err){
+    msg.textContent="Gagal memperbarui password: "+err.message;
+  }finally{
+    btn.disabled=false;
+  }
+});
+
 gcRenderWork();
 let gcMap=null,gcMarker=null,gcCircle=null,gcWatch=null;
 function gcInitMap(){
