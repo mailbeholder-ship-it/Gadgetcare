@@ -13,16 +13,19 @@
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; background: #eef0f2; color: #111; font-family: Arial, Helvetica, sans-serif; }
     body { font-size: 13px; }
-    .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 10px; }
-    .receipt { background: #fff; padding: 16px 14px; border-radius: 10px; box-shadow: 0 3px 18px rgba(0,0,0,.08); }
+    
+    /* Container & Receipt Dibuat Mepet Atas */
+    .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 0 10px; }
+    .receipt { background: #fff; padding: 4px 14px 16px; border-radius: 0 0 10px 10px; box-shadow: 0 3px 18px rgba(0,0,0,.08); }
     .loading, .error { text-align: center; padding: 40px 12px; line-height: 1.5; }
     .error { color: #b42318; overflow-wrap: anywhere; }
     
-    /* Brand Header & Logo */
-    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; margin-bottom: 0; padding-top: 0; }
-    .brand img { width: 150px; max-width: 80%; height: auto; object-fit: contain; display: block; margin: 0 auto; filter: contrast(110%); }
+    /* Brand Header & Logo Mepet Atas */
+    header { margin-top: 0; padding-top: 0; }
+    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; margin: 0 0 4px 0; padding-top: 0; }
+    .brand img { width: 160px; max-width: 85%; height: auto; object-fit: contain; display: block; margin: 0 auto; filter: contrast(110%); }
     
-    .tagline { text-align: center; font-size: 11px; margin-top: 4px; font-weight: 800; letter-spacing: .5px; }
+    .tagline { text-align: center; font-size: 11px; margin-top: 2px; font-weight: 800; letter-spacing: .5px; }
     .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 4px 0 0; overflow-wrap: anywhere; }
     .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 2px; font-weight: 700; }
     .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
@@ -48,14 +51,15 @@
     .wa-btn { background: #128c4a; }
     .close-btn { background: #626b75; }
     
-    @media (max-width: 360px) { .container { padding: 0; margin: 0; } .receipt { border-radius: 0; padding: 12px 10px; } }
+    @media (max-width: 360px) { .container { padding: 0; margin: 0; } .receipt { border-radius: 0; padding: 2px 10px 12px; } }
     
-    /* Pengaturan Khusus Printer Thermal 58mm untuk Mengeliminasi Margin Atas */
+    /* Pengaturan Khusus Printer Thermal 58mm */
     @media print {
       @page { size: 58mm auto; margin: 0 !important; }
       html, body { width: 58mm !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 10px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
       .container { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 !important; }
-      .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0.5mm 1mm 1mm 1mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+      .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 1mm 1mm 1mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+      header { margin-top: 0 !important; padding-top: 0 !important; }
       .brand { margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 0 !important; }
       .brand img { width: 48mm !important; max-width: 100% !important; height: auto !important; filter: contrast(150%) grayscale(100%) !important; margin-top: 0 !important; margin-bottom: 0 !important; }
       .tagline { margin-top: 1mm !important; font-size: 8px !important; }
