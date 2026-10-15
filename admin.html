@@ -37,19 +37,62 @@
 <div class="gc-extra-grid"><div class="gc-extra-stat">Order masuk<strong id="gcIncoming">0</strong></div><div class="gc-extra-stat">Perlu konfirmasi<strong id="gcConfirm">0</strong></div><div class="gc-extra-stat">Sedang diperbaiki<strong id="gcRepair">0</strong></div><div class="gc-extra-stat">Selesai<strong id="gcDone">0</strong></div></div>
 <div class="gc-extra-card"><h2>Lokasi Saya</h2><p class="muted small" id="gcLocationStatus">Lokasi belum diaktifkan.</p><div id="gcMap" class="gc-map"></div><button type="button" id="gcLocate" class="gc-orange-btn" style="margin-top:10px">Perbarui Lokasi GPS</button></div>
 </div>
-<div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p><h3 style="margin-top:22px">Riwayat Transaksi</h3><p class="muted small">Booking dengan status pembayaran Dibayar.</p><div id="gcTransactionHistory"><p class="muted small">Memuat riwayat...</p></div></div></div>
-<div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
-<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
-<div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
-<p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section></div>
-<div class="gc-view" data-gc-panel="profile"><div class="gc-extra-card"><h2>Profil Saya</h2><label>Nama admin<input id="gcProfileName" class="gc-extra-field" placeholder="Nama admin"></label><label>Nomor WhatsApp<input id="gcProfilePhone" class="gc-extra-field" inputmode="tel" placeholder="08xxxxxxxxxx"></label><label>Nama usaha<input id="gcProfileBusiness" class="gc-extra-field" value="FixioGadget"></label><button type="button" id="gcSaveProfile" class="gc-orange-btn">Simpan Profil</button><p class="muted small">Profil ini disimpan lokal pada browser/perangkat ini.</p></div></div>
-<div class="gc-view active" data-gc-panel="home">
-<div class="stats">
-<div class="stat"><div class="label">Total Booking</div><strong id="total">0</strong><div class="hint">Semua booking yang terbaca</div></div>
-<div class="stat"><div class="label">Estimasi Pendapatan Hari Ini</div><strong id="revenueToday">Rp0</strong><div class="hint" id="todayCount">0 booking hari ini</div></div>
-<div class="stat"><div class="label">Estimasi Pendapatan Bulan Ini</div><strong id="revenueMonth">Rp0</strong><div class="hint" id="monthCount">0 booking bulan ini</div></div>
+<div class="gc-view" data-gc-panel="profile">
+  <div class="gc-extra-card">
+    
+    <!-- 1. Header Ringkasan Profil -->
+    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
+      <div style="width: 64px; height: 64px; border-radius: 50%; background: #26313c; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; font-size: 26px; overflow: hidden;">
+        <img src="./fixio-logo2.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+      </div>
+      <div>
+        <h2 style="margin: 0; font-size: 20px;" id="gcProfileHeaderName">Nama Admin</h2>
+        <span class="pill" style="margin-top: 4px;">Super Admin</span>
+        <p class="muted small" style="margin: 4px 0 0;" id="gcProfileHeaderEmail">admin@fixiogadget.com</p>
+      </div>
+    </div>
+
+    <!-- 2. Form Data Profil Admin & Toko -->
+    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Informasi Admin & Usaha</h3>
+    
+    <label>Nama Admin
+      <input id="gcProfileName" class="gc-extra-field" placeholder="Masukkan nama lengkap Anda">
+    </label>
+
+    <label>Nomor WhatsApp Admin
+      <input id="gcProfilePhone" class="gc-extra-field" inputmode="tel" placeholder="08xxxxxxxxxx">
+    </label>
+
+    <label>Nama Usaha / Counter
+      <input id="gcProfileBusiness" class="gc-extra-field" value="FixioGadget">
+    </label>
+
+    <label>Alamat Workshop / Counter
+      <textarea id="gcProfileAddress" class="gc-extra-field" rows="2" style="border-radius: 12px; resize: vertical;" placeholder="Jl. Raya Tanjungsari No..."></textarea>
+    </label>
+
+    <label>Catatan Garansi / Footer Nota
+      <input id="gcProfileFooterNote" class="gc-extra-field" placeholder="Contoh: Garansi servis 30 hari. Simpan nota ini.">
+    </label>
+
+    <button type="button" id="gcSaveProfile" class="gc-orange-btn" style="width: 100%; margin-top: 8px;">Simpan Perubahan Profil</button>
+    <p class="muted small" style="margin-top: 8px; text-align: center;">Data disimpan secara lokal di perangkat ini.</p>
+
+    <div class="divider"></div>
+
+    <!-- 3. Fitur Keamanan Akun -->
+    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Keamanan & Akun</h3>
+    <form id="gcChangePasswordForm" style="display: flex; flex-direction: column; gap: 8px;">
+      <label>Password Baru
+        <input id="gcNewPassword" type="password" placeholder="Minimal 6 karakter" required minlength="6">
+      </label>
+      <button type="submit" id="gcBtnChangePassword" class="secondary" style="margin-top: 6px;">Ganti Password Admin</button>
+      <p id="gcPasswordMsg" class="message" role="status"></p>
+    </form>
+
+  </div>
 </div>
-</div>
+  
 <div class="gc-view" data-gc-panel="income">
 <p class="revenue-note">Perhitungan memakai total harga jika tersedia; jika belum, memakai estimasi harga. Ini nilai potensi dari booking, bukan otomatis pendapatan yang sudah dibayar.</p>
 </div>
