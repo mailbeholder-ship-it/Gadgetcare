@@ -17,12 +17,15 @@
     .receipt { background: #fff; padding: 18px 16px; border-radius: 10px; box-shadow: 0 3px 18px rgba(0,0,0,.08); }
     .loading, .error { text-align: center; padding: 40px 12px; line-height: 1.5; }
     .error { color: #b42318; overflow-wrap: anywhere; }
-    .brand { display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
-    .brand img { width: 32px; height: 32px; object-fit: contain; }
+    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
+    .brand img { width: 90px; height: 90px; object-fit: contain; display: block; margin: 0 auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,.15)); }
+    .brand-title { display: flex; align-items: center; gap: 2px; }
     .gadget { color: #111; }
-    .care { color: #111; }
-    .tagline { text-align: center; font-size: 10px; margin-top: 4px; }
-    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 7px 0 0; overflow-wrap: anywhere; }\n    .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 3px; }\n    .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
+    .care { color: #ff5722; }
+    .tagline { text-align: center; font-size: 10px; margin-top: 4px; font-weight: 700; letter-spacing: .5px; }
+    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 7px 0 0; overflow-wrap: anywhere; }
+    .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 3px; }
+    .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
     .dash { border: 0; border-top: 1px dashed #111; margin: 12px 0; }
     .receipt-title { text-align: center; font-size: 15px; font-weight: 800; letter-spacing: .5px; margin: 2px 0 6px; }
     .booking-code { text-align: center; font-weight: 700; font-size: 12px; overflow-wrap: anywhere; }
@@ -40,7 +43,7 @@
     .thanks-note { text-align: center; font-size: 10px; line-height: 1.45; margin-top: 4px; }
     .footer { text-align: center; font-size: 9px; line-height: 1.4; margin-top: 10px; overflow-wrap: anywhere; }
     .buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
-    button { border: 0; border-radius: 7px; padding: 12px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; }
+    button { border: 0; border-radius: 999px; padding: 12px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; }
     .print-btn { background: #111; }
     .wa-btn { background: #128c4a; }
     .close-btn { background: #626b75; }
@@ -51,7 +54,7 @@
       .container { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 !important; }
       .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 2mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
       .brand { font-size: 17px !important; color: #000 !important; }
-      .brand img { width: 24px !important; height: 24px !important; filter: grayscale(100%); }
+      .brand img { width: 45px !important; height: 45px !important; filter: grayscale(100%); }
       .gadget, .care, .label, .value, .tagline, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
       .tagline, .store-address, .store-contact { font-size: 8px !important; }
       .receipt-title { font-size: 13px !important; }
@@ -162,10 +165,11 @@
         <header>
           <div class="brand">
             <img src="./fixio-logo2.png" alt="Logo FixioGadget" onerror="this.style.display='none'">
-            <span><span class="gadget">Gadget</span><span class="care">Care</span></span>
+            <div class="brand-title"><span class="gadget">Fixio</span><span class="care">Gadget</span></div>
           </div>
           <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
-          <div class="store-address">${escapeHtml(address)}</div>\n          <div class="store-contact">WhatsApp: 0858-4600-9748</div>
+          <div class="store-address">${escapeHtml(address)}</div>
+          <div class="store-contact">WhatsApp: 0858-4600-9748</div>
         </header>
 
         <hr class="dash">
@@ -184,7 +188,8 @@
         <div class="line"><div class="label">Perangkat</div><div class="value">${escapeHtml(b.device || "-")}</div></div>
         <div class="line"><div class="label">Kerusakan</div><div class="value">${escapeHtml(b.damage || "-")}</div></div>
         <div class="line"><div class="label">Status Service</div><div class="value">${escapeHtml(b.status || "Menunggu")}</div></div>
-        <div class="line"><div class="label">Pembayaran</div><div class="value payment-status">${escapeHtml(payment)}</div></div>\n        <div class="line"><div class="label">Metode</div><div class="value">${escapeHtml(b.payment_method || "-")}</div></div>
+        <div class="line"><div class="label">Pembayaran</div><div class="value payment-status">${escapeHtml(payment)}</div></div>
+        <div class="line"><div class="label">Metode</div><div class="value">${escapeHtml(b.payment_method || "-")}</div></div>
 
         <div class="section-title">Keterangan Kerusakan</div>
         <div class="damage">${escapeHtml(b.description || "Belum ada keterangan kerusakan.")}</div>
@@ -195,8 +200,9 @@
         <div class="price-row total"><span>TOTAL</span><span>${formatRupiah(total)}</span></div>
 
         <div class="thanks">TERIMA KASIH</div>
-        <div class="thanks-note">Terima kasih telah mempercayakan perbaikan perangkat Anda kepada GadgetCare.</div>
-        <div class="small-note">Catatan: Estimasi biaya dapat berubah setelah pemeriksaan teknisi. Simpan nota ini sebagai bukti service.</div>\n        <div class="footer">Garansi mengikuti ketentuan service yang berlaku.<br>GadgetCare • Home Service</div>
+        <div class="thanks-note">Terima kasih telah mempercayakan perbaikan perangkat Anda kepada FixioGadget.</div>
+        <div class="small-note">Catatan: Estimasi biaya dapat berubah setelah pemeriksaan teknisi. Simpan nota ini sebagai bukti service.</div>
+        <div class="footer">Garansi mengikuti ketentuan service yang berlaku.<br>FixioGadget • Home Service</div>
 
         <div class="buttons">
           <button class="print-btn" type="button" onclick="window.print()">Cetak Nota 58 mm</button>
@@ -218,7 +224,7 @@
         return;
       }
       const b = currentBooking;
-      const message = `Halo ${b.customer_name || ""}, berikut nota service GadgetCare dalam bentuk PDF.
+      const message = `Halo ${b.customer_name || ""}, berikut nota service FixioGadget dalam bentuk PDF.
 
 Kode Booking: ${b.booking_code || "-"}
 Perangkat: ${b.device || "-"}
