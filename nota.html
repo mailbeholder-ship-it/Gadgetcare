@@ -17,18 +17,18 @@
     .receipt { background: #fff; padding: 18px 16px; border-radius: 10px; box-shadow: 0 3px 18px rgba(0,0,0,.08); }
     .loading, .error { text-align: center; padding: 40px 12px; line-height: 1.5; }
     .error { color: #b42318; overflow-wrap: anywhere; }
-    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 22px; font-weight: 800; letter-spacing: -.5px; }
-    .brand img { width: 90px; height: 90px; object-fit: contain; display: block; margin: 0 auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,.15)); }
-    .brand-title { display: flex; align-items: center; gap: 2px; }
-    .gadget { color: #111; }
-    .care { color: #ff5722; }
-    .tagline { text-align: center; font-size: 10px; margin-top: 4px; font-weight: 700; letter-spacing: .5px; }
-    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 7px 0 0; overflow-wrap: anywhere; }
-    .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 3px; }
+    
+    /* Header & Logo Diperbesar untuk Layar & Cetak Thermal */
+    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }
+    .brand img { width: 150px; max-width: 80%; height: auto; object-fit: contain; display: block; margin: 0 auto; filter: contrast(110%); }
+    
+    .tagline { text-align: center; font-size: 11px; margin-top: 4px; font-weight: 800; letter-spacing: .5px; }
+    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 6px 0 0; overflow-wrap: anywhere; }
+    .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 2px; font-weight: 700; }
     .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
     .dash { border: 0; border-top: 1px dashed #111; margin: 12px 0; }
-    .receipt-title { text-align: center; font-size: 15px; font-weight: 800; letter-spacing: .5px; margin: 2px 0 6px; }
-    .booking-code { text-align: center; font-weight: 700; font-size: 12px; overflow-wrap: anywhere; }
+    .receipt-title { text-align: center; font-size: 16px; font-weight: 800; letter-spacing: .5px; margin: 2px 0 6px; }
+    .booking-code { text-align: center; font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
     .date { text-align: center; font-size: 10px; margin-top: 4px; }
     .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 12px 0 7px; }
     .line { display: grid; grid-template-columns: 84px minmax(0,1fr); gap: 7px; margin: 5px 0; line-height: 1.35; }
@@ -47,23 +47,26 @@
     .print-btn { background: #111; }
     .wa-btn { background: #128c4a; }
     .close-btn { background: #626b75; }
+    
     @media (max-width: 360px) { .container { padding: 0; margin: 0; } .receipt { border-radius: 0; padding: 16px 12px; } }
+    
+    /* Pengaturan Khusus Printer Thermal 58mm */
     @media print {
       @page { size: 58mm auto; margin: 0; }
       html, body { width: 58mm !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 10px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
       .container { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 !important; }
-      .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 2mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
-      .brand { font-size: 17px !important; color: #000 !important; }
-      .brand img { width: 45px !important; height: 45px !important; filter: grayscale(100%); }
-      .gadget, .care, .label, .value, .tagline, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
+      .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 1.5mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+      .brand { margin-bottom: 2mm !important; }
+      .brand img { width: 48mm !important; max-width: 100% !important; height: auto !important; filter: contrast(150%) grayscale(100%) !important; }
+      .label, .value, .tagline, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
       .tagline, .store-address, .store-contact { font-size: 8px !important; }
       .receipt-title { font-size: 13px !important; }
       .booking-code { font-size: 10px !important; }
-      .dash { margin: 9px 0 !important; border-top: 1px dashed #000 !important; }
-      .section-title { font-size: 9px !important; margin-top: 10px !important; margin-bottom: 5px !important; }
+      .dash { margin: 8px 0 !important; border-top: 1px dashed #000 !important; }
+      .section-title { font-size: 9px !important; margin-top: 8px !important; margin-bottom: 4px !important; }
       .line { grid-template-columns: 17mm minmax(0,1fr) !important; gap: 1.5mm !important; margin: 3px 0 !important; font-size: 9px !important; line-height: 1.3 !important; }
-      .damage { padding: 5px !important; font-size: 9px !important; border-color: #555 !important; }
-      .price-row { font-size: 9px !important; margin: 5px 0 !important; }
+      .damage { padding: 4px !important; font-size: 9px !important; border-color: #000 !important; }
+      .price-row { font-size: 9px !important; margin: 4px 0 !important; }
       .total { font-size: 12px !important; }
       .thanks { font-size: 11px !important; }
       .thanks-note { font-size: 9px !important; }
@@ -165,7 +168,8 @@
         <header>
           <div class="brand">
             <img src="./fixio-logo2.png" alt="Logo FixioGadget" onerror="this.style.display='none'">
-            <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
+          </div>
+          <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
           <div class="store-address">${escapeHtml(address)}</div>
           <div class="store-contact">WhatsApp: 0858-4600-9748</div>
         </header>
