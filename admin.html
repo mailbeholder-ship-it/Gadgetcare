@@ -117,6 +117,76 @@
 <footer>© 2026 <strong>FixioGadget</strong> — Home Service & Repair Gadget</footer>
 </main>
 <script>
+  // 1. Muat Profil Lokal & Email Supabase Auth
+async function initProfileData() {
+  // Ambil user aktif dari Supabase
+  const { data: { user } } = await db.auth.getUser();
+  if (user) {
+    if ($("gcProfileHeaderEmail")) $("gcProfileHeaderEmail").textContent = user.email;
+  }
+
+  // Ambil profil lokal
+  try {
+    const p = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}");
+    if ($("gcProfileName")) $("gcProfileName").value = p.name || "";
+    if ($("gcProfilePhone")) $("gcProfilePhone").value = p.phone || "";
+    if ($("gcProfileBusiness")) $("gcProfileBusiness").value = p.business || "FixioGadget";
+    if ($("gcProfileAddress")) $("gcProfileAddress").value = p.address || "";
+    if ($("gcProfileFooterNote")) $("gcProfileFooterNote").value = p.footerNote || "";
+    
+    if ($("gcProfileHeaderName")) {
+      $("gcProfileHeaderName").textContent = p.name || "Admin FixioGadget";
+    }
+  } catch (e) {}
+}
+
+// Call fungsi init saat halaman/dashboard dimuat
+initProfileData();
+
+// 2. Event Listener Simpan Profil
+$("gcSaveProfile")?.addEventListener("click", () => {
+  const profileData = {
+    name: $("gcProfileName").value.trim(),
+    phone: $("gcProfilePhone").value.trim(),
+    business: $("gcProfileBusiness").value.trim(),
+    address: $("gcProfileAddress")?.value.trim() || "",
+    footerNote: $("gcProfileFooterNote")?.value.trim() || ""
+  };
+
+  localStorage.setItem("fixiogadget_profile", JSON.stringify(profileData));
+  
+  if ($("gcProfileHeaderName")) {
+    $("gcProfileHeaderName").textContent = profileData.name || "Admin FixioGadget";
+  }
+
+  alert("Profil berhasil diperbarui!");
+});
+
+// 3. Event Listener Ganti Password
+$("gcChangePasswordForm")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = $("gcBtnChangePassword");
+  const msg = $("gcPasswordMsg");
+  const newPass = $("gcNewPassword").value;
+
+  btn.disabled = true;
+  msg.textContent = "Memproses perubahan password...";
+  msg.className = "message";
+
+  try {
+    const { error } = await db.auth.updateUser({ password: newPass });
+    if (error) throw error;
+
+    msg.textContent = "Password berhasil diperbarui!";
+    msg.classList.add("success");
+    $("gcNewPassword").value = "";
+  } catch (err) {
+    msg.textContent = "Gagal memperbarui password: " + err.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
 const SUPABASE_URL="https://sqpolxwdyypbxylgvihi.supabase.co";
 const SUPABASE_KEY="sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
