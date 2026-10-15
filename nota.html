@@ -1,444 +1,307 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FixioGadget — Admin</title>
-<link rel="icon" href="./fixio-logo2.png" type="image/png">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{color-scheme:dark;--bg:#0b0f14;--panel:#111820;--line:#26313c;--muted:#aeb7c2;--orange:#ff5722;--green:#81c784;--red:#ef9a9a}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:16px/1.6 Arial,sans-serif;background:var(--bg);color:#fff}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:999px;background:var(--orange);color:#fff;font-weight:700;padding:12px 17px;transition:opacity .2s,transform .2s}button:hover{opacity:.9}button:active{transform:translateY(1px)}button:disabled{opacity:.6;cursor:wait}.secondary{background:#151c24;color:#fff;border:1px solid #2a3540}.danger{background:#b83b35}.shell{width:min(1100px,92%);margin:auto}.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:12px}.brand{font-size:23px;font-weight:800;display:flex;align-items:center;gap:9px}.logo{width:42px;height:42px;object-fit:contain}.brand h1{margin:0;font-size:23px;line-height:1.2}.brand p{margin:2px 0 0;color:var(--muted);font-size:13px;font-weight:400}.nav{position:sticky;top:0;z-index:20;background:#0b0f14f5;border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0}.nav-label{font-size:13px;color:#cbd5e1}.login{max-width:440px;margin:7vh auto 50px;padding:26px}.login .logo{width:54px;height:54px}.login-title{display:flex;align-items:center;gap:12px}.divider{height:1px;background:var(--line);margin:18px 0}.panel,.stat,.booking{background:var(--panel);border:1px solid #202a34;border-radius:14px;padding:22px}.panel{margin:18px 0}.login p{color:var(--muted)}input,select,textarea{width:100%;padding:12px;border:1px solid #293440;border-radius:8px;background:#0b1016;color:#fff;margin-top:6px}input:focus,select:focus,textarea:focus{outline:1px solid var(--orange);border-color:var(--orange)}label{display:block;color:#c9d0d8;font-size:14px;margin:8px 0}.login button{width:100%;margin-top:12px}.message{margin:10px 0;overflow-wrap:anywhere;color:var(--red)}.success{color:var(--green)}.hero{padding:38px 0 30px;background:radial-gradient(circle at 80% 20%,#ff572224,transparent 32%),var(--bg)}.hero-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}.badge{display:inline-block;padding:5px 12px;border:1px solid #ff572255;border-radius:22px;color:var(--orange);background:#ff572218;font-size:12px}.hero h1{font-size:clamp(28px,5vw,42px);line-height:1.12;margin:13px 0}.hero p{color:var(--muted);margin:0}.top-actions{display:flex;gap:9px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:20px 0}.stat .label{color:var(--muted);font-size:13px}.stat strong{display:block;font-size:clamp(20px,3vw,28px);color:var(--orange);margin-top:8px;overflow-wrap:anywhere}.stat .hint{font-size:12px;color:var(--muted);margin-top:5px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.section-head h2{margin:0 0 5px;font-size:25px}.toolbar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin:18px 0}.toolbar input,.toolbar select{margin:0}.booking{margin:12px 0;padding:18px}.booking-code{font-size:18px;color:var(--orange);font-weight:700;overflow-wrap:anywhere}.pill{display:inline-block;border-radius:30px;background:#ff57221f;color:var(--orange);font-size:12px;padding:4px 9px;margin:6px 5px 0 0}.details{line-height:1.8;overflow-wrap:anywhere;margin:10px 0 14px}.editgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;position:relative;z-index:1}.editgrid label,.editgrid input,.editgrid select{position:relative;z-index:2;pointer-events:auto;touch-action:manipulation}.editgrid input,.editgrid select{display:block;min-height:46px;cursor:pointer;opacity:1}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.actions button{flex:1;min-width:115px}.revenue-note{font-size:12px;color:var(--muted);margin-top:8px}.empty{padding:24px;text-align:center;border:1px dashed #35404b;border-radius:10px;color:var(--muted)}footer{border-top:1px solid #202832;padding:25px 0;color:#87919c;font-size:13px;text-align:center;margin-top:25px}
-@media(max-width:760px){.shell{width:92%}.nav-inner{flex-wrap:wrap}.nav-label{width:100%}.stats{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.editgrid{grid-template-columns:1fr 1fr}.panel{padding:15px}.hero{padding:30px 0 20px}.hero-inner{align-items:flex-start}.section-head h2{font-size:22px}}
-@media(max-width:420px){.editgrid{grid-template-columns:1fr}.actions button{min-width:100%}.login{padding:18px}.brand h1{font-size:20px}}
-
-/* Mobile dashboard navigation addition */
-.gc-bottom-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;position:sticky;top:0;z-index:50;padding:8px;background:#171717;border:1px solid #3b3029;border-radius:14px;margin:12px 0}.gc-bottom-nav button{background:transparent;color:#ddd;padding:8px 2px;font-size:11px;display:flex;flex-direction:column;gap:5px;align-items:center;white-space:normal}.gc-bottom-nav button .nav-icon-img{width:22px;height:22px;object-fit:contain;display:block}.gc-bottom-nav button.active{color:var(--orange);background:#332116}.gc-view{display:none}.gc-view.active{display:block}.gc-extra-card{background:#202020;border:1px solid #45403c;border-radius:14px;padding:16px;margin:12px 0}.gc-extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gc-extra-stat{border-left:4px solid var(--orange);border-radius:10px;padding:14px;background:#292522}.gc-extra-stat strong{display:block;font-size:24px;margin-top:8px}.gc-orange-btn{background:var(--orange)!important;color:#fff!important}.gc-map{height:300px;border-radius:12px;overflow:hidden;background:#282828}.gc-extra-field{width:100%;margin:6px 0 14px;padding:12px;border-radius:12px;border:1px solid #555;background:#151515;color:#fff}@media(max-width:420px){.gc-bottom-nav button{font-size:9px}.gc-bottom-nav button .nav-icon-img{width:18px;height:18px}.gc-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-/* Style khusus Tampilan Profil & Accordion Edit */
-.profile-view-card{background:#161c24;border:1px solid #2a3644;border-radius:14px;padding:18px;margin-bottom:14px}
-.profile-row-info{display:flex;flex-direction:column;gap:12px;margin-top:14px}
-.profile-info-item{display:flex;flex-direction:column;gap:2px}
-.profile-info-item .lbl{font-size:12px;color:var(--muted)}
-.profile-info-item .val{font-size:14px;font-weight:600;color:#fff;overflow-wrap:anywhere}
-.edit-accordion-btn{width:100%;background:#1c2530;border:1px dashed #3a4859;color:#c9d3e0;padding:12px;border-radius:10px;display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.edit-accordion-btn:hover{background:#232e3c;color:#fff}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Nota Service - FixioGadget</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: #eef0f2; color: #111; font-family: Arial, Helvetica, sans-serif; }
+    body { font-size: 13px; }
+    
+    /* Container & Receipt Dibuat Mepet Atas */
+    .container { width: 100%; max-width: 420px; margin: 0 auto; padding: 0 10px; }
+    .receipt { background: #fff; padding: 4px 14px 16px; border-radius: 0 0 10px 10px; box-shadow: 0 3px 18px rgba(0,0,0,.08); }
+    .loading, .error { text-align: center; padding: 40px 12px; line-height: 1.5; }
+    .error { color: #b42318; overflow-wrap: anywhere; }
+    
+    /* Brand Header & Logo Mepet Atas */
+    header { margin-top: 0; padding-top: 0; }
+    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; margin: 0 0 4px 0; padding-top: 0; }
+    .brand img { width: 160px; max-width: 85%; height: auto; object-fit: contain; display: block; margin: 0 auto; filter: contrast(110%); }
+    
+    .tagline { text-align: center; font-size: 11px; margin-top: 2px; font-weight: 800; letter-spacing: .5px; }
+    .store-address { text-align: justify; font-size: 10px; line-height: 1.4; margin: 4px 0 0; overflow-wrap: anywhere; }
+    .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 2px; font-weight: 700; }
+    .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; text-align: justify; }
+    .dash { border: 0; border-top: 1px dashed #111; margin: 10px 0; }
+    .receipt-title { text-align: center; font-size: 16px; font-weight: 800; letter-spacing: .5px; margin: 2px 0 4px; }
+    .booking-code { text-align: center; font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
+    .date { text-align: center; font-size: 10px; margin-top: 4px; }
+    .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 10px 0 6px; }
+    
+    /* Format Baris Rata Titik Dua (:) & Teks Rata Kanan Kiri */
+    .line { display: grid; grid-template-columns: 95px 12px minmax(0, 1fr); gap: 2px; margin: 4px 0; line-height: 1.35; }
+    .label { color: #333; text-align: justify; text-justify: inter-word; }
+    .colon { text-align: center; font-weight: 600; color: #111; }
+    .value { font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; text-align: justify; }
+    
+    .damage { border: 1px dashed #777; padding: 7px; font-size: 11px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; text-align: justify; }
+    .price-row { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0; line-height: 1.35; }
+    .price-row span:last-child { text-align: right; overflow-wrap: anywhere; }
+    .total { border-top: 1px dashed #111; margin-top: 8px; padding-top: 8px; font-weight: 800; font-size: 15px; }
+    .payment-status { font-weight: 700; }
+    .thanks { text-align: center; font-weight: 800; font-size: 12px; margin-top: 10px; }
+    .thanks-note { text-align: justify; font-size: 10px; line-height: 1.45; margin-top: 3px; }
+    .footer { text-align: center; font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
+    .buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    button { border: 0; border-radius: 999px; padding: 12px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; }
+    .print-btn { background: #111; }
+    .wa-btn { background: #128c4a; }
+    .close-btn { background: #626b75; }
+    
+    @media (max-width: 360px) { .container { padding: 0; margin: 0; } .receipt { border-radius: 0; padding: 2px 10px 12px; } }
+    
+    /* Pengaturan Khusus Printer Thermal 58mm */
+    @media print {
+      @page { size: 58mm auto; margin: 0 !important; }
+      html, body { width: 58mm !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 10px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .container { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 !important; }
+      .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 1mm 1mm 1mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
+      header { margin-top: 0 !important; padding-top: 0 !important; }
+      .brand { margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 0 !important; }
+      .brand img { width: 48mm !important; max-width: 100% !important; height: auto !important; filter: contrast(150%) grayscale(100%) !important; margin-top: 0 !important; margin-bottom: 0 !important; }
+      .tagline { margin-top: 1mm !important; font-size: 8px !important; }
+      .label, .colon, .value, .store-address, .date, .footer, .thanks-note, .small-note, .damage { color: #000 !important; text-align: justify !important; }
+      .store-address, .store-contact { font-size: 8px !important; }
+      .receipt-title { font-size: 13px !important; margin-top: 1mm !important; text-align: center !important; }
+      .booking-code { font-size: 10px !important; text-align: center !important; }
+      .dash { margin: 6px 0 !important; border-top: 1px dashed #000 !important; }
+      .section-title { font-size: 9px !important; margin-top: 6px !important; margin-bottom: 3px !important; }
+      .line { grid-template-columns: 20mm 3mm minmax(0, 1fr) !important; gap: 0 !important; margin: 2px 0 !important; font-size: 9px !important; line-height: 1.25 !important; }
+      .damage { padding: 4px !important; font-size: 9px !important; border-color: #000 !important; }
+      .price-row { font-size: 9px !important; margin: 3px 0 !important; }
+      .total { font-size: 12px !important; margin-top: 6px !important; padding-top: 6px !important; }
+      .thanks { font-size: 11px !important; margin-top: 8px !important; text-align: center !important; }
+      .thanks-note { font-size: 9px !important; }
+      .footer, .small-note { font-size: 8px !important; }
+      .footer { text-align: center !important; }
+      .buttons { display: none !important; }
+      .section, .damage, .price-row, .total, .thanks { break-inside: avoid; page-break-inside: avoid; }
+    }
+  </style>
 </head>
 <body>
-<nav class="nav"><div class="shell nav-inner"><a href="./index.html" class="brand" style="text-decoration:none;color:#fff"><img class="logo" src="./fixio-logo2.png" alt="Logo FixioGadget"><span>Fixio<span style="color:var(--orange)">Gadget</span></span></a><span class="nav-label">Panel administrasi · Home Service & Repair Gadget</span></div></nav>
-<main class="shell">
-<section id="loginSection" class="panel login">
-<div class="login-title"><img class="logo" src="./fixio-logo2.png" alt="Logo FixioGadget"><div><h1>Admin Login</h1><p>Masuk untuk mengelola booking servis.</p></div></div>
-<div class="divider"></div>
-<form id="loginForm"><label>Email admin<input id="email" type="email" autocomplete="username" required placeholder="email@contoh.com"></label><label>Password<input id="password" type="password" autocomplete="current-password" required placeholder="Password admin"></label><button id="loginButton" type="submit" style="width:100%;margin-top:12px">Masuk</button></form><p id="loginMessage" class="message" role="status"></p>
-</section>
-<section id="dashboard" class="hidden">
-<header class="hero"><div class="hero-inner"><div><span class="badge">DASHBOARD ADMIN</span><h1>Kelola Servis <span style="color:var(--orange)">FixioGadget</span></h1><p>Pantau booking dan estimasi pendapatan usaha Anda.</p></div><div class="top-actions"><button id="refreshButton" class="secondary">↻ Refresh</button><button id="logoutButton" class="danger">Keluar</button></div></div></header>
-<nav class="gc-bottom-nav" aria-label="Menu admin">
-<button type="button" class="active" data-gc-view="home"><img src="./beranda.png" alt="Beranda" class="nav-icon-img">Beranda</button>
-<button type="button" data-gc-view="income"><img src="./pendapatan.png" alt="Pendapatan" class="nav-icon-img">Pendapatan</button>
-<button type="button" data-gc-view="contacts"><img src="./pesan.png" alt="Kontak Masuk" class="nav-icon-img">Kontak Masuk</button>
-<button type="button" data-gc-view="planning"><img src="./perencanaan.png" alt="Perencanaan" class="nav-icon-img">Perencanaan</button>
-<button type="button" data-gc-view="profile"><img src="./profil.png" alt="Profil Saya" class="nav-icon-img">Profil Saya</button>
-</nav>
-<div class="gc-view active" data-gc-panel="home">
-<div class="gc-extra-card"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px"><div><strong id="gcWorkLabel">Anda sedang libur</strong><p class="muted small" id="gcWorkHint">Status kerja pada perangkat ini.</p></div><button type="button" id="gcWorkToggle" class="gc-orange-btn">Aktifkan</button></div></div>
-<div class="gc-extra-grid"><div class="gc-extra-stat">Order masuk<strong id="gcIncoming">0</strong></div><div class="gc-extra-stat">Perlu konfirmasi<strong id="gcConfirm">0</strong></div><div class="gc-extra-stat">Sedang diperbaiki<strong id="gcRepair">0</strong></div><div class="gc-extra-stat">Selesai<strong id="gcDone">0</strong></div></div>
-<div class="gc-extra-card"><h2>Lokasi Saya</h2><p class="muted small" id="gcLocationStatus">Lokasi belum diaktifkan.</p><div id="gcMap" class="gc-map"></div><button type="button" id="gcLocate" class="gc-orange-btn" style="margin-top:10px">Perbarui Lokasi GPS</button></div>
-</div>
-<div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p><h3 style="margin-top:22px">Riwayat Transaksi</h3><p class="muted small">Booking dengan status pembayaran Dibayar.</p><div id="gcTransactionHistory"><p class="muted small">Memuat riwayat...</p></div></div></div>
-<div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
-<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
-<div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
-<p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section></div>
+  <main class="container">
+    <article class="receipt">
+      <div id="content" class="loading">Memuat data nota...</div>
+    </article>
+  </main>
 
-<!-- Profile Panel: Display Mode First, Edit Mode in Accordion Below -->
-<div class="gc-view" data-gc-panel="profile">
-  <!-- Card Tampilan Profil -->
-  <div class="profile-view-card">
-    <div style="display: flex; align-items: center; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
-      <div style="width: 68px; height: 68px; border-radius: 50%; background: #1a222d; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-        <img id="gcViewLogo" src="./fixio-logo2.png" alt="Logo Toko" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
-      </div>
-      <div>
-        <h2 style="margin: 0; font-size: 20px;" id="gcViewHeaderName">Admin FixioGadget</h2>
-        <span class="pill" style="margin-top: 4px;">Super Admin</span>
-        <p class="muted small" style="margin: 4px 0 0;" id="gcViewHeaderEmail">admin@fixiogadget.com</p>
-      </div>
-    </div>
+  <script>
+    const SUPABASE_URL = "https://sqpolxwdyypbxylgvihi.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    let currentBooking = null;
 
-    <div class="profile-row-info">
-      <div class="profile-info-item">
-        <span class="lbl">Nama Usaha / Counter</span>
-        <span class="val" id="gcViewBusiness">FixioGadget</span>
-      </div>
-      <div class="profile-info-item">
-        <span class="lbl">Nomor WhatsApp Admin</span>
-        <span class="val" id="gcViewPhone">-</span>
-      </div>
-      <div class="profile-info-item">
-        <span class="lbl">Alamat Workshop / Counter</span>
-        <span class="val" id="gcViewAddress">Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang</span>
-      </div>
-      <div class="profile-info-item">
-        <span class="lbl">Catatan Garansi / Footer Nota</span>
-        <span class="val" id="gcViewFooterNote">Garansi mengikuti ketentuan service yang berlaku.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tombol Toggle Menu Edit Profil -->
-  <button type="button" class="edit-accordion-btn" id="gcToggleEditMenu">
-    <span>✏️ Pengaturan & Edit Informasi Profil</span>
-    <span id="gcAccordionIcon">▼</span>
-  </button>
-
-  <!-- Form Edit Profil & Keamanan (Default Disembunyikan) -->
-  <div id="gcEditProfileSection" class="gc-extra-card hidden" style="margin-top: 10px;">
-    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Edit Informasi Toko & Admin</h3>
-    
-    <label>Logo Toko / Counter
-      <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
-        <img id="gcLogoPreview" src="./fixio-logo2.png" alt="Preview Logo" style="width:48px; height:48px; border-radius:50%; object-fit:contain; background:#1b242d; border:1px solid #334155; padding:4px;">
-        <input type="file" id="gcProfileLogoInput" accept="image/png, image/jpeg, image/webp" class="gc-extra-field" style="margin:0; flex:1;">
-      </div>
-    </label>
-
-    <label>Nama Admin
-      <input id="gcProfileName" class="gc-extra-field" placeholder="Nama lengkap admin">
-    </label>
-
-    <label>Nomor WhatsApp Admin
-      <input id="gcProfilePhone" class="gc-extra-field" inputmode="tel" placeholder="08xxxxxxxxxx">
-    </label>
-
-    <label>Nama Usaha / Counter
-      <input id="gcProfileBusiness" class="gc-extra-field" value="FixioGadget">
-    </label>
-
-    <label>Alamat Workshop / Counter
-      <textarea id="gcProfileAddress" class="gc-extra-field" rows="2" style="resize: vertical;" placeholder="Alamat lengkap lokasi usaha..."></textarea>
-    </label>
-
-    <label>Catatan Garansi / Footer Nota
-      <input id="gcProfileFooterNote" class="gc-extra-field" placeholder="Contoh: Garansi servis 30 hari. Simpan nota ini.">
-    </label>
-
-    <button type="button" id="gcSaveProfile" class="gc-orange-btn" style="width: 100%; margin-top: 8px;">Simpan Perubahan Profil</button>
-    <p class="muted small" style="margin-top: 8px; text-align: center;">Perubahan akan langsung diperbarui di tampilan profil & cetak nota.</p>
-
-    <div class="divider"></div>
-
-    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Keamanan Akun</h3>
-    <form id="gcChangePasswordForm" style="display: flex; flex-direction: column; gap: 8px;">
-      <label>Password Baru
-        <input id="gcNewPassword" type="password" placeholder="Minimal 6 karakter" required minlength="6">
-      </label>
-      <button type="submit" id="gcBtnChangePassword" class="secondary" style="margin-top: 6px;">Ganti Password Admin</button>
-      <p id="gcPasswordMsg" class="message" role="status"></p>
-    </form>
-  </div>
-</div>
-
-<div class="gc-view active" data-gc-panel="home">
-<div class="stats">
-<div class="stat"><div class="label">Total Booking</div><strong id="total">0</strong><div class="hint">Semua booking yang terbaca</div></div>
-<div class="stat"><div class="label">Estimasi Pendapatan Hari Ini</div><strong id="revenueToday">Rp0</strong><div class="hint" id="todayCount">0 booking hari ini</div></div>
-<div class="stat"><div class="label">Estimasi Pendapatan Bulan Ini</div><strong id="revenueMonth">Rp0</strong><div class="hint" id="monthCount">0 booking bulan ini</div></div>
-</div>
-</div>
-<div class="gc-view" data-gc-panel="income">
-<p class="revenue-note">Perhitungan memakai total harga jika tersedia; jika belum, memakai estimasi harga. Ini nilai potensi dari booking, bukan otomatis pendapatan yang sudah dibayar.</p>
-</div>
-<div class="gc-view active" data-gc-panel="home">
-<section class="panel" id="hoursPanel">
-<div class="section-head"><div><h2>🕒 Pengaturan Jam Operasional</h2><p class="muted small">Atur hari dan jam buka yang akan ditampilkan di halaman pelanggan.</p></div></div>
-<form id="hoursForm">
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:4px 12px;margin:12px 0">
-<label style="display:flex;align-items:center;gap:8px;margin:4px 0"><input type="checkbox" class="dayCheck" value="0" style="width:auto;margin:0"> Minggu</label><label style="display:flex;align-items:center;gap:8px;margin:4px 0"><input type="checkbox" class="dayCheck" value="1" style="width:auto;margin:0"> Senin</label><label style="display:flex;align-items:center;gap:8px;margin:4px 0"><input type="checkbox" class="dayCheck" value="2" style="width:auto;margin:0"> Selasa</label><label style="display:flex;align-items:center;gap:8px;margin:4px 0"><input type="checkbox" class="dayCheck" value="3" style="width:auto;margin:0"> Rabu</label><label style="display:flex;align-items:center;gap:8px;margin:4px 0"><input type="checkbox" class="dayCheck" value="4" style="width:auto;margin:0"> Kamis</label><label style="display:flex;align-items:center;gap:8px;margin:4px 0"><input type="checkbox" class="dayCheck" value="5" style="width:auto;margin:0"> Jumat</label><label style="display:flex;align-items:center;gap:8px;margin:4px 0"><input type="checkbox" class="dayCheck" value="6" style="width:auto;margin:0"> Sabtu</label>
-</div>
-<div class="editgrid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
-<label>Jam buka<input id="openTime" type="time" value="09:00" required></label>
-<label>Jam tutup<input id="closeTime" type="time" value="17:00" required></label>
-</div>
-<input id="manualClosed" type="checkbox" style="display:none" aria-hidden="true">
-<button id="saveHoursButton" type="submit" style="margin-top:12px">Simpan Pengaturan Operasional</button>
-<p id="hoursMessage" class="message" role="status" aria-live="polite"></p>
-</form></section>
-
-</div>
-</section>
-<footer>© 2026 <strong>FixioGadget</strong> — Home Service & Repair Gadget</footer>
-</main>
-<script>
-const SUPABASE_URL="https://sqpolxwdyypbxylgvihi.supabase.co";
-const SUPABASE_KEY="sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const $=id=>document.getElementById(id);let bookings=[];
-const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const money=v=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v)||0);
-function message(id,text,success=false){$(id).textContent=text;$(id).classList.toggle("success",success)}
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;message("loginMessage","Memeriksa akun…");try{const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;message("loginMessage","");await showDashboard()}catch(err){message("loginMessage","Login gagal: "+err.message)}finally{$("loginButton").disabled=false}});
-$("logoutButton").addEventListener("click",async()=>{const {error}=await db.auth.signOut();if(error)message("bookingMessage","Gagal logout: "+error.message);else showLogin()});
-function showLogin(){$("loginSection").classList.remove("hidden");$("dashboard").classList.add("hidden")}
-async function showDashboard(){$("loginSection").classList.add("hidden");$("dashboard").classList.remove("hidden");await Promise.all([loadBookings(),loadHours(),initProfileData()])}
-const dayNames=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-async function loadHours(){
-  message("hoursMessage","Memuat pengaturan operasional…");
-  const {data,error}=await db.from("site_settings").select("id,opening_hours,is_closed").eq("id","main").maybeSingle();
-  if(error){message("hoursMessage","Belum bisa memuat pengaturan. Pastikan SQL site_settings sudah dijalankan di Supabase. "+error.message);return}
-  const hours=data?.opening_hours||{days:[1,2,3,4,5,6],open_time:"09:00",close_time:"17:00"};
-  document.querySelectorAll(".dayCheck").forEach(c=>c.checked=(hours.days||[]).includes(Number(c.value)));
-  $("openTime").value=hours.open_time||"09:00";$("closeTime").value=hours.close_time||"17:00";$("manualClosed").checked=!!data?.is_closed;gcWorkStatus=data?.is_closed?"Libur":"Aktif";gcRenderWork();
-  message("hoursMessage",data?"Pengaturan berhasil dimuat.":"Belum ada pengaturan tersimpan. Atur jam lalu tekan Simpan.",true);
-}
-$("hoursForm").addEventListener("submit",async e=>{
- e.preventDefault();const btn=$("saveHoursButton");btn.disabled=true;message("hoursMessage","Menyimpan pengaturan…");
- try{
-  const days=[...document.querySelectorAll(".dayCheck:checked")].map(c=>Number(c.value));
-  if(!days.length)throw new Error("Pilih minimal satu hari operasional.");
-  if($("closeTime").value<=$("openTime").value)throw new Error("Jam tutup harus setelah jam buka pada hari yang sama.");
-  const payload={id:"main",opening_hours:{days,open_time:$("openTime").value,close_time:$("closeTime").value},is_closed:$("manualClosed").checked,updated_at:new Date().toISOString()};
-  const {error}=await db.from("site_settings").upsert(payload,{onConflict:"id"});
-  if(error)throw error;
-  message("hoursMessage","Pengaturan operasional berhasil disimpan dan akan ditampilkan di halaman pelanggan.",true);
- }catch(err){message("hoursMessage","Gagal menyimpan: "+err.message)}
- finally{btn.disabled=false}
-});
-
-function amount(b){const v=b.total_price??b.estimated_price;return Number.isFinite(Number(v))?Number(v):0}
-function updateRevenue(){const now=new Date(),todayKey=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0"),monthKey=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");const today=bookings.filter(b=>String(b.created_at||"").slice(0,10)===todayKey);const month=bookings.filter(b=>String(b.created_at||"").slice(0,7)===monthKey);$("total").textContent=bookings.length;$("revenueToday").textContent=money(today.reduce((s,b)=>s+amount(b),0));$("revenueMonth").textContent=money(month.reduce((s,b)=>s+amount(b),0));$("todayCount").textContent=today.length+" booking hari ini";$("monthCount").textContent=month.length+" booking bulan ini"}
-async function loadBookings(){message("bookingMessage","Memuat data…");const {data,error}=await db.from("bookings").select("id,booking_code,customer_name,phone,device,damage,description,address,latitude,longitude,status,estimated_price,total_price,created_at,payment_status,payment_method,payment_order_id").order("created_at",{ascending:false}).limit(1000);if(error){bookings=[];updateRevenue();renderBookings();if(typeof gcRenderExtraStats==="function")gcRenderExtraStats();message("bookingMessage","Gagal memuat booking: "+error.message);return}bookings=data||[];updateRevenue();renderBookings();if(typeof gcRenderExtraStats==="function")gcRenderExtraStats();message("bookingMessage",bookings.length+" booking berhasil dimuat.",true)}
-function renderBookings(){const q=$("search").value.toLowerCase().trim(),sf=$("statusFilter").value,pf=$("paymentFilter").value;const rows=bookings.filter(b=>(!q||[b.booking_code,b.customer_name,b.phone,b.device,b.damage,b.address].join(" ").toLowerCase().includes(q))&&(!sf||b.status===sf)&&(!pf||b.payment_status===pf));if(!rows.length){$("bookingList").innerHTML='<div class="empty">Belum ada booking atau tidak ada hasil yang cocok.</div>';return}
-$("bookingList").innerHTML=rows.map(b=>'<article class="booking" data-id="'+esc(b.id)+'"><div class="booking-code">'+esc(b.booking_code||"Tanpa kode")+'</div><span class="pill">Servis: '+esc(b.status||"Menunggu")+'</span><span class="pill">Pembayaran: '+esc(b.payment_status||"Belum diatur")+'</span><div class="details">👤 <b>Nama:</b> '+esc(b.customer_name)+'<br>📞 <b>Telepon:</b> '+esc(b.phone)+'<br>📱 <b>Perangkat:</b> '+esc(b.device)+'<br>🔧 <b>Kerusakan:</b> '+esc(b.damage)+'<br>📝 <b>Keterangan:</b> '+esc(b.description||"-")+'<br>📍 <b>Alamat:</b> '+esc(b.address)+'<br>🕒 <b>Waktu masuk:</b> '+esc(b.created_at?new Date(b.created_at).toLocaleString("id-ID"):"-")+'<br>💳 <b>Metode pembayaran:</b> '+esc(b.payment_method||"-")+'</div><div class="editgrid"><label>Status servis<select class="statusEdit">'+["Menunggu","Dikonfirmasi","Teknisi Berangkat","Sedang Diperbaiki","Selesai"].map(s=>'<option '+(b.status===s?"selected":"")+'>'+s+'</option>').join("")+'</select></label><label>Estimasi harga (Rp)<input class="estimateEdit" type="number" min="0" step="1000" value="'+(b.estimated_price??"")+'" placeholder="Mis. 150000"></label><label>Total harga (Rp)<input class="totalEdit" type="number" min="0" step="1000" value="'+(b.total_price??"")+'" placeholder="Harga final"></label><label>Status pembayaran<select class="paymentEdit">'+["Belum Dibayar","Menunggu","Dibayar","Lunas","Gagal"].map(s=>'<option '+(b.payment_status===s?"selected":"")+'>'+s+'</option>').join("")+'</select></label><label style="grid-column:1/-1">Detail kerusakan / Keterangan nota<textarea class="descriptionEdit" rows="3" maxlength="1500" placeholder="Contoh: layar bergaris, sentuh tidak berfungsi, atau detail pemeriksaan teknisi">'+esc(b.description||"")+'</textarea></label></div><div class="revenue-note">Estimasi: '+esc(money(b.estimated_price))+' · Total: '+esc(money(b.total_price))+'</div><div class="actions"><button type="button" class="save" style="pointer-events:auto;position:relative;z-index:2">Simpan perubahan</button><button class="secondary wa">WhatsApp</button><button class="secondary map">Buka peta</button><button class="secondary print">Cetak</button></div><p class="message itemMessage" role="status"></p></article>').join("");
-$("bookingList").querySelectorAll(".booking").forEach(card=>{const b=bookings.find(x=>x.id===card.dataset.id);card.querySelectorAll(".statusEdit,.estimateEdit,.totalEdit,.paymentEdit").forEach(control=>{control.disabled=false;control.removeAttribute("disabled");});card.querySelector(".save").addEventListener("click",async()=>{const ev=card.querySelector(".estimateEdit").value,tv=card.querySelector(".totalEdit").value;const patch={status:card.querySelector(".statusEdit").value,description:card.querySelector(".descriptionEdit").value.trim()||null,estimated_price:ev===""?null:Number(ev),total_price:tv===""?null:Number(tv),payment_status:card.querySelector(".paymentEdit").value};if([patch.estimated_price,patch.total_price].some(n=>n!==null&&(!Number.isFinite(n)||n<0))){card.querySelector(".itemMessage").textContent="Harga harus angka nol atau lebih.";return}const btn=card.querySelector(".save");btn.disabled=true;btn.textContent="Menyimpan…";try{const {data,error}=await db.from("bookings").update(patch).eq("id",b.id).select("id,status,estimated_price,total_price,payment_status");if(error)throw error;if(!data||data.length===0)throw new Error("Database tidak memperbarui baris booking. Periksa sesi login dan kebijakan UPDATE RLS.");await loadBookings();message("bookingMessage","Perubahan berhasil disimpan.",true)}catch(err){card.querySelector(".itemMessage").textContent="Gagal menyimpan: "+err.message}finally{btn.disabled=false;btn.textContent="Simpan perubahan"}});card.querySelector(".wa").addEventListener("click",()=>{const phone=String(b.phone||"").replace(/\D/g,"").replace(/^0/,"62");window.open("https://wa.me/"+phone+"?text="+encodeURIComponent("Halo "+(b.customer_name||"")+" terkait booking "+(b.booking_code||"")+". Status servis: "+(b.status||"Menunggu")+". Estimasi/total: "+money(b.total_price??b.estimated_price)),"_blank","noopener")});card.querySelector(".map").addEventListener("click",()=>window.open(b.latitude!=null&&b.longitude!=null?"https://www.google.com/maps?q="+encodeURIComponent(b.latitude+","+b.longitude):"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(b.address||""),"_blank","noopener"));card.querySelector(".print").addEventListener("click",()=>{if(!b.booking_code){card.querySelector(".itemMessage").textContent="Kode booking tidak tersedia.";return}const url="./nota.html?code="+encodeURIComponent(b.booking_code);const w=window.open(url,"_blank","noopener");if(!w){card.querySelector(".itemMessage").textContent="Pop-up diblokir. Izinkan pop-up lalu tekan Cetak Nota lagi."}})})}
-$("search").addEventListener("input",renderBookings);$("statusFilter").addEventListener("change",renderBookings);$("paymentFilter").addEventListener("change",renderBookings);$("refreshButton").addEventListener("click",loadBookings);
-
-let gcBookingChannel=null;
-try{gcBookingChannel=db.channel("fixiogadget-bookings-live").on("postgres_changes",{event:"*",schema:"public",table:"bookings"},()=>{loadBookings()}).subscribe()}catch(err){console.warn("Supabase Realtime belum tersedia; memakai refresh berkala.",err)}
-setInterval(()=>{if(document.visibilityState==="visible"&&document.querySelector("#dashboard:not(.hidden)"))loadBookings()},20000);
-db.auth.onAuthStateChange((event,session)=>{if(event==="SIGNED_OUT")showLogin()});
-(async()=>{const {data,error}=await db.auth.getSession();if(error){message("loginMessage",error.message);return}if(data.session)await showDashboard()})();
-
-// ===== FixioGadget mobile dashboard add-on =====
-document.querySelectorAll("[data-gc-view]").forEach(btn=>btn.addEventListener("click",()=>{
-  const page=btn.dataset.gcView;
-  document.querySelectorAll("[data-gc-view]").forEach(x=>x.classList.toggle("active",x===btn));
-  document.querySelectorAll("[data-gc-panel]").forEach(x=>x.classList.toggle("active",x.dataset.gcPanel===page));
-  if(page==="planning") $("gcBookingPanel").scrollIntoView({behavior:"smooth",block:"start"});
-  if(page==="contacts") gcRenderContacts();
-  if(page==="income") gcRenderExtraStats();
-}));
-let gcWorkStatus="Libur";
-function gcRenderWork(){
-  const active=gcWorkStatus==="Aktif";
-  $("gcWorkLabel").textContent=active?"Anda sedang aktif.":"Anda sedang libur.";
-  $("gcWorkHint").textContent=active?"Status aktif dan booking pelanggan dibuka sesuai jadwal.":"Anda sedang libur. Booking pelanggan dinonaktifkan.";
-  $("gcWorkToggle").textContent=active?"Jadikan Libur":"Aktifkan";
-  $("manualClosed").checked=!active;
-}
-$("gcWorkToggle").addEventListener("click",async()=>{
-  const btn=$("gcWorkToggle");btn.disabled=true;
-  const nextClosed=gcWorkStatus==="Aktif";
-  try{
-    const {error}=await db.from("site_settings").upsert({id:"main",is_closed:nextClosed,updated_at:new Date().toISOString()},{onConflict:"id"});
-    if(error)throw error;
-    gcWorkStatus=nextClosed?"Libur":"Aktif";
-    $("manualClosed").checked=nextClosed;
-    gcRenderWork();
-    message("hoursMessage",nextClosed?"Status libur tersimpan. Booking pada web pelanggan ditutup.":"Status aktif tersimpan. Booking pada web pelanggan dibuka sesuai jadwal.",true);
-  }catch(err){message("hoursMessage","Gagal mengubah status: "+err.message);alert("Status tidak tersimpan ke Supabase: "+err.message)}
-  finally{btn.disabled=false}
-});
-function gcRenderExtraStats(){
-  const count=status=>bookings.filter(b=>String(b.status||"").toLowerCase()===status.toLowerCase()).length;
-  $("gcIncoming").textContent=count("Menunggu");
-  $("gcConfirm").textContent=count("Dikonfirmasi");
-  $("gcRepair").textContent=count("Sedang Diperbaiki");
-  $("gcDone").textContent=count("Selesai");
-  const paidStatuses=["dibayar","lunas"];const paid=bookings.filter(b=>paidStatuses.includes(String(b.payment_status||"").trim().toLowerCase()));
-  const revenue=paid.reduce((sum,b)=>sum+Number(b.total_price??b.estimated_price??0),0);
-  $("gcRevenue").textContent=money(revenue);
-  $("gcIncomeDetail").textContent=paid.length+" transaksi berstatus Dibayar.";
-  const history=$("gcTransactionHistory");
-  if(!history)return;
-  const sorted=[...paid].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
-  history.innerHTML=sorted.length?sorted.map(b=>{
-    const name=esc(b.customer_name||b.name||"Pelanggan");
-    const code=esc(b.booking_code||"-");
-    const total=money(Number(b.total_price??b.estimated_price??0));
-    const transactionDate=b.paid_at||b.payment_at||b.updated_at||b.created_at;
-    const date=transactionDate?new Date(transactionDate).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"Tanggal tidak tersedia";
-    const time=transactionDate?new Date(transactionDate).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false,timeZone:"Asia/Jakarta"})+" WIB":"Jam tidak tersedia";
-    return '<div class="gc-extra-card" style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><strong>'+name+'</strong><div class="muted small" style="margin-top:5px">Kode booking: '+code+'</div><div class="muted small">Tanggal transaksi: '+esc(date)+'</div><div class="muted small">Jam transaksi: '+esc(time)+'</div></div><strong style="color:var(--orange)">'+esc(total)+'</strong></div></div>';
-  }).join(""):'<div class="gc-extra-card"><p class="muted small">Belum ada transaksi dengan status pembayaran Dibayar.</p></div>';
-}
-function gcRenderContacts(){
-  const seen=new Map();
-  bookings.forEach(b=>{const phone=String(b.phone||"").trim();if(phone&&!seen.has(phone))seen.set(phone,b)});
-  $("gcContactList").innerHTML=[...seen.values()].map(b=>'<div class="gc-extra-card"><strong>'+esc(b.customer_name||"Pelanggan")+'</strong><p class="muted small">'+esc(b.phone)+' · '+esc(b.booking_code||"")+'</p><a class="gc-orange-btn" style="display:inline-block;padding:10px;border-radius:8px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/'+esc(String(b.phone).replace(/\D/g,"").replace(/^0/,"62"))+'">Buka WhatsApp</a></div>').join("")||'<p class="muted">Belum ada nomor pelanggan dari booking.</p>';
-}
-
-// ===== Upload Logo & Profil Logic =====
-async function uploadStoreLogo(file) {
-  const fileExt = file.name.split('.').pop();
-  const filePath = `store-logo.${fileExt}`;
-  const { data, error } = await db.storage
-    .from('logos')
-    .upload(filePath, file, { upsert: true, cacheControl: '3600' });
-  if (error) throw error;
-  const { data: publicUrlData } = db.storage.from('logos').getPublicUrl(filePath);
-  return publicUrlData.publicUrl;
-}
-
-$("gcProfileLogoInput")?.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      if ($("gcLogoPreview")) $("gcLogoPreview").src = evt.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Toggle Accordion Menu Edit
-$("gcToggleEditMenu")?.addEventListener("click", () => {
-  const sec = $("gcEditProfileSection");
-  const icon = $("gcAccordionIcon");
-  const isHidden = sec.classList.contains("hidden");
-  sec.classList.toggle("hidden", !isHidden);
-  icon.textContent = isHidden ? "▲" : "▼";
-});
-
-async function initProfileData(){
-  try{
-    const {data:{user}}=await db.auth.getUser();
-    if(user && $("gcViewHeaderEmail")) $("gcViewHeaderEmail").textContent = user.email;
-  }catch(e){}
-
-  try{
-    const p = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}");
-    
-    // Fill Form Inputs
-    if($("gcProfileName")) $("gcProfileName").value = p.name || "";
-    if($("gcProfilePhone")) $("gcProfilePhone").value = p.phone || "";
-    if($("gcProfileBusiness")) $("gcProfileBusiness").value = p.business || "FixioGadget";
-    if($("gcProfileAddress")) $("gcProfileAddress").value = p.address || "";
-    if($("gcProfileFooterNote")) $("gcProfileFooterNote").value = p.footerNote || "";
-    
-    // Fill Display Card
-    if($("gcViewHeaderName")) $("gcViewHeaderName").textContent = p.name || "Admin FixioGadget";
-    if($("gcViewBusiness")) $("gcViewBusiness").textContent = p.business || "FixioGadget";
-    if($("gcViewPhone")) $("gcViewPhone").textContent = p.phone || "-";
-    if($("gcViewAddress")) $("gcViewAddress").textContent = p.address || "Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang";
-    if($("gcViewFooterNote")) $("gcViewFooterNote").textContent = p.footerNote || "Garansi mengikuti ketentuan service yang berlaku.";
-
-    // Set Logos
-    if(p.logoUrl){
-      if($("gcLogoPreview")) $("gcLogoPreview").src = p.logoUrl;
-      if($("gcViewLogo")) $("gcViewLogo").src = p.logoUrl;
-      document.querySelectorAll(".logo").forEach(img => img.src = p.logoUrl);
-    }
-  }catch(e){}
-}
-
-$("gcSaveProfile")?.addEventListener("click", async () => {
-  const btn = $("gcSaveProfile");
-  btn.disabled = true;
-  btn.textContent = "Menyimpan...";
-
-  try {
-    let logoUrl = localStorage.getItem("fixiogadget_logo_url") || "./fixio-logo2.png";
-    const logoFile = $("gcProfileLogoInput")?.files[0];
-
-    if (logoFile) {
-      logoUrl = await uploadStoreLogo(logoFile);
-      localStorage.setItem("fixiogadget_logo_url", logoUrl);
+    function getBookingCode() {
+      return new URLSearchParams(window.location.search).get("code");
     }
 
-    const profileData = {
-      name: $("gcProfileName").value.trim(),
-      phone: $("gcProfilePhone").value.trim(),
-      business: $("gcProfileBusiness").value.trim(),
-      address: $("gcProfileAddress") ? $("gcProfileAddress").value.trim() : "",
-      footerNote: $("gcProfileFooterNote") ? $("gcProfileFooterNote").value.trim() : "",
-      logoUrl: logoUrl
-    };
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-    localStorage.setItem("fixiogadget_profile", JSON.stringify(profileData));
+    function formatRupiah(value) {
+      const amount = Number(value || 0);
+      return "Rp " + amount.toLocaleString("id-ID");
+    }
 
-    // Update Display Card
-    if ($("gcViewHeaderName")) $("gcViewHeaderName").textContent = profileData.name || "Admin FixioGadget";
-    if ($("gcViewBusiness")) $("gcViewBusiness").textContent = profileData.business || "FixioGadget";
-    if ($("gcViewPhone")) $("gcViewPhone").textContent = profileData.phone || "-";
-    if ($("gcViewAddress")) $("gcViewAddress").textContent = profileData.address || "-";
-    if ($("gcViewFooterNote")) $("gcViewFooterNote").textContent = profileData.footerNote || "-";
-    
-    if ($("gcLogoPreview")) $("gcLogoPreview").src = logoUrl;
-    if ($("gcViewLogo")) $("gcViewLogo").src = logoUrl;
-    document.querySelectorAll(".logo").forEach(img => img.src = logoUrl);
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "-";
+      return date.toLocaleString("id-ID", {
+        day: "2-digit", month: "short", year: "numeric",
+        hour: "2-digit", minute: "2-digit"
+      });
+    }
 
-    // Sembunyikan form edit setelah simpan
-    $("gcEditProfileSection").classList.add("hidden");
-    $("gcAccordionIcon").textContent = "▼";
+    function showError(message, code) {
+      document.getElementById("content").innerHTML = `
+        <div class="error">
+          <strong>Nota tidak dapat dibuka</strong>
+          ${code ? `<p>Kode booking: <b>${escapeHtml(code)}</b></p>` : ""}
+          <p>${escapeHtml(message)}</p>
+          <p>Pastikan kode booking benar dan data dapat diakses.</p>
+        </div>`;
+    }
 
-    alert("Profil & Logo berhasil diperbarui!");
-  } catch (err) {
-    alert("Gagal mengunggah logo/menyimpan profil: " + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Simpan Perubahan Profil";
-  }
-});
+    async function loadNota() {
+      const code = getBookingCode();
+      if (!code) {
+        showError("Kode booking tidak ditemukan di alamat halaman.", "");
+        return;
+      }
 
-$("gcChangePasswordForm")?.addEventListener("submit",async e=>{
-  e.preventDefault();
-  const btn=$("gcBtnChangePassword");
-  const msg=$("gcPasswordMsg");
-  const newPass=$("gcNewPassword").value;
-  btn.disabled=true;
-  msg.textContent="Memproses perubahan password...";
-  msg.className="message";
+      try {
+        const { data, error } = await supabaseClient.rpc("check_booking", {
+          p_booking_code: code
+        });
 
-  try{
-    const {error}=await db.auth.updateUser({password:newPass});
-    if(error)throw error;
-    msg.textContent="Password berhasil diperbarui!";
-    msg.classList.add("success");
-    $("gcNewPassword").value="";
-  }catch(err){
-    msg.textContent="Gagal memperbarui password: "+err.message;
-  }finally{
-    btn.disabled=false;
-  }
-});
+        if (error) {
+          console.error("SUPABASE ERROR:", error);
+          showError("Data nota gagal dimuat: " + error.message, code);
+          return;
+        }
 
-gcRenderWork();
-let gcMap=null,gcMarker=null,gcCircle=null,gcWatch=null;
-function gcInitMap(){
-  if(!window.L||gcMap)return;
-  gcMap=L.map("gcMap").setView([-6.9,107.6],10);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(gcMap);
-}
-$("gcLocate").addEventListener("click",()=>{
-  if(!navigator.geolocation){$("gcLocationStatus").textContent="Browser tidak mendukung GPS.";return}
-  $("gcLocationStatus").textContent="Meminta izin GPS...";
-  if(!window.L){
-    if(!document.querySelector('link[data-gc-leaflet]')){const css=document.createElement("link");css.rel="stylesheet";css.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";css.dataset.gcLeaflet="1";document.head.appendChild(css)}
-    const script=document.createElement("script");script.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";script.onload=()=>{gcInitMap();gcStartGps()};script.onerror=()=>{$("gcLocationStatus").textContent="Pustaka peta gagal dimuat."};document.head.appendChild(script);
-  }else{gcInitMap();gcStartGps()}
-});
-function gcStartGps(){
-  if(!navigator.geolocation)return;
-  if(gcWatch!==null)navigator.geolocation.clearWatch(gcWatch);
-  gcWatch=navigator.geolocation.watchPosition(pos=>{
-    gcInitMap();if(!gcMap)return;
-    const pt=[pos.coords.latitude,pos.coords.longitude],acc=pos.coords.accuracy;
-    if(!gcMarker){gcMarker=L.marker(pt).addTo(gcMap).bindPopup("Lokasi saya");gcCircle=L.circle(pt,{radius:acc,color:"#ff7a00"}).addTo(gcMap);gcMap.setView(pt,16)}
-    else{gcMarker.setLatLng(pt);gcCircle.setLatLng(pt);gcCircle.setRadius(acc)}
-    $("gcLocationStatus").textContent="GPS aktif · akurasi ±"+Math.round(acc)+" meter.";
-  },err=>{$("gcLocationStatus").textContent=({1:"Izin lokasi ditolak.",2:"Lokasi tidak tersedia.",3:"GPS kehabisan waktu."})[err.code]||"GPS gagal."},{enableHighAccuracy:true,maximumAge:3000,timeout:15000});
-}
-</script>
-</body></html>
+        currentBooking = Array.isArray(data) ? data[0] : data;
+        if (!currentBooking) {
+          showError("Data booking tidak ditemukan.", code);
+          return;
+        }
+        renderNota(currentBooking);
+      } catch (error) {
+        console.error("Gagal memuat nota:", error);
+        showError("Terjadi kesalahan koneksi. Periksa internet lalu muat ulang halaman.", code);
+      }
+    }
+
+    function renderNota(b) {
+      const estimated = Number(b.estimated_price || 0);
+      const total = Number(b.total_price ?? b.estimated_price ?? 0);
+      const date = formatDate(b.created_at);
+      const payment = b.payment_status || "Belum diketahui";
+
+      // Membaca data profil dari localStorage (Admin Panel)
+      let profile = {};
+      try {
+        profile = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}");
+      } catch (e) {
+        console.warn("Gagal memuat profil lokal", e);
+      }
+
+      const businessName = profile.business || "FixioGadget";
+      const logoSrc = profile.logoUrl || "./logo-nota3.png";
+      const address = profile.address || "Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366";
+      const phoneContact = profile.phone ? "WhatsApp: " + profile.phone : "WhatsApp: 0858-4600-9748";
+      const footerNote = profile.footerNote || "Garansi mengikuti ketentuan service yang berlaku.";
+
+      document.getElementById("content").innerHTML = `
+        <header>
+          <div class="brand">
+            <img id="notaLogo" src="${escapeHtml(logoSrc)}" alt="Logo ${escapeHtml(businessName)}" onerror="this.src='./logo-nota3.png'">
+          </div>
+          <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
+          <div class="store-address">${escapeHtml(address)}</div>
+          <div class="store-contact">${escapeHtml(phoneContact)}</div>
+        </header>
+
+        <hr class="dash">
+        <div class="receipt-title">NOTA SERVICE</div>
+        <div class="booking-code">${escapeHtml(b.booking_code || "-")}</div>
+        <div class="date">${escapeHtml(date)}</div>
+        <hr class="dash">
+
+        <div class="section-title">Informasi Pelanggan</div>
+        <div class="line"><div class="label">Nama</div><div class="colon">:</div><div class="value">${escapeHtml(b.customer_name || "-")}</div></div>
+        <div class="line"><div class="label">WhatsApp</div><div class="colon">:</div><div class="value">${escapeHtml(b.phone || "-")}</div></div>
+        <div class="line"><div class="label">Alamat</div><div class="colon">:</div><div class="value">${escapeHtml(b.address || "-")}</div></div>
+
+        <hr class="dash">
+        <div class="section-title">Detail Perangkat</div>
+        <div class="line"><div class="label">Perangkat</div><div class="colon">:</div><div class="value">${escapeHtml(b.device || "-")}</div></div>
+        <div class="line"><div class="label">Kerusakan</div><div class="colon">:</div><div class="value">${escapeHtml(b.damage || "-")}</div></div>
+        <div class="line"><div class="label">Status Service</div><div class="colon">:</div><div class="value">${escapeHtml(b.status || "Menunggu")}</div></div>
+        <div class="line"><div class="label">Pembayaran</div><div class="colon">:</div><div class="value payment-status">${escapeHtml(payment)}</div></div>
+        <div class="line"><div class="label">Metode</div><div class="colon">:</div><div class="value">${escapeHtml(b.payment_method || "-")}</div></div>
+
+        <div class="section-title">Keterangan Kerusakan</div>
+        <div class="damage">${escapeHtml(b.description || "Belum ada keterangan kerusakan.")}</div>
+
+        <hr class="dash">
+        <div class="section-title">Rincian Biaya</div>
+        <div class="price-row"><span>Estimasi Harga</span><span>${formatRupiah(estimated)}</span></div>
+        <div class="price-row total"><span>TOTAL</span><span>${formatRupiah(total)}</span></div>
+
+        <div class="thanks">TERIMA KASIH</div>
+        <div class="thanks-note">Terima kasih telah mempercayakan perbaikan perangkat Anda kepada ${escapeHtml(businessName)}.</div>
+        <div class="small-note">Catatan: Estimasi biaya dapat berubah setelah pemeriksaan teknisi. Simpan nota ini sebagai bukti service.</div>
+        <div class="footer">${escapeHtml(footerNote)}<br>${escapeHtml(businessName)} • Home Service</div>
+
+        <div class="buttons">
+          <button class="print-btn" type="button" onclick="window.print()">Cetak Nota 58 mm</button>
+          <button class="wa-btn" type="button" onclick="sendWhatsApp()">Kirim Nota PDF via WhatsApp</button>
+          <button class="close-btn" type="button" onclick="closeNota()">Tutup</button>
+        </div>`;
+    }
+
+    async function sendWhatsApp() {
+      if (!currentBooking || !currentBooking.phone) {
+        alert("Nomor WhatsApp pelanggan tidak tersedia.");
+        return;
+      }
+      let number = String(currentBooking.phone).replace(/\D/g, "");
+      if (number.startsWith("0")) number = "62" + number.slice(1);
+      else if (number.startsWith("8")) number = "62" + number;
+      if (!number.startsWith("62")) {
+        alert("Format nomor WhatsApp tidak dikenali. Periksa nomor pelanggan.");
+        return;
+      }
+      const b = currentBooking;
+
+      let profile = {};
+      try { profile = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}"); } catch (e) {}
+      const businessName = profile.business || "FixioGadget";
+
+      const message = `Halo ${b.customer_name || ""}, berikut nota service ${businessName} dalam bentuk PDF.
+
+Kode Booking: ${b.booking_code || "-"}
+Perangkat: ${b.device || "-"}
+Kerusakan: ${b.damage || "-"}
+Keterangan: ${b.description || "-"}
+Status Service: ${b.status || "Menunggu"}
+Estimasi Harga: ${formatRupiah(b.estimated_price)}
+Total: ${formatRupiah(b.total_price ?? b.estimated_price)}
+Status Pembayaran: ${b.payment_status || "Belum diketahui"}
+
+Terima kasih telah menggunakan ${businessName}.`;
+      const waUrl = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
+      const receipt = document.querySelector(".receipt");
+      try {
+        if (typeof window.html2canvas !== "function" || !window.jspdf || !window.jspdf.jsPDF) throw new Error("Pustaka PDF belum tersedia.");
+        const canvas = await window.html2canvas(receipt, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+        const { jsPDF } = window.jspdf;
+        const heightMm = Math.max(100, canvas.height * 58 / canvas.width);
+        const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: [58, heightMm] });
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 58, heightMm);
+        const blob = pdf.output("blob");
+        const filename = "Nota-" + String(businessName).replace(/[^a-z0-9_-]/gi, "") + "-" + String(b.booking_code || "booking").replace(/[^a-z0-9_-]/gi, "") + ".pdf";
+        const file = new File([blob], filename, { type: "application/pdf" });
+        if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+          await navigator.share({ files: [file], title: "Nota " + businessName, text: message });
+          return;
+        }
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        alert("Nota PDF diunduh. WhatsApp akan dibuka; lampirkan file PDF yang baru diunduh sebelum mengirim.");
+        window.location.href = waUrl;
+      } catch (error) {
+        console.error("PDF/share error:", error);
+        window.open(waUrl, "_blank", "noopener");
+        alert("Browser tidak mendukung berbagi PDF otomatis. WhatsApp dibuka dengan pesan; simpan nota sebagai PDF lalu lampirkan secara manual.");
+      }
+    }
+    function closeNota() {
+      if (window.history.length > 1) window.history.back();
+      else window.location.href = "./index.html";
+    }
+
+    loadNota();
+  </script>
+</body>
+</html>
