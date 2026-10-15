@@ -144,4 +144,148 @@
         address: $('address').value.trim(),
         latitude: $('latitude').value ? Number($('latitude').value) : null,
         longitude: $('longitude').value ? Number($('longitude').value) : null,
-       
+        status: 'Menunggu',
+        estimated_price: 0,
+        total_price: 0
+      };
+      if (!payload.customer_name || !phone || !payload.device || !payload.damage || !payload.address) throw new Error('Lengkapi semua kolom wajib sebelum mengirim booking.');
+      const { error } = await supabaseClient.from('bookings').insert(payload);
+      if (error) {
+        console.error('Supabase insert error:',error);
+        const detail = [error.message,error.details,error.hint,error.code].filter(Boolean).join(' — ');
+        throw new Error(detail || 'Database menolak booking. Periksa struktur tabel dan kebijakan RLS.');
+      }
+      showAlert('success',`Booking berhasil disimpan! Kode booking Anda: ${payload.booking_code}. Simpan kode ini untuk cek status. Admin akan menghubungi Anda untuk konfirmasi harga dan jadwal.`);
+      const codeBox = document.createElement('div');
+      codeBox.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding:12px;border:1px solid #ff572255;border-radius:10px;background:#0b1016';
+      const codeText = document.createElement('strong');
+      codeText.textContent = payload.booking_code;
+      codeText.style.cssText = 'font-size:18px;letter-spacing:1px;overflow-wrap:anywhere';
+      const copyButton = document.createElement('button');
+      copyButton.type = 'button';
+      copyButton.className = 'btn btn-dark';
+      copyButton.textContent = '📋 Salin Kode Booking';
+      copyButton.addEventListener('click', async () => {
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(payload.booking_code);
+          } else {
+            const temp = document.createElement('textarea');
+            temp.value = payload.booking_code;
+            temp.setAttribute('readonly', '');
+            temp.style.position = 'fixed';
+            temp.style.opacity = '0';
+            document.body.appendChild(temp);
+            temp.select();
+            const copied = document.execCommand('copy');
+            temp.remove();
+            if (!copied) throw new Error('Penyalinan otomatis tidak didukung browser.');
+          }
+          copyButton.textContent = '✅ Kode Tersalin!';
+        } catch (copyError) {
+          copyButton.textContent = 'Salin manual: pilih kode';
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(codeText);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+      });
+      codeBox.appendChild(codeText);
+      codeBox.appendChild(copyButton);
+      bookingAlert.appendChild(codeBox);
+      $('bookingCode').value = payload.booking_code;
+      $('paymentBookingCode').value = payload.booking_code;
+      $('paymentPhone').value = phone;
+      const waText = `Halo FixioGadget, saya sudah membuat booking service.%0A%0AKode: ${encodeURIComponent(payload.booking_code)}%0ANama: ${encodeURIComponent(payload.customer_name)}%0ANo. WhatsApp: ${encodeURIComponent(phone)}%0AGadget: ${encodeURIComponent(payload.device)}%0AKerusakan: ${encodeURIComponent(payload.damage)}%0AAlamat: ${encodeURIComponent(payload.address)}${payload.latitude != null && payload.longitude != null ? '%0ALokasi: https://www.google.com/maps?q='+payload.latitude+','+payload.longitude : ''}`;
+      const wa = document.createElement('a'); wa.href='https://wa.me/6285846009748?text='+waText; wa.target='_blank'; wa.rel='noopener'; wa.className='btn btn-dark'; wa.textContent='Kirim detail ke WhatsApp'; wa.style.marginTop='10px'; bookingAlert.appendChild(document.createElement('br')); bookingAlert.appendChild(wa);
+      this.reset(); resetMap();
+    } catch (err) {
+      console.error('Booking failed:',err);
+      showAlert('error','Booking gagal: '+(err && err.message ? err.message : String(err))+' Jika masalah berlanjut, kirim teks error ini ke admin.');
+    } finally { button.disabled=false; button.textContent='Kirim Booking'; }
+  });
+
+
+  // Navigasi pelanggan: tampilkan satu halaman/menu pada satu waktu.
+  const customerButtons=[...document.querySelectorAll("[data-customer-page]")];
+  function showCustomerPage(page){
+    document.querySelectorAll(".customer-page").forEach(view=>view.classList.toggle("active",view.dataset.page===page));
+    customerButtons.forEach(button=>{const active=button.dataset.customerPage===page;button.classList.toggle("active",active);button.setAttribute("aria-current",active?"page":"false")});
+    window.scrollTo({top:0,behavior:"smooth"});
+    if(page==="beranda"&&window.L&&window.customerMap){setTimeout(()=>window.customerMap.invalidateSize(),100)}
+  }
+  customerButtons.forEach(button=>button.addEventListener("click",()=>showCustomerPage(button.dataset.customerPage)));
+  $('heroBookingButton').addEventListener('click',()=>showCustomerPage('booking'));
+
+  $('statusForm').addEventListener('submit',async function(e){
+    e.preventDefault(); const result=$('statusResult'); result.style.display='block'; result.textContent='Memeriksa status...';
+    try {
+      if (!window.supabase) throw new Error('Pustaka Supabase tidak dimuat.');
+      if (!supabaseClient) supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+      const code=$('bookingCode').value.trim().toUpperCase();
+      const {data,error}=await supabaseClient.rpc('check_booking',{p_booking_code:code});
+      if(error) throw error;
+      const booking=Array.isArray(data)?data[0]:data;
+      if(!booking){result.innerHTML='<div class="alert error">Kode tidak ditemukan atau fungsi cek status belum dikonfigurasi.</div>';return;}
+      result.innerHTML=`<div class="status-row"><span class="status-label">Kode booking</span><span class="status-value">${escapeHTML(booking.booking_code||'-')}</span></div><div class="status-row"><span class="status-label">Nama</span><span class="status-value">${escapeHTML(booking.customer_name||'-')}</span></div><div class="status-row"><span class="status-label">Gadget</span><span class="status-value">${escapeHTML(booking.device||'-')}</span></div><div class="status-row"><span class="status-label">Kerusakan</span><span class="status-value">${escapeHTML(booking.damage||'-')}</span></div><div class="status-row"><span class="status-label">Status</span><span class="status-value"><span class="status-badge">${escapeHTML(booking.status||'Menunggu')}</span></span></div><div class="status-row"><span class="status-label">Estimasi</span><span class="status-value">Rp${Number(booking.estimated_price||0).toLocaleString('id-ID')}</span></div><div class="status-row"><span class="status-label">Total</span><span class="status-value">Rp${Number(booking.total_price||0).toLocaleString('id-ID')}</span></div>`;
+    } catch(err) { console.error('Status lookup error:',err); result.innerHTML='<div class="alert error">Gagal cek status: '+escapeHTML(err.message||'Kesalahan tidak diketahui')+'</div>'; }
+  });
+
+  $('midtransPayButton').addEventListener('click',async function(){
+    const button=this;
+    const message=$('paymentMessage');
+    const bookingCode=$('paymentBookingCode').value.trim().toUpperCase();
+    const phone=$('paymentPhone').value.trim();
+    message.textContent='';
+    if(!bookingCode||!phone){
+      message.textContent='Masukkan kode booking dan nomor WhatsApp terlebih dahulu.';
+      return;
+    }
+    button.disabled=true;
+    button.textContent='Menyiapkan pembayaran...';
+    try {
+      const response=await fetch(SUPABASE_URL+'/functions/v1/create-midtrans-payment',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'apikey':SUPABASE_KEY,
+          'Authorization':'Bearer '+SUPABASE_KEY
+        },
+        body:JSON.stringify({booking_code:bookingCode,phone})
+      });
+      const raw=await response.text();
+      let result;
+      try {
+        result=JSON.parse(raw);
+      } catch {
+        throw new Error('Respons server bukan JSON yang valid. Periksa log Edge Function pembayaran.');
+      }
+      if(!response.ok) {
+        throw new Error(result.error||result.message||'Server pembayaran merespons HTTP '+response.status+'.');
+      }
+      if(!result.redirect_url) {
+        throw new Error('Server tidak mengembalikan redirect_url. Periksa kontrak Edge Function pembayaran.');
+      }
+      let checkoutUrl;
+      try {
+        checkoutUrl=new URL(result.redirect_url);
+      } catch {
+        throw new Error('URL checkout dari server tidak valid.');
+      }
+      const allowedHosts=['app.sandbox.midtrans.com','app.midtrans.com'];
+      if(checkoutUrl.protocol!=='https:'||!allowedHosts.includes(checkoutUrl.hostname)) {
+        throw new Error('URL checkout bukan domain Snap Midtrans yang diizinkan.');
+      }
+      window.location.assign(checkoutUrl.href);
+    } catch(err) {
+      console.error('Payment error:',err);
+      message.textContent='Pembayaran belum dapat dibuat: '+(err.message||'Kesalahan tidak diketahui');
+      button.disabled=false;
+      button.textContent='Lanjut ke Pembayaran';
+    }
+  });
+})();
+</script>
+</body>
+</html>
