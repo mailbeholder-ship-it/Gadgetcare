@@ -26,28 +26,28 @@
     .brand img { width: 160px; max-width: 85%; height: auto; object-fit: contain; display: block; margin: 0 auto; filter: contrast(110%); }
     
     .tagline { text-align: center; font-size: 11px; margin-top: 2px; font-weight: 800; letter-spacing: .5px; }
-    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 4px 0 0; overflow-wrap: anywhere; }
+    .store-address { text-align: justify; font-size: 10px; line-height: 1.4; margin: 4px 0 0; overflow-wrap: anywhere; }
     .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 2px; font-weight: 700; }
-    .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
+    .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; text-align: justify; }
     .dash { border: 0; border-top: 1px dashed #111; margin: 10px 0; }
     .receipt-title { text-align: center; font-size: 16px; font-weight: 800; letter-spacing: .5px; margin: 2px 0 4px; }
     .booking-code { text-align: center; font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
     .date { text-align: center; font-size: 10px; margin-top: 4px; }
     .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 10px 0 6px; }
     
-    /* Format Baris Rata Titik Dua (:) */
+    /* Format Baris Rata Titik Dua (:) & Teks Rata Kanan Kiri */
     .line { display: grid; grid-template-columns: 95px 12px minmax(0, 1fr); gap: 2px; margin: 4px 0; line-height: 1.35; }
-    .label { color: #333; }
+    .label { color: #333; text-align: justify; text-justify: inter-word; }
     .colon { text-align: center; font-weight: 600; color: #111; }
-    .value { font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+    .value { font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; text-align: justify; }
     
-    .damage { border: 1px dashed #777; padding: 7px; font-size: 11px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .damage { border: 1px dashed #777; padding: 7px; font-size: 11px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; text-align: justify; }
     .price-row { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0; line-height: 1.35; }
     .price-row span:last-child { text-align: right; overflow-wrap: anywhere; }
     .total { border-top: 1px dashed #111; margin-top: 8px; padding-top: 8px; font-weight: 800; font-size: 15px; }
     .payment-status { font-weight: 700; }
     .thanks { text-align: center; font-weight: 800; font-size: 12px; margin-top: 10px; }
-    .thanks-note { text-align: center; font-size: 10px; line-height: 1.45; margin-top: 3px; }
+    .thanks-note { text-align: justify; font-size: 10px; line-height: 1.45; margin-top: 3px; }
     .footer { text-align: center; font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
     .buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
     button { border: 0; border-radius: 999px; padding: 12px; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer; }
@@ -67,19 +67,20 @@
       .brand { margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 0 !important; }
       .brand img { width: 48mm !important; max-width: 100% !important; height: auto !important; filter: contrast(150%) grayscale(100%) !important; margin-top: 0 !important; margin-bottom: 0 !important; }
       .tagline { margin-top: 1mm !important; font-size: 8px !important; }
-      .label, .colon, .value, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
+      .label, .colon, .value, .store-address, .date, .footer, .thanks-note, .small-note, .damage { color: #000 !important; text-align: justify !important; }
       .store-address, .store-contact { font-size: 8px !important; }
-      .receipt-title { font-size: 13px !important; margin-top: 1mm !important; }
-      .booking-code { font-size: 10px !important; }
+      .receipt-title { font-size: 13px !important; margin-top: 1mm !important; text-align: center !important; }
+      .booking-code { font-size: 10px !important; text-align: center !important; }
       .dash { margin: 6px 0 !important; border-top: 1px dashed #000 !important; }
       .section-title { font-size: 9px !important; margin-top: 6px !important; margin-bottom: 3px !important; }
       .line { grid-template-columns: 20mm 3mm minmax(0, 1fr) !important; gap: 0 !important; margin: 2px 0 !important; font-size: 9px !important; line-height: 1.25 !important; }
       .damage { padding: 4px !important; font-size: 9px !important; border-color: #000 !important; }
       .price-row { font-size: 9px !important; margin: 3px 0 !important; }
       .total { font-size: 12px !important; margin-top: 6px !important; padding-top: 6px !important; }
-      .thanks { font-size: 11px !important; margin-top: 8px !important; }
+      .thanks { font-size: 11px !important; margin-top: 8px !important; text-align: center !important; }
       .thanks-note { font-size: 9px !important; }
       .footer, .small-note { font-size: 8px !important; }
+      .footer { text-align: center !important; }
       .buttons { display: none !important; }
       .section, .damage, .price-row, .total, .thanks { break-inside: avoid; page-break-inside: avoid; }
     }
