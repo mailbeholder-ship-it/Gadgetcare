@@ -43,12 +43,12 @@
 <div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
 <p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section></div>
 
-<!-- Profile Panel Improved -->
+<!-- Profile Panel Improved with Logo Upload -->
 <div class="gc-view" data-gc-panel="profile">
   <div class="gc-extra-card">
     <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
       <div style="width: 64px; height: 64px; border-radius: 50%; background: #26313c; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; font-size: 26px; overflow: hidden; flex-shrink: 0;">
-        <img src="./fixio-logo2.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+        <img id="gcLogoHeader" src="./fixio-logo2.png" alt="Logo Header" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
       </div>
       <div>
         <h2 style="margin: 0; font-size: 20px;" id="gcProfileHeaderName">Admin FixioGadget</h2>
@@ -59,6 +59,13 @@
 
     <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Informasi Admin & Usaha</h3>
     
+    <label>Logo Toko / Counter
+      <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
+        <img id="gcLogoPreview" src="./fixio-logo2.png" alt="Preview Logo" style="width:50px; height:50px; border-radius:50%; object-fit:contain; background:#1b242d; border:1px solid #334155; padding:4px;">
+        <input type="file" id="gcProfileLogoInput" accept="image/png, image/jpeg, image/webp" class="gc-extra-field" style="margin:0; flex:1;">
+      </div>
+    </label>
+
     <label>Nama Admin
       <input id="gcProfileName" class="gc-extra-field" placeholder="Nama lengkap admin">
     </label>
@@ -234,7 +241,29 @@ function gcRenderContacts(){
   $("gcContactList").innerHTML=[...seen.values()].map(b=>'<div class="gc-extra-card"><strong>'+esc(b.customer_name||"Pelanggan")+'</strong><p class="muted small">'+esc(b.phone)+' · '+esc(b.booking_code||"")+'</p><a class="gc-orange-btn" style="display:inline-block;padding:10px;border-radius:8px;text-decoration:none" target="_blank" rel="noopener" href="https://wa.me/'+esc(String(b.phone).replace(/\D/g,"").replace(/^0/,"62"))+'">Buka WhatsApp</a></div>').join("")||'<p class="muted">Belum ada nomor pelanggan dari booking.</p>';
 }
 
-// ===== Profil & Keamanan Admin Logic =====
+// ===== Upload Logo & Profil Logic =====
+async function uploadStoreLogo(file) {
+  const fileExt = file.name.split('.').pop();
+  const filePath = `store-logo.${fileExt}`;
+  const { data, error } = await db.storage
+    .from('logos')
+    .upload(filePath, file, { upsert: true, cacheControl: '3600' });
+  if (error) throw error;
+  const { data: publicUrlData } = db.storage.from('logos').getPublicUrl(filePath);
+  return publicUrlData.publicUrl;
+}
+
+$("gcProfileLogoInput")?.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      if ($("gcLogoPreview")) $("gcLogoPreview").src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
 async function initProfileData(){
   try{
     const {data:{user}}=await db.auth.getUser();
@@ -249,20 +278,51 @@ async function initProfileData(){
     if($("gcProfileAddress")) $("gcProfileAddress").value=p.address||"";
     if($("gcProfileFooterNote")) $("gcProfileFooterNote").value=p.footerNote||"";
     if($("gcProfileHeaderName")) $("gcProfileHeaderName").textContent=p.name||"Admin FixioGadget";
+    if(p.logoUrl){
+      if($("gcLogoPreview")) $("gcLogoPreview").src=p.logoUrl;
+      if($("gcLogoHeader")) $("gcLogoHeader").src=p.logoUrl;
+      document.querySelectorAll(".logo").forEach(img=>img.src=p.logoUrl);
+    }
   }catch(e){}
 }
 
-$("gcSaveProfile")?.addEventListener("click",()=>{
-  const profileData={
-    name:$("gcProfileName").value.trim(),
-    phone:$("gcProfilePhone").value.trim(),
-    business:$("gcProfileBusiness").value.trim(),
-    address:$("gcProfileAddress")?$("gcProfileAddress").value.trim():"",
-    footerNote:$("gcProfileFooterNote")?$("gcProfileFooterNote").value.trim():""
-  };
-  localStorage.setItem("fixiogadget_profile",JSON.stringify(profileData));
-  if($("gcProfileHeaderName")) $("gcProfileHeaderName").textContent=profileData.name||"Admin FixioGadget";
-  alert("Profil berhasil diperbarui!");
+$("gcSaveProfile")?.addEventListener("click", async () => {
+  const btn=$("gcSaveProfile");
+  btn.disabled=true;
+  btn.textContent="Menyimpan...";
+
+  try {
+    let logoUrl = localStorage.getItem("fixiogadget_logo_url") || "./fixio-logo2.png";
+    const logoFile = $("gcProfileLogoInput")?.files[0];
+
+    if (logoFile) {
+      logoUrl = await uploadStoreLogo(logoFile);
+      localStorage.setItem("fixiogadget_logo_url", logoUrl);
+    }
+
+    const profileData = {
+      name: $("gcProfileName").value.trim(),
+      phone: $("gcProfilePhone").value.trim(),
+      business: $("gcProfileBusiness").value.trim(),
+      address: $("gcProfileAddress") ? $("gcProfileAddress").value.trim() : "",
+      footerNote: $("gcProfileFooterNote") ? $("gcProfileFooterNote").value.trim() : "",
+      logoUrl: logoUrl
+    };
+
+    localStorage.setItem("fixiogadget_profile", JSON.stringify(profileData));
+
+    if ($("gcProfileHeaderName")) $("gcProfileHeaderName").textContent = profileData.name || "Admin FixioGadget";
+    if ($("gcLogoPreview")) $("gcLogoPreview").src = logoUrl;
+    if ($("gcLogoHeader")) $("gcLogoHeader").src = logoUrl;
+    document.querySelectorAll(".logo").forEach(img => img.src = logoUrl);
+
+    alert("Profil & Logo berhasil diperbarui!");
+  } catch (err) {
+    alert("Gagal mengunggah logo/menyimpan profil: " + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Simpan Perubahan Profil";
+  }
 });
 
 $("gcChangePasswordForm")?.addEventListener("submit",async e=>{
