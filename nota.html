@@ -172,16 +172,29 @@
       const total = Number(b.total_price ?? b.estimated_price ?? 0);
       const date = formatDate(b.created_at);
       const payment = b.payment_status || "Belum diketahui";
-      const address = "Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366";
+
+      // Membaca data profil dari localStorage (Admin Panel)
+      let profile = {};
+      try {
+        profile = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}");
+      } catch (e) {
+        console.warn("Gagal memuat profil lokal", e);
+      }
+
+      const businessName = profile.business || "FixioGadget";
+      const logoSrc = profile.logoUrl || "./logo-nota3.png";
+      const address = profile.address || "Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366";
+      const phoneContact = profile.phone ? "WhatsApp: " + profile.phone : "WhatsApp: 0858-4600-9748";
+      const footerNote = profile.footerNote || "Garansi mengikuti ketentuan service yang berlaku.";
 
       document.getElementById("content").innerHTML = `
         <header>
           <div class="brand">
-            <img src="./logo-nota3.png" alt="Logo FixioGadget" onerror="this.style.display='none'">
+            <img id="notaLogo" src="${escapeHtml(logoSrc)}" alt="Logo ${escapeHtml(businessName)}" onerror="this.src='./logo-nota3.png'">
           </div>
           <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
           <div class="store-address">${escapeHtml(address)}</div>
-          <div class="store-contact">WhatsApp: 0858-4600-9748</div>
+          <div class="store-contact">${escapeHtml(phoneContact)}</div>
         </header>
 
         <hr class="dash">
@@ -212,9 +225,9 @@
         <div class="price-row total"><span>TOTAL</span><span>${formatRupiah(total)}</span></div>
 
         <div class="thanks">TERIMA KASIH</div>
-        <div class="thanks-note">Terima kasih telah mempercayakan perbaikan perangkat Anda kepada FixioGadget.</div>
+        <div class="thanks-note">Terima kasih telah mempercayakan perbaikan perangkat Anda kepada ${escapeHtml(businessName)}.</div>
         <div class="small-note">Catatan: Estimasi biaya dapat berubah setelah pemeriksaan teknisi. Simpan nota ini sebagai bukti service.</div>
-        <div class="footer">Garansi mengikuti ketentuan service yang berlaku.<br>FixioGadget • Home Service</div>
+        <div class="footer">${escapeHtml(footerNote)}<br>${escapeHtml(businessName)} • Home Service</div>
 
         <div class="buttons">
           <button class="print-btn" type="button" onclick="window.print()">Cetak Nota 58 mm</button>
@@ -236,7 +249,12 @@
         return;
       }
       const b = currentBooking;
-      const message = `Halo ${b.customer_name || ""}, berikut nota service FixioGadget dalam bentuk PDF.
+
+      let profile = {};
+      try { profile = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}"); } catch (e) {}
+      const businessName = profile.business || "FixioGadget";
+
+      const message = `Halo ${b.customer_name || ""}, berikut nota service ${businessName} dalam bentuk PDF.
 
 Kode Booking: ${b.booking_code || "-"}
 Perangkat: ${b.device || "-"}
@@ -247,7 +265,7 @@ Estimasi Harga: ${formatRupiah(b.estimated_price)}
 Total: ${formatRupiah(b.total_price ?? b.estimated_price)}
 Status Pembayaran: ${b.payment_status || "Belum diketahui"}
 
-Terima kasih telah menggunakan FixioGadget.`;
+Terima kasih telah menggunakan ${businessName}.`;
       const waUrl = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
       const receipt = document.querySelector(".receipt");
       try {
@@ -258,10 +276,10 @@ Terima kasih telah menggunakan FixioGadget.`;
         const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: [58, heightMm] });
         pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 58, heightMm);
         const blob = pdf.output("blob");
-        const filename = "Nota-FixioGadget-" + String(b.booking_code || "booking").replace(/[^a-z0-9_-]/gi, "") + ".pdf";
+        const filename = "Nota-" + String(businessName).replace(/[^a-z0-9_-]/gi, "") + "-" + String(b.booking_code || "booking").replace(/[^a-z0-9_-]/gi, "") + ".pdf";
         const file = new File([blob], filename, { type: "application/pdf" });
         if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-          await navigator.share({ files: [file], title: "Nota FixioGadget", text: message });
+          await navigator.share({ files: [file], title: "Nota " + businessName, text: message });
           return;
         }
         const link = document.createElement("a");
