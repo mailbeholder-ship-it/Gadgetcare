@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <title>Nota Service - GadgetCare</title>
+  <title>Nota Service - FixioGadget</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -161,7 +161,7 @@
       document.getElementById("content").innerHTML = `
         <header>
           <div class="brand">
-            <img src="./logo-nota.png" alt="Logo GadgetCare" onerror="this.style.display='none'">
+            <img src="./fixio-logo2.png" alt="Logo FixioGadget" onerror="this.style.display='none'">
             <span><span class="gadget">Gadget</span><span class="care">Care</span></span>
           </div>
           <div class="tagline">SERVICE HANDPHONE • HOME SERVICE</div>
@@ -229,7 +229,7 @@ Estimasi Harga: ${formatRupiah(b.estimated_price)}
 Total: ${formatRupiah(b.total_price ?? b.estimated_price)}
 Status Pembayaran: ${b.payment_status || "Belum diketahui"}
 
-Terima kasih telah menggunakan GadgetCare.`;
+Terima kasih telah menggunakan FixioGadget.`;
       const waUrl = "https://wa.me/" + number + "?text=" + encodeURIComponent(message);
       const receipt = document.querySelector(".receipt");
       try {
@@ -240,10 +240,10 @@ Terima kasih telah menggunakan GadgetCare.`;
         const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: [58, heightMm] });
         pdf.addImage(canvas.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, 58, heightMm);
         const blob = pdf.output("blob");
-        const filename = "Nota-GadgetCare-" + String(b.booking_code || "booking").replace(/[^a-z0-9_-]/gi, "") + ".pdf";
+        const filename = "Nota-FixioGadget-" + String(b.booking_code || "booking").replace(/[^a-z0-9_-]/gi, "") + ".pdf";
         const file = new File([blob], filename, { type: "application/pdf" });
         if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-          await navigator.share({ files: [file], title: "Nota GadgetCare", text: message });
+          await navigator.share({ files: [file], title: "Nota FixioGadget", text: message });
           return;
         }
         const link = document.createElement("a");
