@@ -13,6 +13,15 @@
 
 /* Mobile dashboard navigation addition */
 .gc-bottom-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;position:sticky;top:0;z-index:50;padding:8px;background:#171717;border:1px solid #3b3029;border-radius:14px;margin:12px 0}.gc-bottom-nav button{background:transparent;color:#ddd;padding:8px 2px;font-size:11px;display:flex;flex-direction:column;gap:5px;align-items:center;white-space:normal}.gc-bottom-nav button .nav-icon-img{width:22px;height:22px;object-fit:contain;display:block}.gc-bottom-nav button.active{color:var(--orange);background:#332116}.gc-view{display:none}.gc-view.active{display:block}.gc-extra-card{background:#202020;border:1px solid #45403c;border-radius:14px;padding:16px;margin:12px 0}.gc-extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.gc-extra-stat{border-left:4px solid var(--orange);border-radius:10px;padding:14px;background:#292522}.gc-extra-stat strong{display:block;font-size:24px;margin-top:8px}.gc-orange-btn{background:var(--orange)!important;color:#fff!important}.gc-map{height:300px;border-radius:12px;overflow:hidden;background:#282828}.gc-extra-field{width:100%;margin:6px 0 14px;padding:12px;border-radius:12px;border:1px solid #555;background:#151515;color:#fff}@media(max-width:420px){.gc-bottom-nav button{font-size:9px}.gc-bottom-nav button .nav-icon-img{width:18px;height:18px}.gc-extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Style khusus Tampilan Profil & Accordion Edit */
+.profile-view-card{background:#161c24;border:1px solid #2a3644;border-radius:14px;padding:18px;margin-bottom:14px}
+.profile-row-info{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.profile-info-item{display:flex;flex-direction:column;gap:2px}
+.profile-info-item .lbl{font-size:12px;color:var(--muted)}
+.profile-info-item .val{font-size:14px;font-weight:600;color:#fff;overflow-wrap:anywhere}
+.edit-accordion-btn{width:100%;background:#1c2530;border:1px dashed #3a4859;color:#c9d3e0;padding:12px;border-radius:10px;display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.edit-accordion-btn:hover{background:#232e3c;color:#fff}
 </style>
 </head>
 <body>
@@ -43,25 +52,54 @@
 <div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
 <p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section></div>
 
-<!-- Profile Panel Improved with Logo Upload -->
+<!-- Profile Panel: Display Mode First, Edit Mode in Accordion Below -->
 <div class="gc-view" data-gc-panel="profile">
-  <div class="gc-extra-card">
-    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
-      <div style="width: 64px; height: 64px; border-radius: 50%; background: #26313c; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; font-size: 26px; overflow: hidden; flex-shrink: 0;">
-        <img id="gcLogoHeader" src="./fixio-logo2.png" alt="Logo Header" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+  <!-- Card Tampilan Profil -->
+  <div class="profile-view-card">
+    <div style="display: flex; align-items: center; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line);">
+      <div style="width: 68px; height: 68px; border-radius: 50%; background: #1a222d; border: 2px solid var(--orange); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+        <img id="gcViewLogo" src="./fixio-logo2.png" alt="Logo Toko" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
       </div>
       <div>
-        <h2 style="margin: 0; font-size: 20px;" id="gcProfileHeaderName">Admin FixioGadget</h2>
+        <h2 style="margin: 0; font-size: 20px;" id="gcViewHeaderName">Admin FixioGadget</h2>
         <span class="pill" style="margin-top: 4px;">Super Admin</span>
-        <p class="muted small" style="margin: 4px 0 0;" id="gcProfileHeaderEmail">admin@fixiogadget.com</p>
+        <p class="muted small" style="margin: 4px 0 0;" id="gcViewHeaderEmail">admin@fixiogadget.com</p>
       </div>
     </div>
 
-    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Informasi Admin & Usaha</h3>
+    <div class="profile-row-info">
+      <div class="profile-info-item">
+        <span class="lbl">Nama Usaha / Counter</span>
+        <span class="val" id="gcViewBusiness">FixioGadget</span>
+      </div>
+      <div class="profile-info-item">
+        <span class="lbl">Nomor WhatsApp Admin</span>
+        <span class="val" id="gcViewPhone">-</span>
+      </div>
+      <div class="profile-info-item">
+        <span class="lbl">Alamat Workshop / Counter</span>
+        <span class="val" id="gcViewAddress">Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang</span>
+      </div>
+      <div class="profile-info-item">
+        <span class="lbl">Catatan Garansi / Footer Nota</span>
+        <span class="val" id="gcViewFooterNote">Garansi mengikuti ketentuan service yang berlaku.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tombol Toggle Menu Edit Profil -->
+  <button type="button" class="edit-accordion-btn" id="gcToggleEditMenu">
+    <span>✏️ Pengaturan & Edit Informasi Profil</span>
+    <span id="gcAccordionIcon">▼</span>
+  </button>
+
+  <!-- Form Edit Profil & Keamanan (Default Disembunyikan) -->
+  <div id="gcEditProfileSection" class="gc-extra-card hidden" style="margin-top: 10px;">
+    <h3 style="font-size: 16px; margin-top: 0; color: var(--orange);">Edit Informasi Toko & Admin</h3>
     
     <label>Logo Toko / Counter
       <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
-        <img id="gcLogoPreview" src="./fixio-logo2.png" alt="Preview Logo" style="width:50px; height:50px; border-radius:50%; object-fit:contain; background:#1b242d; border:1px solid #334155; padding:4px;">
+        <img id="gcLogoPreview" src="./fixio-logo2.png" alt="Preview Logo" style="width:48px; height:48px; border-radius:50%; object-fit:contain; background:#1b242d; border:1px solid #334155; padding:4px;">
         <input type="file" id="gcProfileLogoInput" accept="image/png, image/jpeg, image/webp" class="gc-extra-field" style="margin:0; flex:1;">
       </div>
     </label>
@@ -87,7 +125,7 @@
     </label>
 
     <button type="button" id="gcSaveProfile" class="gc-orange-btn" style="width: 100%; margin-top: 8px;">Simpan Perubahan Profil</button>
-    <p class="muted small" style="margin-top: 8px; text-align: center;">Profil ini disimpan lokal pada browser/perangkat ini.</p>
+    <p class="muted small" style="margin-top: 8px; text-align: center;">Perubahan akan langsung diperbarui di tampilan profil & cetak nota.</p>
 
     <div class="divider"></div>
 
@@ -264,32 +302,51 @@ $("gcProfileLogoInput")?.addEventListener("change", (e) => {
   }
 });
 
+// Toggle Accordion Menu Edit
+$("gcToggleEditMenu")?.addEventListener("click", () => {
+  const sec = $("gcEditProfileSection");
+  const icon = $("gcAccordionIcon");
+  const isHidden = sec.classList.contains("hidden");
+  sec.classList.toggle("hidden", !isHidden);
+  icon.textContent = isHidden ? "▲" : "▼";
+});
+
 async function initProfileData(){
   try{
     const {data:{user}}=await db.auth.getUser();
-    if(user&&$("gcProfileHeaderEmail")) $("gcProfileHeaderEmail").textContent=user.email;
+    if(user && $("gcViewHeaderEmail")) $("gcViewHeaderEmail").textContent = user.email;
   }catch(e){}
 
   try{
-    const p=JSON.parse(localStorage.getItem("fixiogadget_profile")||"{}");
-    if($("gcProfileName")) $("gcProfileName").value=p.name||"";
-    if($("gcProfilePhone")) $("gcProfilePhone").value=p.phone||"";
-    if($("gcProfileBusiness")) $("gcProfileBusiness").value=p.business||"FixioGadget";
-    if($("gcProfileAddress")) $("gcProfileAddress").value=p.address||"";
-    if($("gcProfileFooterNote")) $("gcProfileFooterNote").value=p.footerNote||"";
-    if($("gcProfileHeaderName")) $("gcProfileHeaderName").textContent=p.name||"Admin FixioGadget";
+    const p = JSON.parse(localStorage.getItem("fixiogadget_profile") || "{}");
+    
+    // Fill Form Inputs
+    if($("gcProfileName")) $("gcProfileName").value = p.name || "";
+    if($("gcProfilePhone")) $("gcProfilePhone").value = p.phone || "";
+    if($("gcProfileBusiness")) $("gcProfileBusiness").value = p.business || "FixioGadget";
+    if($("gcProfileAddress")) $("gcProfileAddress").value = p.address || "";
+    if($("gcProfileFooterNote")) $("gcProfileFooterNote").value = p.footerNote || "";
+    
+    // Fill Display Card
+    if($("gcViewHeaderName")) $("gcViewHeaderName").textContent = p.name || "Admin FixioGadget";
+    if($("gcViewBusiness")) $("gcViewBusiness").textContent = p.business || "FixioGadget";
+    if($("gcViewPhone")) $("gcViewPhone").textContent = p.phone || "-";
+    if($("gcViewAddress")) $("gcViewAddress").textContent = p.address || "Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang";
+    if($("gcViewFooterNote")) $("gcViewFooterNote").textContent = p.footerNote || "Garansi mengikuti ketentuan service yang berlaku.";
+
+    // Set Logos
     if(p.logoUrl){
-      if($("gcLogoPreview")) $("gcLogoPreview").src=p.logoUrl;
-      if($("gcLogoHeader")) $("gcLogoHeader").src=p.logoUrl;
-      document.querySelectorAll(".logo").forEach(img=>img.src=p.logoUrl);
+      if($("gcLogoPreview")) $("gcLogoPreview").src = p.logoUrl;
+      if($("gcViewLogo")) $("gcViewLogo").src = p.logoUrl;
+      document.querySelectorAll(".logo").forEach(img => img.src = p.logoUrl);
     }
   }catch(e){}
 }
 
 $("gcSaveProfile")?.addEventListener("click", async () => {
-  const btn=$("gcSaveProfile");
-  btn.disabled=true;
-  btn.textContent="Menyimpan...";
+  const btn = $("gcSaveProfile");
+  btn.disabled = true;
+  btn.textContent = "Menyimpan...";
 
   try {
     let logoUrl = localStorage.getItem("fixiogadget_logo_url") || "./fixio-logo2.png";
@@ -311,10 +368,20 @@ $("gcSaveProfile")?.addEventListener("click", async () => {
 
     localStorage.setItem("fixiogadget_profile", JSON.stringify(profileData));
 
-    if ($("gcProfileHeaderName")) $("gcProfileHeaderName").textContent = profileData.name || "Admin FixioGadget";
+    // Update Display Card
+    if ($("gcViewHeaderName")) $("gcViewHeaderName").textContent = profileData.name || "Admin FixioGadget";
+    if ($("gcViewBusiness")) $("gcViewBusiness").textContent = profileData.business || "FixioGadget";
+    if ($("gcViewPhone")) $("gcViewPhone").textContent = profileData.phone || "-";
+    if ($("gcViewAddress")) $("gcViewAddress").textContent = profileData.address || "-";
+    if ($("gcViewFooterNote")) $("gcViewFooterNote").textContent = profileData.footerNote || "-";
+    
     if ($("gcLogoPreview")) $("gcLogoPreview").src = logoUrl;
-    if ($("gcLogoHeader")) $("gcLogoHeader").src = logoUrl;
+    if ($("gcViewLogo")) $("gcViewLogo").src = logoUrl;
     document.querySelectorAll(".logo").forEach(img => img.src = logoUrl);
+
+    // Sembunyikan form edit setelah simpan
+    $("gcEditProfileSection").classList.add("hidden");
+    $("gcAccordionIcon").textContent = "▼";
 
     alert("Profil & Logo berhasil diperbarui!");
   } catch (err) {
