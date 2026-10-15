@@ -34,9 +34,13 @@
     .booking-code { text-align: center; font-weight: 700; font-size: 13px; overflow-wrap: anywhere; }
     .date { text-align: center; font-size: 10px; margin-top: 4px; }
     .section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; margin: 10px 0 6px; }
-    .line { display: grid; grid-template-columns: 84px minmax(0,1fr); gap: 7px; margin: 4px 0; line-height: 1.35; }
+    
+    /* Format Baris Rata Titik Dua (:) */
+    .line { display: grid; grid-template-columns: 95px 12px minmax(0, 1fr); gap: 2px; margin: 4px 0; line-height: 1.35; }
     .label { color: #333; }
+    .colon { text-align: center; font-weight: 600; color: #111; }
     .value { font-weight: 600; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+    
     .damage { border: 1px dashed #777; padding: 7px; font-size: 11px; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
     .price-row { display: flex; justify-content: space-between; gap: 8px; margin: 6px 0; line-height: 1.35; }
     .price-row span:last-child { text-align: right; overflow-wrap: anywhere; }
@@ -63,13 +67,13 @@
       .brand { margin-top: 0 !important; margin-bottom: 0 !important; padding-top: 0 !important; }
       .brand img { width: 48mm !important; max-width: 100% !important; height: auto !important; filter: contrast(150%) grayscale(100%) !important; margin-top: 0 !important; margin-bottom: 0 !important; }
       .tagline { margin-top: 1mm !important; font-size: 8px !important; }
-      .label, .value, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
+      .label, .colon, .value, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
       .store-address, .store-contact { font-size: 8px !important; }
       .receipt-title { font-size: 13px !important; margin-top: 1mm !important; }
       .booking-code { font-size: 10px !important; }
       .dash { margin: 6px 0 !important; border-top: 1px dashed #000 !important; }
       .section-title { font-size: 9px !important; margin-top: 6px !important; margin-bottom: 3px !important; }
-      .line { grid-template-columns: 17mm minmax(0,1fr) !important; gap: 1.5mm !important; margin: 2px 0 !important; font-size: 9px !important; line-height: 1.25 !important; }
+      .line { grid-template-columns: 20mm 3mm minmax(0, 1fr) !important; gap: 0 !important; margin: 2px 0 !important; font-size: 9px !important; line-height: 1.25 !important; }
       .damage { padding: 4px !important; font-size: 9px !important; border-color: #000 !important; }
       .price-row { font-size: 9px !important; margin: 3px 0 !important; }
       .total { font-size: 12px !important; margin-top: 6px !important; padding-top: 6px !important; }
@@ -186,17 +190,17 @@
         <hr class="dash">
 
         <div class="section-title">Informasi Pelanggan</div>
-        <div class="line"><div class="label">Nama</div><div class="value">${escapeHtml(b.customer_name || "-")}</div></div>
-        <div class="line"><div class="label">WhatsApp</div><div class="value">${escapeHtml(b.phone || "-")}</div></div>
-        <div class="line"><div class="label">Alamat</div><div class="value">${escapeHtml(b.address || "-")}</div></div>
+        <div class="line"><div class="label">Nama</div><div class="colon">:</div><div class="value">${escapeHtml(b.customer_name || "-")}</div></div>
+        <div class="line"><div class="label">WhatsApp</div><div class="colon">:</div><div class="value">${escapeHtml(b.phone || "-")}</div></div>
+        <div class="line"><div class="label">Alamat</div><div class="colon">:</div><div class="value">${escapeHtml(b.address || "-")}</div></div>
 
         <hr class="dash">
         <div class="section-title">Detail Perangkat</div>
-        <div class="line"><div class="label">Perangkat</div><div class="value">${escapeHtml(b.device || "-")}</div></div>
-        <div class="line"><div class="label">Kerusakan</div><div class="value">${escapeHtml(b.damage || "-")}</div></div>
-        <div class="line"><div class="label">Status Service</div><div class="value">${escapeHtml(b.status || "Menunggu")}</div></div>
-        <div class="line"><div class="label">Pembayaran</div><div class="value payment-status">${escapeHtml(payment)}</div></div>
-        <div class="line"><div class="label">Metode</div><div class="value">${escapeHtml(b.payment_method || "-")}</div></div>
+        <div class="line"><div class="label">Perangkat</div><div class="colon">:</div><div class="value">${escapeHtml(b.device || "-")}</div></div>
+        <div class="line"><div class="label">Kerusakan</div><div class="colon">:</div><div class="value">${escapeHtml(b.damage || "-")}</div></div>
+        <div class="line"><div class="label">Status Service</div><div class="colon">:</div><div class="value">${escapeHtml(b.status || "Menunggu")}</div></div>
+        <div class="line"><div class="label">Pembayaran</div><div class="colon">:</div><div class="value payment-status">${escapeHtml(payment)}</div></div>
+        <div class="line"><div class="label">Metode</div><div class="colon">:</div><div class="value">${escapeHtml(b.payment_method || "-")}</div></div>
 
         <div class="section-title">Keterangan Kerusakan</div>
         <div class="damage">${escapeHtml(b.description || "Belum ada keterangan kerusakan.")}</div>
