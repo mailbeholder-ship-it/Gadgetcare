@@ -18,12 +18,13 @@
     .loading, .error { text-align: center; padding: 40px 12px; line-height: 1.5; }
     .error { color: #b42318; overflow-wrap: anywhere; }
     
-    /* Header & Logo Diperbesar untuk Layar & Cetak Thermal */
-    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; margin-bottom: 6px; }
+    /* Brand Header & Logo */
+    .brand { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; margin-bottom: 0; }
     .brand img { width: 150px; max-width: 80%; height: auto; object-fit: contain; display: block; margin: 0 auto; filter: contrast(110%); }
     
-    .tagline { text-align: center; font-size: 11px; margin-top: 4px; font-weight: 800; letter-spacing: .5px; }
-    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 6px 0 0; overflow-wrap: anywhere; }
+    /* Jarak Tagline didekatkan ke logo (jarak ~10mm pada tampilan cetak) */
+    .tagline { text-align: center; font-size: 11px; margin-top: 6px; font-weight: 800; letter-spacing: .5px; }
+    .store-address { text-align: center; font-size: 10px; line-height: 1.4; margin: 4px 0 0; overflow-wrap: anywhere; }
     .store-contact { text-align: center; font-size: 10px; line-height: 1.4; margin-top: 2px; font-weight: 700; }
     .small-note { font-size: 9px; line-height: 1.4; margin-top: 8px; overflow-wrap: anywhere; }
     .dash { border: 0; border-top: 1px dashed #111; margin: 12px 0; }
@@ -56,10 +57,11 @@
       html, body { width: 58mm !important; min-width: 0 !important; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; font-family: Arial, Helvetica, sans-serif !important; font-size: 10px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
       .container { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 0 !important; }
       .receipt { display: block !important; width: 58mm !important; max-width: 58mm !important; margin: 0 !important; padding: 1.5mm !important; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: #fff !important; color: #000 !important; }
-      .brand { margin-bottom: 2mm !important; }
-      .brand img { width: 48mm !important; max-width: 100% !important; height: auto !important; filter: contrast(150%) grayscale(100%) !important; }
-      .label, .value, .tagline, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
-      .tagline, .store-address, .store-contact { font-size: 8px !important; }
+      .brand { margin-bottom: 0 !important; }
+      .brand img { width: 48mm !important; max-width: 100% !important; height: auto !important; filter: contrast(150%) grayscale(100%) !important; margin-bottom: 0 !important; }
+      .tagline { margin-top: 2mm !important; font-size: 8px !important; }
+      .label, .value, .store-address, .date, .footer, .thanks-note { color: #000 !important; }
+      .store-address, .store-contact { font-size: 8px !important; }
       .receipt-title { font-size: 13px !important; }
       .booking-code { font-size: 10px !important; }
       .dash { margin: 8px 0 !important; border-top: 1px dashed #000 !important; }
