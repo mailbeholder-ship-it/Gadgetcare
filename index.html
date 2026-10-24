@@ -272,7 +272,7 @@
       } catch {
         throw new Error('URL checkout dari server tidak valid.');
       }
-      const allowedHosts=['app.sandbox.midtrans.com','app.midtrans.com'];
+      const allowedHosts=['app.midtrans.com','app.midtrans.com'];
       if(checkoutUrl.protocol!=='https:'||!allowedHosts.includes(checkoutUrl.hostname)) {
         throw new Error('URL checkout bukan domain Snap Midtrans yang diizinkan.');
       }
