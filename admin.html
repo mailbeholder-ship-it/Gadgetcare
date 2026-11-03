@@ -75,7 +75,7 @@
 </main>
 <script>
 const SUPABASE_URL="https://sqpolxwdyypbxylgvihi.supabase.co";
-const SUPABASE_KEY="sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxcG9seHdkeXlwYnh5bGd2aWhpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzOTE2NzUsImV4cCI6MjEwNjk2NzY3NX0.ziRDaue4DVumx14M-qhlqp2w2ch8PmbB79iJEW7YY2Q";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);let bookings=[];
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
