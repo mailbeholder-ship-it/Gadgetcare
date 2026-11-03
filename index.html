@@ -35,6 +35,7 @@
 <div class="form-group"><label for="damage">Kerusakan</label><select id="damage" name="damage" required><option value="">Pilih kerusakan</option><option>LCD / Layar</option><option>Baterai</option><option>Charging</option><option>Mati Total</option><option>Terkena Air</option><option>Software</option><option>Kerusakan Lainnya</option></select></div>
 <div class="form-group"><label for="description">Keterangan kerusakan (opsional)</label><textarea id="description" name="description" maxlength="1500" placeholder="Jelaskan kondisi gadget Anda..."></textarea></div>
 <div class="form-group"><label for="address">Alamat lengkap</label><textarea id="address" name="address" required maxlength="1000" placeholder="Alamat tempat teknisi datang"></textarea></div>
+<div class="form-group"><label for="requestedSchedule">Tanggal & jam kunjungan yang diinginkan</label><input id="requestedSchedule" name="requestedSchedule" type="datetime-local" required><small class="hint">Ini permintaan jadwal. Admin akan mengonfirmasi atau mengusulkan waktu lain.</small></div>
 <div class="form-group"><label>Lokasi GPS (opsional)</label><div class="gps-row"><button type="button" class="btn btn-orange" id="gpsBtn"><img src="./gmaps.png" alt="GPS" class="btn-icon-img"> Gunakan GPS Saya</button><button type="button" class="btn btn-dark" id="mapResetBtn"><img src="./reset.png" alt="Reset" class="btn-icon-img"> Reset Lokasi</button></div><div id="map" aria-label="Peta untuk memilih lokasi"></div><div id="coordinates" class="coordinates">Belum menentukan lokasi. Anda juga dapat mengetuk peta untuk memilih titik.</div><input type="hidden" id="latitude" name="latitude"><input type="hidden" id="longitude" name="longitude"></div>
 <button id="submitBtn" type="submit" class="btn btn-orange full">Kirim Booking</button><div id="bookingAlert" class="alert" role="status" aria-live="polite"></div><p class="hint">Jangan tutup halaman sampai hasil booking ditampilkan.</p>
 </form></div></div></section>
@@ -143,13 +144,15 @@
         damage: $('damage').value,
         description: $('description').value.trim() || null,
         address: $('address').value.trim(),
+        scheduled_at: new Date($('requestedSchedule').value).toISOString(),
         latitude: $('latitude').value ? Number($('latitude').value) : null,
         longitude: $('longitude').value ? Number($('longitude').value) : null,
         status: 'Menunggu',
         estimated_price: 0,
         total_price: 0
       };
-      if (!payload.customer_name || !phone || !payload.device || !payload.damage || !payload.address) throw new Error('Lengkapi semua kolom wajib sebelum mengirim booking.');
+      if (!payload.customer_name || !phone || !payload.device || !payload.damage || !payload.address || !$('requestedSchedule').value) throw new Error('Lengkapi semua kolom wajib termasuk tanggal dan jam kunjungan.');
+      if (new Date(payload.scheduled_at) <= new Date()) throw new Error('Pilih jadwal pada waktu mendatang.');
       const { error } = await supabaseClient.from('bookings').insert(payload);
       if (error) {
         console.error('Supabase insert error:',error);
@@ -227,7 +230,7 @@
       if(error) throw error;
       const booking=Array.isArray(data)?data[0]:data;
       if(!booking){result.innerHTML='<div class="alert error">Kode tidak ditemukan atau fungsi cek status belum dikonfigurasi.</div>';return;}
-      result.innerHTML=`<div class="status-row"><span class="status-label">Kode booking</span><span class="status-value">${escapeHTML(booking.booking_code||'-')}</span></div><div class="status-row"><span class="status-label">Nama</span><span class="status-value">${escapeHTML(booking.customer_name||'-')}</span></div><div class="status-row"><span class="status-label">Gadget</span><span class="status-value">${escapeHTML(booking.device||'-')}</span></div><div class="status-row"><span class="status-label">Kerusakan</span><span class="status-value">${escapeHTML(booking.damage||'-')}</span></div><div class="status-row"><span class="status-label">Status</span><span class="status-value"><span class="status-badge">${escapeHTML(booking.status||'Menunggu')}</span></span></div><div class="status-row"><span class="status-label">Estimasi</span><span class="status-value">Rp${Number(booking.estimated_price||0).toLocaleString('id-ID')}</span></div><div class="status-row"><span class="status-label">Total</span><span class="status-value">Rp${Number(booking.total_price||0).toLocaleString('id-ID')}</span></div>`;
+      result.innerHTML=`<div class="status-row"><span class="status-label">Kode booking</span><span class="status-value">${escapeHTML(booking.booking_code||'-')}</span></div><div class="status-row"><span class="status-label">Nama</span><span class="status-value">${escapeHTML(booking.customer_name||'-')}</span></div><div class="status-row"><span class="status-label">Gadget</span><span class="status-value">${escapeHTML(booking.device||'-')}</span></div><div class="status-row"><span class="status-label">Kerusakan</span><span class="status-value">${escapeHTML(booking.damage||'-')}</span></div><div class="status-row"><span class="status-label">Status</span><span class="status-value"><span class="status-badge">${escapeHTML(booking.status||'Menunggu')}</span></span></div><div class="status-row"><span class="status-label">Jadwal kunjungan</span><span class="status-value">${booking.scheduled_at?new Date(booking.scheduled_at).toLocaleString('id-ID',{dateStyle:'full',timeStyle:'short',timeZone:'Asia/Jakarta'}):'Belum dikonfirmasi'}</span></div><div class="status-row"><span class="status-label">Estimasi</span><span class="status-value">Rp${Number(booking.estimated_price||0).toLocaleString('id-ID')}</span></div><div class="status-row"><span class="status-label">Total</span><span class="status-value">Rp${Number(booking.total_price||0).toLocaleString('id-ID')}</span></div>`;
     } catch(err) { console.error('Status lookup error:',err); result.innerHTML='<div class="alert error">Gagal cek status: '+escapeHTML(err.message||'Kesalahan tidak diketahui')+'</div>'; }
   });
 
