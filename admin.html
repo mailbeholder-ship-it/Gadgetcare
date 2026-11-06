@@ -415,6 +415,43 @@ $("gcChangePasswordForm")?.addEventListener("submit",async e=>{
   }
 });
 
+
+async function gcLoadReviews(){
+  const box=$("gcReviewModeration");
+  if(!box)return;
+  box.textContent="Memuat ulasan...";
+  try{
+    const {data,error}=await db.from("customer_reviews")
+      .select("id,customer_name,rating,comment,is_published,created_at")
+      .order("created_at",{ascending:false}).limit(100);
+    if(error)throw error;
+    if(!data||!data.length){
+      box.innerHTML='<div class="empty">Belum ada ulasan pelanggan.</div>';
+      return;
+    }
+    box.innerHTML=data.map(r=>{
+      const stars="★".repeat(Number(r.rating))+"☆".repeat(5-Number(r.rating));
+      return '<article class="gc-extra-card"><strong>'+esc(r.customer_name||"Pelanggan")+'</strong><div style="color:#ffb300;font-size:18px">'+stars+'</div><p>'+esc(r.comment||"")+'</p><p class="muted small">'+(r.created_at?new Date(r.created_at).toLocaleString("id-ID"):"")+' · '+(r.is_published?"Sudah dipublikasikan":"Menunggu pemeriksaan")+'</p><button type="button" class="gc-review-toggle" data-review-id="'+esc(r.id)+'" data-published="'+String(r.is_published)+'">'+(r.is_published?"Sembunyikan":"Publikasikan")+'</button></article>';
+    }).join("");
+    box.querySelectorAll(".gc-review-toggle").forEach(btn=>{
+      btn.addEventListener("click",async()=>{
+        btn.disabled=true;
+        try{
+          const nextValue=btn.dataset.published!=="true";
+          const {error}=await db.from("customer_reviews").update({is_published:nextValue}).eq("id",btn.dataset.reviewId);
+          if(error)throw error;
+          await gcLoadReviews();
+        }catch(err){
+          alert("Gagal memperbarui ulasan: "+err.message);
+          btn.disabled=false;
+        }
+      });
+    });
+  }catch(err){
+    box.textContent="Gagal memuat ulasan: "+err.message;
+  }
+}
+
 gcRenderWork();
 let gcMap=null,gcMarker=null,gcCircle=null,gcWatch=null;
 function gcInitMap(){
