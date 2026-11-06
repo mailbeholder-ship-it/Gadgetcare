@@ -281,7 +281,8 @@
     }finally{btn.disabled=false;btn.textContent='Kirim Ulasan'}
   });
   loadPublicReviews();
-\n  $('midtransPayButton').addEventListener('click',async function(){
+
+  $('midtransPayButton').addEventListener('click',async function(){
     const button=this;
     const message=$('paymentMessage');
     const bookingCode=$('paymentBookingCode').value.trim().toUpperCase();
