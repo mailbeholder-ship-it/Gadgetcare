@@ -226,7 +226,8 @@ document.querySelectorAll("[data-gc-view]").forEach(btn=>btn.addEventListener("c
   document.querySelectorAll("[data-gc-view]").forEach(x=>x.classList.toggle("active",x===btn));
   document.querySelectorAll("[data-gc-panel]").forEach(x=>x.classList.toggle("active",x.dataset.gcPanel===page));
   if(page==="planning") $("gcBookingPanel").scrollIntoView({behavior:"smooth",block:"start"});
-  if(page==="contacts") gcRenderContacts();\n  if(page==="planning") gcLoadReviews();
+  if(page==="contacts") gcRenderContacts();
+  if(page==="planning") gcLoadReviews();
   if(page==="income") gcRenderExtraStats();
 }));
 let gcWorkStatus="Libur";
