@@ -48,7 +48,7 @@
 </div>
 <div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p><h3 style="margin-top:22px">Riwayat Transaksi</h3><p class="muted small">Booking dengan status pembayaran Dibayar.</p><div id="gcTransactionHistory"><p class="muted small">Memuat riwayat...</p></div></div></div>
 <div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
-<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
+<div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Ulasan Pelanggan</h2><p class="muted small">Periksa ulasan masuk, lalu publikasikan agar tampil di website pelanggan.</p><div id="gcReviewModeration">Memuat ulasan...</div></div>\n<div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
 <div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
 <p id="bookingMessage" class="message" role="status"></p><div id="bookingList"><div class="empty">Memuat booking…</div></div></section></div>
 
@@ -226,7 +226,7 @@ document.querySelectorAll("[data-gc-view]").forEach(btn=>btn.addEventListener("c
   document.querySelectorAll("[data-gc-view]").forEach(x=>x.classList.toggle("active",x===btn));
   document.querySelectorAll("[data-gc-panel]").forEach(x=>x.classList.toggle("active",x.dataset.gcPanel===page));
   if(page==="planning") $("gcBookingPanel").scrollIntoView({behavior:"smooth",block:"start"});
-  if(page==="contacts") gcRenderContacts();
+  if(page==="contacts") gcRenderContacts();\n  if(page==="planning") gcLoadReviews();
   if(page==="income") gcRenderExtraStats();
 }));
 let gcWorkStatus="Libur";
