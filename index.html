@@ -14,7 +14,7 @@
 </style>
 </head>
 <body>
-<nav><div class="container nav-inner"><a href="./index.html" class="brand"><img src="./fixio-logo2.png" alt="Logo FixioGadget" onerror="this.style.display='none'"><span>Fixio<span class="orange">Gadget</span></span></a><div class="customer-menu" role="navigation" aria-label="Menu pelanggan"><button type="button" class="active" data-customer-page="beranda">Beranda</button><button type="button" data-customer-page="booking">Booking Service</button><button type="button" data-customer-page="status">Cek Status</button><button type="button" data-customer-page="pembayaran">Pembayaran</button></div></div></nav>
+<nav><div class="container nav-inner"><a href="./index.html" class="brand"><img src="./fixio-logo2.png" alt="Logo FixioGadget" onerror="this.style.display='none'"><span>Fixio<span class="orange">Gadget</span></span></a><div class="customer-menu" role="navigation" aria-label="Menu pelanggan"><button type="button" class="active" data-customer-page="beranda">Beranda</button><button type="button" data-customer-page="booking">Booking Service</button><button type="button" data-customer-page="status">Cek Status</button><button type="button" data-customer-page="pembayaran">Pembayaran</button><button type="button" data-customer-page="ulasan">Ulasan</button></div></div></nav>
 <header class="hero customer-page active" data-page="beranda"><div class="container hero-content"><span class="badge">HOME SERVICE & REPAIR GADGET</span><h1>Perbaikan Gadget<br><span class="orange">Datang ke Rumah Anda.</span></h1><p>FixioGadget menyediakan layanan perbaikan gadget dengan teknisi yang siap datang ke lokasi Anda. Isi booking dan admin akan menghubungi Anda untuk konfirmasi.</p><button type="button" class="btn btn-orange" id="heroBookingButton">Booking Service</button></div></header>
 <section id="layanan" class="customer-page active" data-page="beranda"><div class="container"><div class="section-title"><h2>Layanan FixioGadget</h2><p>Pilih layanan sesuai kebutuhan perangkat Anda.</p></div><div class="services">
 <div class="card"><div class="service-icon"><img src="./lcd.png" alt="Ganti LCD"></div><h3>Ganti LCD</h3><p>Penggantian layar pecah, bergaris atau tidak berfungsi.</p><div class="price">Mulai Rp150.000</div></div>
@@ -41,7 +41,23 @@
 </form></div></div></section>
 <section id="status" class="customer-page" data-page="status"><div class="container"><div class="section-title"><h2>Cek Status Service</h2><p>Masukkan kode booking. Data status diambil melalui fungsi Supabase yang dikonfigurasi admin.</p></div><div class="status-box"><form id="statusForm"><div class="form-group"><label for="bookingCode">Kode booking</label><input id="bookingCode" required placeholder="Contoh: FX-123456" autocomplete="off"></div><button class="btn btn-orange full" type="submit">Cek Status</button></form><div id="statusResult" class="status-result" role="status" aria-live="polite"></div></div></div></section>
 <section id="pembayaran" class="payment-section customer-page" data-page="pembayaran"><div class="container"><div class="section-title"><h2>Pembayaran Online</h2><p>Pembayaran tersedia setelah admin menetapkan harga service.</p></div><div class="payment-detail"><div class="payment-logo"><img src="./gembok.png" alt="Pembayaran Aman"></div><h3>Pembayaran</h3><p>Lanjutkan ke pembayaran untuk memilih metode pembayaran.</p><div class="form-group"><label for="paymentBookingCode">Kode booking</label><input id="paymentBookingCode" placeholder="Contoh: FX-123456" autocomplete="off"></div><div class="form-group"><label for="paymentPhone">Nomor WhatsApp saat booking</label><input id="paymentPhone" type="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div><p class="hint">Metode pembayaran akan ditampilkan oleh halaman pembayaran penyedia setelah server berhasil membuat sesi pembayaran.</p><button type="button" class="btn btn-orange full" id="midtransPayButton">Lanjut ke Pembayaran</button><div id="paymentMessage" class="payment-message" role="status" aria-live="polite"></div></div></div></section>
-<footer><div class="container">© 2026 <strong>FixioGadget</strong> — Home Service & Repair Gadget
+
+<section id="ulasan" class="customer-page" data-page="ulasan">
+<div class="container">
+<div class="section-title"><h2>Ulasan Pelanggan</h2><p>Ceritakan pengalaman Anda menggunakan layanan FixioGadget.</p></div>
+<div class="form-wrapper">
+<form id="reviewForm">
+<div class="form-group"><label for="reviewBookingCode">Kode booking</label><input id="reviewBookingCode" required placeholder="Contoh: FX-123456"></div>
+<div class="form-group"><label for="reviewPhone">Nomor WhatsApp saat booking</label><input id="reviewPhone" type="tel" required placeholder="08xxxxxxxxxx"></div>
+<div class="form-group"><label for="reviewRating">Penilaian</label><select id="reviewRating" required><option value="">Pilih rating</option><option value="5">★★★★★ — Sangat puas</option><option value="4">★★★★☆ — Puas</option><option value="3">★★★☆☆ — Cukup</option><option value="2">★★☆☆☆ — Kurang puas</option><option value="1">★☆☆☆☆ — Tidak puas</option></select></div>
+<div class="form-group"><label for="reviewComment">Komentar</label><textarea id="reviewComment" required minlength="5" maxlength="1000" placeholder="Bagaimana pengalaman Anda menggunakan layanan kami?"></textarea></div>
+<button class="btn btn-orange full" id="reviewSubmit" type="submit">Kirim Ulasan</button>
+<div id="reviewAlert" class="alert" role="status" aria-live="polite"></div>
+</form></div>
+<div class="section-title" style="margin-top:42px"><h2>Apa Kata Pelanggan?</h2><p>Ulasan yang sudah diperiksa dan dipublikasikan.</p></div>
+<div id="publicReviews" class="services"><div class="card"><p>Memuat ulasan...</p></div></div>
+</div></section>
+\n<footer><div class="container">© 2026 <strong>FixioGadget</strong> — Home Service & Repair Gadget
   <p><br>Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366</p><br><a href="https://wa.me/6285846009748">WhatsApp FixioGadget</a></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -234,7 +250,38 @@
     } catch(err) { console.error('Status lookup error:',err); result.innerHTML='<div class="alert error">Gagal cek status: '+escapeHTML(err.message||'Kesalahan tidak diketahui')+'</div>'; }
   });
 
-  $('midtransPayButton').addEventListener('click',async function(){
+
+  async function loadPublicReviews(){
+    const target=$('publicReviews');
+    if(!target)return;
+    try{
+      if(!supabaseClient)supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+      const {data,error}=await supabaseClient.from('customer_reviews').select('customer_name,rating,comment,created_at').eq('is_published',true).order('created_at',{ascending:false}).limit(12);
+      if(error)throw error;
+      target.innerHTML=data&&data.length?data.map(r=>'<article class="card"><div style="color:#ffb300;font-size:20px;letter-spacing:2px">'+('★'.repeat(Number(r.rating))+'☆'.repeat(5-Number(r.rating)))+'</div><h3>'+escapeHTML(r.customer_name||'Pelanggan')+'</h3><p>'+escapeHTML(r.comment)+'</p><small class="hint">'+(r.created_at?new Date(r.created_at).toLocaleDateString('id-ID'):'')+'</small></article>').join(''):'<div class="card"><p>Belum ada ulasan yang dipublikasikan. Jadilah pelanggan pertama yang berbagi pengalaman!</p></div>';
+    }catch(err){console.warn('Ulasan belum dapat dimuat:',err);target.innerHTML='<div class="card"><p>Ulasan belum dapat dimuat saat ini.</p></div>'}
+  }
+  $('reviewForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    const btn=$('reviewSubmit'),alertBox=$('reviewAlert');
+    btn.disabled=true;btn.textContent='Mengirim ulasan...';alertBox.style.display='none';
+    try{
+      if(!supabaseClient)supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+      const {data,error}=await supabaseClient.rpc('submit_customer_review',{
+        p_booking_code:$('reviewBookingCode').value.trim().toUpperCase(),
+        p_phone:$('reviewPhone').value.trim(),
+        p_rating:Number($('reviewRating').value),
+        p_comment:$('reviewComment').value.trim()
+      });
+      if(error)throw error;
+      alertBox.className='alert success';alertBox.textContent=data?.message||'Ulasan berhasil dikirim dan menunggu pemeriksaan admin.';alertBox.style.display='block';
+      this.reset();
+    }catch(err){
+      alertBox.className='alert error';alertBox.textContent='Ulasan gagal dikirim: '+(err.message||'Terjadi kesalahan.');alertBox.style.display='block';
+    }finally{btn.disabled=false;btn.textContent='Kirim Ulasan'}
+  });
+  loadPublicReviews();
+\n  $('midtransPayButton').addEventListener('click',async function(){
     const button=this;
     const message=$('paymentMessage');
     const bookingCode=$('paymentBookingCode').value.trim().toUpperCase();
