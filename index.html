@@ -37,7 +37,7 @@
 <button id="submitBtn" type="submit" class="btn btn-orange full">Kirim Booking</button><div id="bookingAlert" class="alert" role="status" aria-live="polite"></div><p class="hint">Jangan tutup halaman sampai hasil booking ditampilkan.</p>
 </form></div></div></section>
 <section id="status" class="customer-page" data-page="status"><div class="container"><div class="section-title"><h2>Cek Status Service</h2><p>Masukkan kode booking. Data status diambil melalui fungsi Supabase yang dikonfigurasi admin.</p></div><div class="status-box"><form id="statusForm"><div class="form-group"><label for="bookingCode">Kode booking</label><input id="bookingCode" required placeholder="Contoh: FX-123456" autocomplete="off"></div><button class="btn btn-orange full" type="submit">Cek Status</button></form><div id="statusResult" class="status-result" role="status" aria-live="polite"></div></div></div></section>
-<section id="pembayaran" class="payment-section customer-page" data-page="pembayaran"><div class="container"><div class="section-title"><h2>Pembayaran Online</h2><p>Pembayaran tersedia setelah admin menetapkan harga service.</p></div><div class="payment-detail"><div class="payment-logo">🔒</div><h3>Bayar dengan Midtrans</h3><p>Lanjutkan ke pembayaran untuk memilih metode pembayaran.</p><div class="form-group"><label for="paymentBookingCode">Kode booking</label><input id="paymentBookingCode" placeholder="Contoh: FX-123456" autocomplete="off"></div><div class="form-group"><label for="paymentPhone">Nomor WhatsApp saat booking</label><input id="paymentPhone" type="tel" placeholder="08xxxxxxxxxx" autocomplete="tel"></div><p class="hint">Metode pembayaran akan ditampilkan oleh halaman pembayaran penyedia setelah server berhasil membuat sesi pembayaran.</p><button type="button" class="btn btn-orange full" id="midtransPayButton">Lanjut ke Pembayaran</button><div id="paymentMessage" class="payment-message" role="status" aria-live="polite"></div></div></div></section>
+<section id="pembayaran" class="payment-section customer-page" data-page="pembayaran"><div class="container"><div class="section-title"><h2>Pembayaran QRIS</h2><p>Scan kode QRIS FixioGadget menggunakan aplikasi mobile banking atau dompet digital yang mendukung QRIS.</p></div><div class="payment-detail" style="max-width:520px;text-align:center"><h3 style="margin-top:0">FixioGadget, Service</h3><p style="color:var(--muted);margin-top:-8px">QRIS — Satu QR untuk semua aplikasi pembayaran</p><img src="./qris.svg" alt="Kode QRIS pembayaran FixioGadget" style="display:block;width:min(100%,340px);height:auto;margin:18px auto;padding:12px;background:#fff;border-radius:12px"><p style="font-weight:700;margin:8px 0">NMID: ID1026534655471</p><p class="hint">Pastikan nama merchant yang muncul di aplikasi pembayaran adalah <strong>FixioGadget, Service</strong> sebelum memasukkan PIN dan menyelesaikan pembayaran.</p><p class="hint">Simpan bukti pembayaran, lalu kirimkan kepada admin melalui WhatsApp untuk konfirmasi.</p><a class="btn btn-orange full" href="https://wa.me/6285846009748" target="_blank" rel="noopener">Kirim Bukti Pembayaran ke WhatsApp</a></div></div></section>
 <footer><div class="container">© 2026 <strong>FixioGadget</strong> — Home Service & Repair Gadget<br>Dusun Sindanglaya RT.01 RW.07, Desa Sindangsari, Kecamatan Sukasari, Kabupaten Sumedang, Jawa Barat 45366<p></p><br><a href="https://wa.me/6285846009748">WhatsApp FixioGadget</a></div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -195,8 +195,6 @@
       codeBox.appendChild(copyButton);
       bookingAlert.appendChild(codeBox);
       $('bookingCode').value = payload.booking_code;
-      $('paymentBookingCode').value = payload.booking_code;
-      $('paymentPhone').value = phone;
       const waText = `Halo FixioGadget, saya sudah membuat booking service.%0A%0AKode: ${encodeURIComponent(payload.booking_code)}%0ANama: ${encodeURIComponent(payload.customer_name)}%0ANo. WhatsApp: ${encodeURIComponent(phone)}%0AGadget: ${encodeURIComponent(payload.device)}%0AKerusakan: ${encodeURIComponent(payload.damage)}%0AAlamat: ${encodeURIComponent(payload.address)}${payload.latitude != null && payload.longitude != null ? '%0ALokasi: https://www.google.com/maps?q='+payload.latitude+','+payload.longitude : ''}`;
       const wa = document.createElement('a'); wa.href='https://wa.me/6285846009748?text='+waText; wa.target='_blank'; wa.rel='noopener'; wa.className='btn btn-dark'; wa.textContent='Kirim detail ke WhatsApp'; wa.style.marginTop='10px'; bookingAlert.appendChild(document.createElement('br')); bookingAlert.appendChild(wa);
       this.reset(); resetMap();
@@ -232,59 +230,7 @@
     } catch(err) { console.error('Status lookup error:',err); result.innerHTML='<div class="alert error">Gagal cek status: '+escapeHTML(err.message||'Kesalahan tidak diketahui')+'</div>'; }
   });
 
-  $('midtransPayButton').addEventListener('click',async function(){
-    const button=this;
-    const message=$('paymentMessage');
-    const bookingCode=$('paymentBookingCode').value.trim().toUpperCase();
-    const phone=$('paymentPhone').value.trim();
-    message.textContent='';
-    if(!bookingCode||!phone){
-      message.textContent='Masukkan kode booking dan nomor WhatsApp terlebih dahulu.';
-      return;
-    }
-    button.disabled=true;
-    button.textContent='Menyiapkan pembayaran...';
-    try {
-      const response=await fetch(SUPABASE_URL+'/functions/v1/create-midtrans-payment',{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'apikey':SUPABASE_KEY,
-          'Authorization':'Bearer '+SUPABASE_KEY
-        },
-        body:JSON.stringify({booking_code:bookingCode,phone})
-      });
-      const raw=await response.text();
-      let result;
-      try {
-        result=JSON.parse(raw);
-      } catch {
-        throw new Error('Respons server bukan JSON yang valid. Periksa log Edge Function pembayaran.');
-      }
-      if(!response.ok) {
-        throw new Error(result.error||result.message||'Server pembayaran merespons HTTP '+response.status+'.');
-      }
-      if(!result.redirect_url) {
-        throw new Error('Server tidak mengembalikan redirect_url. Periksa kontrak Edge Function pembayaran.');
-      }
-      let checkoutUrl;
-      try {
-        checkoutUrl=new URL(result.redirect_url);
-      } catch {
-        throw new Error('URL checkout dari server tidak valid.');
-      }
-      const allowedHosts=['app.sandbox.midtrans.com','app.midtrans.com'];
-      if(checkoutUrl.protocol!=='https:'||!allowedHosts.includes(checkoutUrl.hostname)) {
-        throw new Error('URL checkout bukan domain Snap Midtrans yang diizinkan.');
-      }
-      window.location.assign(checkoutUrl.href);
-    } catch(err) {
-      console.error('Payment error:',err);
-      message.textContent='Pembayaran belum dapat dibuat: '+(err.message||'Kesalahan tidak diketahui');
-      button.disabled=false;
-      button.textContent='Lanjut ke Pembayaran';
-    }
-  });
+
 })();
 </script>
 </body>
