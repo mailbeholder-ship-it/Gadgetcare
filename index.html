@@ -85,6 +85,47 @@
   const $ = id => document.getElementById(id);
   const dayNames = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
   let isTemporarilyClosed = false;
+  let currentOperatingHours = null;
+  function localDateTimeValue(date){
+    const pad=n=>String(n).padStart(2,"0");
+    return date.getFullYear()+"-"+pad(date.getMonth()+1)+"-"+pad(date.getDate())+"T"+pad(date.getHours())+":"+pad(date.getMinutes());
+  }
+  function applyBookingScheduleRules(){
+    const input=$("requestedSchedule"),hint=input?.parentElement?.querySelector(".hint");
+    if(!input)return;
+    input.min=localDateTimeValue(new Date());
+    if(currentOperatingHours){
+      const days=currentOperatingHours.days.map(d=>dayNames[d]).join(", ");
+      if(hint)hint.textContent="Pilih hari "+(days||"operasional yang tersedia")+" pada pukul "+currentOperatingHours.open_time+"–"+currentOperatingHours.close_time+". Jadwal mengikuti pengaturan terbaru admin.";
+    }else if(hint){
+      hint.textContent="Jam operasional belum tersedia. Silakan muat ulang halaman atau hubungi admin.";
+    }
+  }
+  function validateRequestedSchedule(){
+    const value=$("requestedSchedule").value;
+    if(!value)return "Pilih tanggal dan jam kunjungan.";
+    if(!currentOperatingHours)return "Jam operasional belum berhasil dimuat. Coba lagi beberapa saat.";
+    const [datePart,timePart]=value.split("T");
+    const selectedDate=new Date(value);
+    if(Number.isNaN(selectedDate.getTime())||selectedDate<=new Date())return "Pilih jadwal pada waktu mendatang.";
+    const day=selectedDate.getDay();
+    if(!currentOperatingHours.days.includes(day))return "Tanggal yang dipilih bukan hari operasional. Silakan pilih hari lain.";
+    if(timePart<currentOperatingHours.open_time||timePart>=currentOperatingHours.close_time)return "Jam booking harus berada dalam jam operasional "+currentOperatingHours.open_time+"–"+currentOperatingHours.close_time+".";
+    return "";
+  }
+  async function refreshBookingHours(){
+    if(!window.supabase)throw new Error("Layanan pengaturan belum termuat.");
+    const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+    const {data,error}=await client.from("site_settings").select("opening_hours,is_closed,updated_at").eq("id","main").maybeSingle();
+    if(error)throw error;
+    if(!data)throw new Error("Jam operasional belum diatur oleh admin.");
+    isTemporarilyClosed=data.is_closed===true;
+    const h=data.opening_hours||{};
+    currentOperatingHours={days:Array.isArray(h.days)?h.days:[],open_time:h.open_time||"09:00",close_time:h.close_time||"17:00"};
+    applyBookingScheduleRules();
+    if(isTemporarilyClosed)throw new Error("FixioGadget sedang tutup sementara. Booking belum dapat dikirim.");
+    return currentOperatingHours;
+  }
   async function loadOperatingHours(){
     const status=$("hoursStatus"),display=$("hoursDisplay");
     try{
@@ -92,9 +133,12 @@
       const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
       const {data,error}=await client.from("site_settings").select("opening_hours,is_closed,updated_at").eq("id","main").maybeSingle();
       if(error)throw error;
-      if(!data){status.textContent="Jam operasional belum diatur.";display.textContent="Silakan hubungi admin untuk konfirmasi jadwal.";return}
-      isTemporarilyClosed = data.is_closed === true;
-      const form=$("bookingForm"), submit=$("submitBtn");
+      if(!data){currentOperatingHours=null;applyBookingScheduleRules();status.textContent="Jam operasional belum diatur.";display.textContent="Silakan hubungi admin untuk konfirmasi jadwal.";return}
+      isTemporarilyClosed=data.is_closed===true;
+      const h=data.opening_hours||{};
+      currentOperatingHours={days:Array.isArray(h.days)?h.days:[],open_time:h.open_time||"09:00",close_time:h.close_time||"17:00"};
+      applyBookingScheduleRules();
+      const form=$("bookingForm"),submit=$("submitBtn");
       if(isTemporarilyClosed){
         status.textContent="🔴 Tutup sementara";
         display.textContent="FixioGadget sedang libur/tutup sementara. Booking online untuk sementara dinonaktifkan. Silakan hubungi admin untuk informasi lebih lanjut.";
@@ -104,11 +148,11 @@
       }
       form.querySelectorAll("input,select,textarea,button").forEach(el=>{el.disabled=false});
       submit.textContent="Kirim Booking";
-      const h=data.opening_hours||{},days=Array.isArray(h.days)?h.days:[];
+      const days=currentOperatingHours.days;
       status.textContent="🟢 Jam operasional";
-      display.innerHTML=days.length?days.slice().sort((a,b)=>a-b).map(d=>'<div style="display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #26313c"><span>'+dayNames[d]+'</span><strong>'+String(h.open_time||"09:00")+'–'+String(h.close_time||"17:00")+'</strong></div>').join(""):'Tidak ada hari operasional yang dipilih.';
+      display.innerHTML=days.length?days.slice().sort((a,b)=>a-b).map(d=>'<div style="display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid #26313c"><span>'+dayNames[d]+'</span><strong>'+currentOperatingHours.open_time+'–'+currentOperatingHours.close_time+'</strong></div>').join(""):'Tidak ada hari operasional yang dipilih.';
       if(days.length<7)display.innerHTML+='<p class="hint" style="margin-bottom:0">Hari yang tidak tercantum merupakan hari libur.</p>';
-    }catch(err){status.textContent="Jam operasional belum dapat dimuat.";display.textContent="Silakan hubungi admin untuk memastikan jadwal. ("+err.message+")"}
+    }catch(err){currentOperatingHours=null;applyBookingScheduleRules();status.textContent="Jam operasional belum dapat dimuat.";display.textContent="Silakan hubungi admin untuk memastikan jadwal. ("+err.message+")"}
   }
   loadOperatingHours();
   window.addEventListener("focus",loadOperatingHours);
@@ -165,6 +209,9 @@
     button.disabled = true; button.textContent = 'Mengirim booking...';
     bookingAlert.className='alert'; bookingAlert.style.display='none'; bookingAlert.textContent='';
     try {
+      await refreshBookingHours();
+      const scheduleError=validateRequestedSchedule();
+      if(scheduleError)throw new Error(scheduleError);
       if (!window.supabase || typeof window.supabase.createClient !== 'function') throw new Error('Pustaka Supabase tidak berhasil dimuat. Periksa koneksi internet lalu muat ulang halaman.');
       if (!supabaseClient) supabaseClient = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
       const phone = $('phone').value.trim();
@@ -185,6 +232,8 @@
       };
       if (!payload.customer_name || !phone || !payload.device || !payload.damage || !payload.address || !$('requestedSchedule').value) throw new Error('Lengkapi semua kolom wajib termasuk tanggal dan jam kunjungan.');
       if (new Date(payload.scheduled_at) <= new Date()) throw new Error('Pilih jadwal pada waktu mendatang.');
+      const latestScheduleError=validateRequestedSchedule();
+      if(latestScheduleError)throw new Error(latestScheduleError);
       const { error } = await supabaseClient.from('bookings').insert(payload);
       if (error) {
         console.error('Supabase insert error:',error);
