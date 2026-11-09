@@ -194,7 +194,8 @@
       codeBox.appendChild(codeText);
       codeBox.appendChild(copyButton);
       bookingAlert.appendChild(codeBox);
-      $('bookingCode').value = payload.booking_code;
+      const bookingCodeInput = $('bookingCode');
+      if (bookingCodeInput) bookingCodeInput.value = payload.booking_code;
       const waText = `Halo FixioGadget, saya sudah membuat booking service.%0A%0AKode: ${encodeURIComponent(payload.booking_code)}%0ANama: ${encodeURIComponent(payload.customer_name)}%0ANo. WhatsApp: ${encodeURIComponent(phone)}%0AGadget: ${encodeURIComponent(payload.device)}%0AKerusakan: ${encodeURIComponent(payload.damage)}%0AAlamat: ${encodeURIComponent(payload.address)}${payload.latitude != null && payload.longitude != null ? '%0ALokasi: https://www.google.com/maps?q='+payload.latitude+','+payload.longitude : ''}`;
       const wa = document.createElement('a'); wa.href='https://wa.me/6285846009748?text='+waText; wa.target='_blank'; wa.rel='noopener'; wa.className='btn btn-dark'; wa.textContent='Kirim detail ke WhatsApp'; wa.style.marginTop='10px'; bookingAlert.appendChild(document.createElement('br')); bookingAlert.appendChild(wa);
       this.reset(); resetMap();
