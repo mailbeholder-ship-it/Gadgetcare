@@ -209,6 +209,24 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(255,87,34,.13)
 @media(max-width:560px){.customer-page.hero:after{right:2%;top:19%;width:86px;height:142px;opacity:.88}.customer-page.hero .hero-content{padding-right:36px}}
 @media(prefers-reduced-motion:reduce){.customer-page.hero:after{animation:none}}
 
+
+/* Perapihan hero khusus layar mobile */
+@media(max-width:800px){
+ .customer-page.hero{min-height:280px;padding:38px 0 34px;background-position:58% center}
+ .customer-page.hero .hero-content{width:100%;padding-right:108px}
+ .customer-page.hero .hero-content .badge{font-size:10px;padding:5px 9px}
+ .customer-page.hero h1{font-size:clamp(27px,7.2vw,36px);line-height:1.12;margin:14px 0 10px}
+ .customer-page.hero p{font-size:13px;line-height:1.5;margin:0 0 16px}
+ .customer-page.hero:after{width:100px;height:156px;right:0;top:50%;opacity:1}
+}
+@media(max-width:420px){
+ .customer-page.hero{min-height:258px;padding:32px 0 28px;background-position:62% center}
+ .customer-page.hero .hero-content{padding-right:88px}
+ .customer-page.hero h1{font-size:27px}
+ .customer-page.hero p{font-size:12px}
+ .customer-page.hero:after{width:82px;height:132px;right:-3px}
+ .customer-page.hero .btn{padding:10px 12px;font-size:13px}
+}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
