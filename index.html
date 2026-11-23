@@ -188,29 +188,25 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(255,87,34,.13)
 @media(prefers-reduced-motion:reduce){.card,.form-wrapper,.payment-detail,.btn,.customer-menu button{transition:none!important}.card:hover,.payment-detail:hover,.btn:hover{transform:none!important}}
 
 
-/* 3D hero device: ilustrasi smartphone CSS, tanpa aset eksternal */
+/* Visual animasi handphone dari aset animasi.png */
 .customer-page.hero{min-height:430px;display:flex;align-items:center}
 .customer-page.hero .hero-content{z-index:2;max-width:760px;padding-right:210px}
 .customer-page.hero:after{
- content:"FIXIO\A GADGET\A\A HOME SERVICE";
- white-space:pre;display:flex;align-items:center;justify-content:center;text-align:center;
- position:absolute;z-index:1;right:9%;top:50%;width:164px;height:300px;
- transform:translateY(-50%) perspective(900px) rotateY(-19deg) rotateZ(9deg);
- border:7px solid #65717e;border-radius:30px;
- background:radial-gradient(circle at 50% 25%,rgba(255,116,54,.34),transparent 34%),linear-gradient(155deg,#263442 0%,#101820 48%,#090d12 100%);
- box-shadow:inset 0 0 0 2px rgba(255,255,255,.16),inset 0 -30px 55px rgba(0,0,0,.48),18px 28px 38px rgba(0,0,0,.5),-8px 0 28px rgba(255,87,34,.14);
- color:#fff;font:800 17px/1.4 "Inter Display",sans-serif;letter-spacing:2px;
- text-shadow:0 0 20px rgba(255,111,65,.65);
- animation:gcDeviceFloat 6s ease-in-out infinite;
+ content:"";position:absolute;z-index:1;right:7%;top:50%;width:205px;height:330px;
+ transform:translateY(-50%) perspective(900px) rotateY(-12deg) rotateZ(4deg);
+ background:url('./animasi.png') center/contain no-repeat;
+ border:0;border-radius:0;box-shadow:none;
+ filter:brightness(1.12) contrast(1.08) saturate(1.14) drop-shadow(0 22px 24px rgba(0,0,0,.48)) drop-shadow(0 0 16px rgba(255,112,64,.2));
+ animation:gcDeviceFloat 6s ease-in-out infinite;pointer-events:none;
 }
 .customer-page.hero:before{z-index:0}
-@keyframes gcDeviceFloat{0%,100%{margin-top:0;transform:translateY(-50%) perspective(900px) rotateY(-19deg) rotateZ(9deg)}50%{margin-top:-12px;transform:translateY(-50%) perspective(900px) rotateY(-14deg) rotateZ(6deg)}}
+@keyframes gcDeviceFloat{0%,100%{margin-top:0;transform:translateY(-50%) perspective(900px) rotateY(-12deg) rotateZ(4deg)}50%{margin-top:-12px;transform:translateY(-50%) perspective(900px) rotateY(-8deg) rotateZ(2deg)}}
 @media(max-width:800px){
  .customer-page.hero{min-height:0}
  .customer-page.hero .hero-content{padding-right:0}
- .customer-page.hero:after{width:82px;height:150px;right:5%;top:22%;border-width:4px;border-radius:18px;font-size:9px;letter-spacing:1px;opacity:.52}
+ .customer-page.hero:after{width:112px;height:180px;right:3%;top:24%;opacity:.92}
 }
-@media(max-width:560px){.customer-page.hero:after{right:4%;top:18%;width:64px;height:120px;font-size:7px}.customer-page.hero .hero-content{padding-right:36px}}
+@media(max-width:560px){.customer-page.hero:after{right:2%;top:19%;width:86px;height:142px;opacity:.88}.customer-page.hero .hero-content{padding-right:36px}}
 @media(prefers-reduced-motion:reduce){.customer-page.hero:after{animation:none}}
 
 </style>
