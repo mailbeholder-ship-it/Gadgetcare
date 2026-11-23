@@ -187,6 +187,32 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(255,87,34,.13)
 @media(max-width:800px){.hero:before{width:220px;height:220px;right:-70px;top:0}.card,.form-wrapper,.status-result,.payment-detail{box-shadow:0 10px 24px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.06)}}
 @media(prefers-reduced-motion:reduce){.card,.form-wrapper,.payment-detail,.btn,.customer-menu button{transition:none!important}.card:hover,.payment-detail:hover,.btn:hover{transform:none!important}}
 
+
+/* 3D hero device: ilustrasi smartphone CSS, tanpa aset eksternal */
+.customer-page.hero{min-height:430px;display:flex;align-items:center}
+.customer-page.hero .hero-content{z-index:2;max-width:760px;padding-right:210px}
+.customer-page.hero:after{
+ content:"FIXIO\A GADGET\A\A HOME SERVICE";
+ white-space:pre;display:flex;align-items:center;justify-content:center;text-align:center;
+ position:absolute;z-index:1;right:9%;top:50%;width:164px;height:300px;
+ transform:translateY(-50%) perspective(900px) rotateY(-19deg) rotateZ(9deg);
+ border:7px solid #65717e;border-radius:30px;
+ background:radial-gradient(circle at 50% 25%,rgba(255,116,54,.34),transparent 34%),linear-gradient(155deg,#263442 0%,#101820 48%,#090d12 100%);
+ box-shadow:inset 0 0 0 2px rgba(255,255,255,.16),inset 0 -30px 55px rgba(0,0,0,.48),18px 28px 38px rgba(0,0,0,.5),-8px 0 28px rgba(255,87,34,.14);
+ color:#fff;font:800 17px/1.4 "Inter Display",sans-serif;letter-spacing:2px;
+ text-shadow:0 0 20px rgba(255,111,65,.65);
+ animation:gcDeviceFloat 6s ease-in-out infinite;
+}
+.customer-page.hero:before{z-index:0}
+@keyframes gcDeviceFloat{0%,100%{margin-top:0;transform:translateY(-50%) perspective(900px) rotateY(-19deg) rotateZ(9deg)}50%{margin-top:-12px;transform:translateY(-50%) perspective(900px) rotateY(-14deg) rotateZ(6deg)}}
+@media(max-width:800px){
+ .customer-page.hero{min-height:0}
+ .customer-page.hero .hero-content{padding-right:0}
+ .customer-page.hero:after{width:82px;height:150px;right:5%;top:22%;border-width:4px;border-radius:18px;font-size:9px;letter-spacing:1px;opacity:.52}
+}
+@media(max-width:560px){.customer-page.hero:after{right:4%;top:18%;width:64px;height:120px;font-size:7px}.customer-page.hero .hero-content{padding-right:36px}}
+@media(prefers-reduced-motion:reduce){.customer-page.hero:after{animation:none}}
+
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
