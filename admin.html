@@ -218,6 +218,26 @@ button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25),0 5px
 @media(max-width:760px){#dashboard>.hero{min-height:160px}#dashboard>.hero .hero-inner{padding-right:92px}#dashboard>.hero:after{right:2%;width:92px;height:118px;opacity:.9}}
 @media(prefers-reduced-motion:reduce){#dashboard>.hero:after{animation:none}}
 
+
+/* Perapihan hero dashboard khusus layar mobile */
+@media(max-width:760px){
+ #dashboard>.hero{min-height:190px;padding:24px 0 22px;background-position:58% center}
+ #dashboard>.hero .hero-inner{width:100%;padding-right:108px;gap:12px;align-items:flex-start}
+ #dashboard>.hero .hero-inner>div:first-child{min-width:0}
+ #dashboard>.hero h1{font-size:clamp(23px,6.5vw,30px);line-height:1.13;margin:10px 0}
+ #dashboard>.hero p{font-size:12px;line-height:1.45;max-width:240px}
+ #dashboard>.hero .top-actions{gap:6px}
+ #dashboard>.hero .top-actions button{padding:9px 11px;font-size:12px}
+ #dashboard>.hero:after{width:96px;height:126px;right:0;top:50%;opacity:1}
+}
+@media(max-width:420px){
+ #dashboard>.hero{min-height:178px;padding:20px 0}
+ #dashboard>.hero .hero-inner{padding-right:88px}
+ #dashboard>.hero h1{font-size:23px}
+ #dashboard>.hero p{font-size:11px}
+ #dashboard>.hero:after{width:80px;height:108px;right:-3px}
+ #dashboard>.hero .top-actions button{padding:8px 9px;font-size:11px}
+}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
