@@ -2,6 +2,11 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0f14">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preload" as="image" href="./header.png">
+<link rel="preload" as="image" href="./gifanimasi.gif">
 <title>FixioGadget — Admin</title>
 <link rel="icon" href="./fixio-logo2.png" type="image/png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -238,6 +243,11 @@ button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25),0 5px
  #dashboard>.hero:after{width:80px;height:108px;right:-3px}
  #dashboard>.hero .top-actions button{padding:8px 9px;font-size:11px}
 }
+
+/* Optimasi rendering hero dan animasi */
+.hero{background-color:#0b0f14;background-repeat:no-repeat;background-size:cover}
+.customer-page.hero:after,#dashboard>.hero:after{will-change:transform;backface-visibility:hidden}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.customer-page.hero:after,#dashboard>.hero:after{will-change:auto}}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
