@@ -544,8 +544,21 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(255,87,34,.13)
           selection.addRange(range);
         }
       });
+      const trackButton = document.createElement('button');
+      trackButton.type = 'button';
+      trackButton.className = 'btn btn-orange';
+      trackButton.textContent = 'Lihat Status Booking';
+      trackButton.addEventListener('click', () => {
+        showCustomerPage('status');
+        const statusCodeInput = $('bookingCode');
+        if (statusCodeInput) {
+          statusCodeInput.value = payload.booking_code;
+          $('statusForm').requestSubmit();
+        }
+      });
       codeBox.appendChild(codeText);
       codeBox.appendChild(copyButton);
+      codeBox.appendChild(trackButton);
       bookingAlert.appendChild(codeBox);
       const bookingCodeInput = $('bookingCode');
       if (bookingCodeInput) bookingCodeInput.value = payload.booking_code;
