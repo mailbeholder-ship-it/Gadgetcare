@@ -158,6 +158,35 @@ h1,h2,h3,h4,h5,h6,
   font-family:"Open Sauce Sans",sans-serif;
   font-weight:700;
 }
+
+/* ===== 3D PREMIUM DARK EXPERIENCE — pelanggan ===== */
+:root{--gc-glow:rgba(255,87,34,.22);--gc-edge:rgba(255,255,255,.09)}
+body{background:radial-gradient(ellipse at 82% 8%,rgba(255,87,34,.075),transparent 34%),radial-gradient(ellipse at 8% 55%,rgba(39,91,128,.10),transparent 32%),var(--bg)}
+nav{box-shadow:0 10px 35px rgba(0,0,0,.28)}
+.hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 82% 30%,rgba(255,87,34,.19),transparent 36%),linear-gradient(135deg,#101820 0%,#0b0f14 62%,#17120f 100%)}
+.hero:before{content:"";position:absolute;z-index:-1;width:340px;height:340px;right:7%;top:4%;border-radius:50%;background:radial-gradient(circle,rgba(255,116,54,.18),rgba(255,87,34,.035) 48%,transparent 70%);filter:blur(8px);pointer-events:none}
+.hero-content{position:relative}
+.badge{box-shadow:0 0 24px rgba(255,87,34,.10),inset 0 1px rgba(255,255,255,.10)}
+.card,.form-wrapper,.status-result,.payment-detail{position:relative;border-color:rgba(255,255,255,.085);background:linear-gradient(145deg,rgba(26,36,47,.97),rgba(14,20,27,.98));box-shadow:0 14px 32px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.065);transform:perspective(1000px) translateZ(0);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.card:before,.form-wrapper:before,.payment-detail:before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.055),transparent 34%);pointer-events:none}
+.card h3,.card p,.card .service-icon,.card .price{position:relative}
+.btn{box-shadow:0 7px 0 rgba(0,0,0,.22),0 12px 22px rgba(0,0,0,.20),inset 0 1px rgba(255,255,255,.18);transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.btn-orange{background:linear-gradient(145deg,#ff7848,#ed4317);box-shadow:0 6px 0 #9f3217,0 13px 24px rgba(255,87,34,.20),inset 0 1px rgba(255,255,255,.28)}
+.btn-dark{background:linear-gradient(145deg,#202b37,#111820);border-color:rgba(255,255,255,.12)}
+input,select,textarea{box-shadow:inset 0 3px 9px rgba(0,0,0,.22),0 1px rgba(255,255,255,.025);transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(255,87,34,.13),inset 0 2px 8px rgba(0,0,0,.2)}
+.customer-menu{box-shadow:0 22px 55px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.12),0 0 28px rgba(255,87,34,.045)}
+.customer-menu button.active{box-shadow:0 7px 18px rgba(255,87,34,.22),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -2px 5px rgba(0,0,0,.12)}
+@media(hover:hover) and (pointer:fine){
+ .card:hover,.payment-detail:hover{transform:perspective(1000px) rotateX(2deg) rotateY(-1.5deg) translateY(-6px);border-color:rgba(255,112,65,.38);box-shadow:0 24px 48px rgba(0,0,0,.38),0 0 24px rgba(255,87,34,.08),inset 0 1px rgba(255,255,255,.10)}
+ .btn:hover{transform:translateY(-3px);filter:brightness(1.08);box-shadow:0 10px 0 rgba(0,0,0,.18),0 17px 28px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.2)}
+ .btn-orange:hover{box-shadow:0 9px 0 #9f3217,0 18px 28px rgba(255,87,34,.25),inset 0 1px rgba(255,255,255,.28)}
+ .customer-menu button:hover{transform:translateX(3px)}
+}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25),0 5px 12px rgba(0,0,0,.2)}
+@media(max-width:800px){.hero:before{width:220px;height:220px;right:-70px;top:0}.card,.form-wrapper,.status-result,.payment-detail{box-shadow:0 10px 24px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.06)}}
+@media(prefers-reduced-motion:reduce){.card,.form-wrapper,.payment-detail,.btn,.customer-menu button{transition:none!important}.card:hover,.payment-detail:hover,.btn:hover{transform:none!important}}
+
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
