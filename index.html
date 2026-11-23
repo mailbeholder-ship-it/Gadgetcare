@@ -599,8 +599,31 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(255,87,34,.13)
       const currentStage=stages.indexOf(booking.status||'Menunggu');
       const progress=stages.map((stage,index)=>'<div class="progress-step '+(currentStage>=index?'done':'')+'">'+escapeHTML(stage)+'</div>').join('');
       result.innerHTML=`<div class="status-row"><span class="status-label">Kode booking</span><span class="status-value">${escapeHTML(booking.booking_code||'-')}</span></div><div class="status-row"><span class="status-label">Nama</span><span class="status-value">${escapeHTML(booking.customer_name||'-')}</span></div><div class="status-row"><span class="status-label">Gadget</span><span class="status-value">${escapeHTML(booking.device||'-')}</span></div><div class="status-row"><span class="status-label">Kerusakan</span><span class="status-value">${escapeHTML(booking.damage||'-')}</span></div><div class="status-row"><span class="status-label">Status terkini</span><span class="status-value"><span class="status-badge">${escapeHTML(booking.status||'Menunggu')}</span></span></div><div class="service-progress"><h3>Riwayat Proses Servis</h3><div class="progress-steps">${progress}</div></div><div class="status-row"><span class="status-label">Jadwal kunjungan</span><span class="status-value">${booking.scheduled_at?new Date(booking.scheduled_at).toLocaleString('id-ID',{dateStyle:'full',timeStyle:'short',timeZone:'Asia/Jakarta'}):'Belum dikonfirmasi'}</span></div><div class="status-row"><span class="status-label">Estimasi</span><span class="status-value">Rp${Number(booking.estimated_price||0).toLocaleString('id-ID')}</span></div><div class="status-row"><span class="status-label">Total</span><span class="status-value">Rp${Number(booking.total_price||0).toLocaleString('id-ID')}</span></div><div class="warranty-note"><strong>Informasi garansi:</strong> Ketentuan dan masa garansi (jika berlaku) mengikuti konfirmasi admin serta bukti transaksi. Simpan bukti servis Anda dan hubungi admin untuk memastikan cakupan garansi.</div>
-      <button type="button" class="btn btn-orange full" id="gcPrintBookingSummary" style="margin-top:14px">🖨️ Cetak Ringkasan Booking & Servis</button>
-      <p class="hint">Ringkasan ini bukan kuitansi pembayaran. Status pembayaran perlu dikonfirmasi melalui admin.</p>`;
+      <div class="status-actions" style="display:flex;flex-wrap:wrap;gap:9px;margin-top:14px">
+        <button type="button" class="btn btn-dark" id="gcCopyStatusCode">📋 Salin Kode Booking</button>
+        <button type="button" class="btn btn-dark" id="gcContactStatusAdmin">💬 Hubungi Admin</button>
+        <button type="button" class="btn btn-orange" id="gcPrintBookingSummary">🖨️ Cetak Ringkasan</button>
+      </div>
+      <p class="hint">Estimasi dan total biaya mengikuti data terakhir yang dicatat admin. Ringkasan ini bukan kuitansi pembayaran.</p>`;
+      $('gcCopyStatusCode').addEventListener('click',async()=>{
+        const btn=$('gcCopyStatusCode'),value=String(booking.booking_code||'').trim();
+        try{
+          if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(value);
+          else{
+            const temp=document.createElement('textarea');temp.value=value;temp.setAttribute('readonly','');temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.select();
+            const copied=document.execCommand('copy');temp.remove();if(!copied)throw new Error('Salin manual');
+          }
+          btn.textContent='✅ Kode Tersalin';
+        }catch(copyErr){
+          btn.textContent='Pilih kode pada hasil status untuk menyalin';
+          const codeNode=[...result.querySelectorAll('.status-row')].find(node=>node.textContent.includes('Kode booking'));
+          if(codeNode){const range=document.createRange();range.selectNodeContents(codeNode);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);}
+        }
+      });
+      $('gcContactStatusAdmin').addEventListener('click',()=>{
+        const message='Halo FixioGadget, saya ingin menanyakan booking '+(booking.booking_code||'-')+'. Nama: '+(booking.customer_name||'-')+'. Status servis saat ini: '+(booking.status||'Menunggu')+'. Mohon bantu informasinya.';
+        window.open('https://wa.me/6285846009748?text='+encodeURIComponent(message),'_blank','noopener');
+      });
       $('gcPrintBookingSummary').addEventListener('click',()=>{
         const printWindow=window.open('','_blank','width=820,height=900');
         if(!printWindow){alert('Jendela cetak diblokir browser. Izinkan pop-up untuk situs ini lalu coba lagi.');return;}
