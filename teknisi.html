@@ -20,7 +20,9 @@ const SUPABASE_URL="https://sqpolxwdyypbxylgvihi.supabase.co";
 const SUPABASE_KEY="sb_publishable_rtENTJcEofFn3NbyP76ORw_YY1CwF8G";
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=id=>document.getElementById(id);
-let technician=null;
+let technician=null, jobsChannel=null, jobsRefreshTimer=null;
+async function stopJobsLive(){if(jobsChannel){await db.removeChannel(jobsChannel);jobsChannel=null}if(jobsRefreshTimer){clearInterval(jobsRefreshTimer);jobsRefreshTimer=null}}
+function startJobsLive(){if(!technician)return;if(jobsChannel)db.removeChannel(jobsChannel);jobsChannel=db.channel('technician-bookings-'+technician.id).on('postgres_changes',{event:'*',schema:'public',table:'bookings',filter:'technician_id=eq.'+technician.id},()=>loadJobs()).subscribe();if(jobsRefreshTimer)clearInterval(jobsRefreshTimer);jobsRefreshTimer=setInterval(()=>{if(document.visibilityState==='visible'&&technician)loadJobs()},30000)}
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dateText=v=>{if(!v)return"Belum dijadwalkan";const d=new Date(v);return Number.isNaN(d.getTime())?"-":new Intl.DateTimeFormat("id-ID",{dateStyle:"medium",timeStyle:"short"}).format(d)};
 function showLogin(msg=""){$("login").classList.remove("hidden");$("dashboard").classList.add("hidden");$("logout").classList.add("hidden");$("loginMessage").textContent=msg}
@@ -41,10 +43,10 @@ async function openTechnicianDashboard(){
  const {data:userData}=await db.auth.getUser();if(!userData.user){await db.auth.signOut();showLogin("Sesi login tidak valid.");return}
  const {data,error}=await db.from("technicians").select("id,name,specialty,is_active").eq("auth_user_id",userData.user.id).eq("is_active",true).maybeSingle();
  if(error||!data){await db.auth.signOut();showLogin("Akun ini belum terhubung ke profil teknisi aktif. Hubungi admin.");return}
- technician=data;$("techName").textContent=data.name;showDashboard();await loadJobs();
+ technician=data;$("techName").textContent=data.name;showDashboard();await loadJobs();startJobsLive();
 }
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;$("loginMessage").textContent="Memeriksa akun…";const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("loginButton").disabled=false;if(error){$("loginMessage").textContent="Login gagal: "+error.message;return}await openTechnicianDashboard()});
-$("logout").addEventListener("click",async()=>{await db.auth.signOut();technician=null;showLogin("Anda sudah keluar.")});
-db.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT"){technician=null;showLogin()}});
+$("logout").addEventListener("click",async()=>{await stopJobsLive();await db.auth.signOut();technician=null;showLogin("Anda sudah keluar.")});
+db.auth.onAuthStateChange((event)=>{if(event==="SIGNED_OUT"){stopJobsLive();technician=null;showLogin()}});
 (async()=>{const {data}=await db.auth.getSession();if(data.session)await openTechnicianDashboard()})();
 </script></body></html>
