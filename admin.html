@@ -255,6 +255,17 @@ button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25),0 5px
 .gc-analytics-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.gc-analytics-head h2{font-size:19px;margin:4px 0}.gc-analytics-kicker{font-size:10px;letter-spacing:.12em;color:var(--orange);font-weight:800}.gc-analytics-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:#ff57221c;color:var(--orange);font-size:20px}
 .gc-trend{height:190px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:end;gap:10px;padding:18px 4px 0}.gc-trend-col{height:100%;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px}.gc-trend-value{font-size:11px;color:#f4f4f5;font-weight:700}.gc-trend-track{height:130px;width:min(30px,72%);display:flex;align-items:flex-end;border-radius:9px;background:#ffffff08;overflow:hidden}.gc-trend-bar{width:100%;min-height:3px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#ff9a68,#ff5722);box-shadow:0 0 18px #ff572233;transition:height .35s ease}.gc-trend-label{font-size:10px;color:var(--muted);white-space:nowrap}.gc-status-breakdown{display:grid;gap:13px;margin-top:20px}.gc-status-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;font-size:12px}.gc-status-row span:last-child{font-weight:700;color:#fff}.gc-status-track{grid-column:1/-1;height:7px;border-radius:10px;background:#ffffff12;overflow:hidden}.gc-status-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#ff5722,#ff9a68)}.gc-analytics-empty{grid-column:1/-1;padding:22px 8px;text-align:center;color:var(--muted);font-size:12px}
 @media(max-width:760px){.gc-analytics-grid{grid-template-columns:1fr;gap:10px}.gc-analytics-card{padding:15px}.gc-trend{gap:5px;height:175px}.gc-trend-track{height:116px;width:min(27px,76%)}.gc-trend-label{font-size:9px}}
+
+/* Laporan keuangan admin */
+.gc-report-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr)) auto;gap:10px;align-items:end;margin:16px 0}
+.gc-report-filters label{display:grid;gap:6px;font-size:12px;color:var(--muted)}
+.gc-report-filters input{width:100%;min-width:0;background:#0b1118;color:#fff;border:1px solid var(--line);border-radius:9px;padding:11px}
+.gc-report-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.gc-report-summary>div{padding:14px;border-radius:12px;background:linear-gradient(145deg,#202a35,#111820);border:1px solid rgba(255,255,255,.08);min-width:0}
+.gc-report-summary span{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}
+.gc-report-summary strong{display:block;font-size:clamp(16px,2.5vw,23px);overflow-wrap:anywhere;color:#fff}
+.gc-report-actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}
+@media(max-width:600px){.gc-report-filters{grid-template-columns:1fr 1fr}.gc-report-filters button{grid-column:1/-1}.gc-report-summary{grid-template-columns:1fr}.gc-report-summary>div{padding:12px}}
 </style>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -285,7 +296,16 @@ button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.25),0 5px
 <div class="gc-extra-grid"><div class="gc-extra-stat">Order masuk<strong id="gcIncoming">0</strong></div><div class="gc-extra-stat">Perlu konfirmasi<strong id="gcConfirm">0</strong></div><div class="gc-extra-stat">Sedang diperbaiki<strong id="gcRepair">0</strong></div><div class="gc-extra-stat">Selesai<strong id="gcDone">0</strong></div></div>
 <div class="gc-extra-card"><h2>Lokasi Saya</h2><p class="muted small" id="gcLocationStatus">Lokasi belum diaktifkan.</p><div id="gcMap" class="gc-map"></div><button type="button" id="gcLocate" class="gc-orange-btn" style="margin-top:10px">Perbarui Lokasi GPS</button></div>
 </div>
-<div class="gc-view" data-gc-panel="income"><div class="gc-extra-card"><h2>Pendapatan Dibayar</h2><strong id="gcRevenue" style="font-size:28px">Rp0</strong><p class="muted small">Total harga booking dengan status pembayaran Dibayar.</p><h3>Ringkasan pendapatan</h3><p id="gcIncomeDetail" class="muted small">Memuat data...</p><h3 style="margin-top:22px">Riwayat Transaksi</h3><p class="muted small">Booking dengan status pembayaran Dibayar.</p><div id="gcTransactionHistory"><p class="muted small">Memuat riwayat...</p></div></div></div>
+<div class="gc-view" data-gc-panel="income">
+ <div class="gc-extra-card">
+  <h2>Laporan Keuangan</h2><p class="muted small">Pilih rentang tanggal untuk melihat transaksi yang sudah dibayar atau lunas.</p>
+  <div class="gc-report-filters"><label>Dari tanggal<input type="date" id="gcReportFrom"></label><label>Sampai tanggal<input type="date" id="gcReportTo"></label><button type="button" id="gcApplyReport" class="gc-orange-btn">Terapkan Filter</button></div>
+  <div class="gc-report-summary"><div><span>Total pendapatan lunas</span><strong id="gcRevenue">Rp0</strong></div><div><span>Jumlah transaksi</span><strong id="gcPaidCount">0</strong></div><div><span>Rata-rata transaksi</span><strong id="gcAveragePaid">Rp0</strong></div></div>
+  <p id="gcIncomeDetail" class="muted small">Memuat data...</p>
+  <div class="gc-report-actions"><button type="button" id="gcExportCsv" class="secondary">Unduh CSV</button><button type="button" id="gcPrintReport" class="gc-orange-btn">Cetak / Simpan PDF</button></div>
+  <h3 style="margin-top:22px">Riwayat Transaksi</h3><div id="gcTransactionHistory"><p class="muted small">Memuat riwayat...</p></div>
+ </div>
+</div>
 <div class="gc-view" data-gc-panel="contacts"><div class="gc-extra-card"><h2>Kontak Masuk</h2><p class="muted small">Daftar kontak pelanggan dari booking. Pesan WhatsApp tidak tersedia otomatis tanpa integrasi WhatsApp Business API.</p><div id="gcContactList">Memuat kontak...</div></div></div>
 <div class="gc-view" data-gc-panel="planning"><div class="gc-extra-card"><h2>Perencanaan & Perubahan Data</h2><p class="muted small">Kelola harga, keterangan kerusakan, status servis, pembayaran, dan nota melalui daftar booking di bawah.</p></div><section class="panel" id="gcBookingPanel"><div class="section-head"><div><h2>Pesanan pelanggan</h2><p class="muted small">Perbarui status, harga dan pembayaran dari sini.</p></div></div>
 <div class="toolbar"><input id="search" placeholder="Cari kode, nama, nomor HP..."><select id="statusFilter"><option value="">Semua status servis</option><option>Menunggu</option><option>Dikonfirmasi</option><option>Teknisi Berangkat</option><option>Sedang Diperbaiki</option><option>Selesai</option></select><select id="paymentFilter"><option value="">Semua pembayaran</option><option value="Belum Dibayar">Belum Dibayar</option><option value="Menunggu">Menunggu</option><option value="Dibayar">Dibayar</option><option value="Gagal">Gagal</option></select></div>
@@ -475,6 +495,9 @@ async function loadBookings(){message("bookingMessage","Memuat data…");const {
 function renderBookings(){const q=$("search").value.toLowerCase().trim(),sf=$("statusFilter").value,pf=$("paymentFilter").value;const rows=bookings.filter(b=>(!q||[b.booking_code,b.customer_name,b.phone,b.device,b.damage,b.address].join(" ").toLowerCase().includes(q))&&(!sf||b.status===sf)&&(!pf||b.payment_status===pf));if(!rows.length){$("bookingList").innerHTML='<div class="empty">Belum ada booking atau tidak ada hasil yang cocok.</div>';return}
 $("bookingList").innerHTML=rows.map(b=>'<article class="booking" data-id="'+esc(b.id)+'"><div class="booking-code">'+esc(b.booking_code||"Tanpa kode")+'</div><span class="pill">Servis: '+esc(b.status||"Menunggu")+'</span><span class="pill">Pembayaran: '+esc(b.payment_status||"Belum diatur")+'</span><div class="details">👤 <b>Nama:</b> '+esc(b.customer_name)+'<br>📞 <b>Telepon:</b> '+esc(b.phone)+'<br>📱 <b>Perangkat:</b> '+esc(b.device)+'<br>🔧 <b>Kerusakan:</b> '+esc(b.damage)+'<br>📝 <b>Keterangan:</b> '+esc(b.description||"-")+'<br>📍 <b>Alamat:</b> '+esc(b.address)+'<br>🕒 <b>Waktu masuk:</b> '+esc(b.created_at?new Date(b.created_at).toLocaleString("id-ID"):"-")+'<br>📅 <b>Jadwal:</b> '+esc(b.scheduled_at?new Date(b.scheduled_at).toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Jakarta"}):"Belum diatur")+'<br>💳 <b>Metode pembayaran:</b> '+esc(b.payment_method||"-")+'</div><div class="editgrid"><label>Status servis<select class="statusEdit">'+["Menunggu","Dikonfirmasi","Teknisi Berangkat","Sedang Diperbaiki","Selesai"].map(s=>'<option '+(b.status===s?"selected":"")+'>'+s+'</option>').join("")+'</select></label><label>Estimasi harga (Rp)<input class="estimateEdit" type="number" min="0" step="1000" value="'+(b.estimated_price??"")+'" placeholder="Mis. 150000"></label><label>Total harga (Rp)<input class="totalEdit" type="number" min="0" step="1000" value="'+(b.total_price??"")+'" placeholder="Harga final"></label><label>Jadwal kunjungan<input class="scheduleEdit" type="datetime-local" value="'+(b.scheduled_at?(()=>{const d=new Date(b.scheduled_at);return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)})():"")+'"></label><label>Catatan jadwal<input class="scheduleNotesEdit" maxlength="500" value="'+esc(b.schedule_notes||"")+'" placeholder="Catatan untuk pelanggan"></label><label>Status pembayaran<select class="paymentEdit">'+["Belum Dibayar","Menunggu","Dibayar","Lunas","Gagal"].map(s=>'<option '+(b.payment_status===s?"selected":"")+'>'+s+'</option>').join("")+'</select></label><label style="grid-column:1/-1">Detail kerusakan / Keterangan nota<textarea class="descriptionEdit" rows="3" maxlength="1500" placeholder="Contoh: layar bergaris, sentuh tidak berfungsi, atau detail pemeriksaan teknisi">'+esc(b.description||"")+'</textarea></label></div><div class="revenue-note">Estimasi: '+esc(money(b.estimated_price))+' · Total: '+esc(money(b.total_price))+'</div><div class="actions"><button type="button" class="save" style="pointer-events:auto;position:relative;z-index:2">Simpan perubahan</button><button class="secondary wa">WhatsApp</button><button class="secondary map">Buka peta</button><button class="secondary print">Cetak</button></div><p class="message itemMessage" role="status"></p></article>').join("");
 $("bookingList").querySelectorAll(".booking").forEach(card=>{const b=bookings.find(x=>x.id===card.dataset.id);card.querySelectorAll(".statusEdit,.estimateEdit,.totalEdit,.paymentEdit,.scheduleEdit,.scheduleNotesEdit").forEach(control=>{control.disabled=false;control.removeAttribute("disabled");});card.querySelector(".save").addEventListener("click",async()=>{const ev=card.querySelector(".estimateEdit").value,tv=card.querySelector(".totalEdit").value;const patch={status:card.querySelector(".statusEdit").value,description:card.querySelector(".descriptionEdit").value.trim()||null,estimated_price:ev===""?null:Number(ev),total_price:tv===""?null:Number(tv),payment_status:card.querySelector(".paymentEdit").value,scheduled_at:card.querySelector(".scheduleEdit").value?new Date(card.querySelector(".scheduleEdit").value).toISOString():null,schedule_notes:card.querySelector(".scheduleNotesEdit").value.trim()||null};if([patch.estimated_price,patch.total_price].some(n=>n!==null&&(!Number.isFinite(n)||n<0))){card.querySelector(".itemMessage").textContent="Harga harus angka nol atau lebih.";return}const btn=card.querySelector(".save");btn.disabled=true;btn.textContent="Menyimpan…";try{const {data,error}=await db.from("bookings").update(patch).eq("id",b.id).select("id,status,estimated_price,total_price,payment_status,scheduled_at,schedule_notes");if(error)throw error;if(!data||data.length===0)throw new Error("Database tidak memperbarui baris booking. Periksa sesi login dan kebijakan UPDATE RLS.");await loadBookings();message("bookingMessage","Perubahan berhasil disimpan.",true)}catch(err){card.querySelector(".itemMessage").textContent="Gagal menyimpan: "+err.message}finally{btn.disabled=false;btn.textContent="Simpan perubahan"}});card.querySelector(".wa").addEventListener("click",()=>{const phone=String(b.phone||"").replace(/\D/g,"").replace(/^0/,"62");window.open("https://wa.me/"+phone+"?text="+encodeURIComponent("Halo "+(b.customer_name||"")+" terkait booking "+(b.booking_code||"")+". Status servis: "+(b.status||"Menunggu")+". Estimasi/total: "+money(b.total_price??b.estimated_price)),"_blank","noopener")});card.querySelector(".map").addEventListener("click",()=>window.open(b.latitude!=null&&b.longitude!=null?"https://www.google.com/maps?q="+encodeURIComponent(b.latitude+","+b.longitude):"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(b.address||""),"_blank","noopener"));card.querySelector(".print").addEventListener("click",()=>{if(!b.booking_code){card.querySelector(".itemMessage").textContent="Kode booking tidak tersedia.";return}const url="./nota.html?code="+encodeURIComponent(b.booking_code);const w=window.open(url,"_blank","noopener");if(!w){card.querySelector(".itemMessage").textContent="Pop-up diblokir. Izinkan pop-up lalu tekan Cetak Nota lagi."}})})}
+$("gcApplyReport").addEventListener("click",()=>{if($("gcReportFrom").value&&$("gcReportTo").value&&$("gcReportFrom").value>$("gcReportTo").value){alert("Tanggal awal tidak boleh melewati tanggal akhir.");return}gcRenderIncomeReport()});
+$("gcExportCsv").addEventListener("click",gcDownloadIncomeCsv);
+$("gcPrintReport").addEventListener("click",gcPrintIncomeReport);
 $("search").addEventListener("input",renderBookings);$("statusFilter").addEventListener("change",renderBookings);$("paymentFilter").addEventListener("change",renderBookings);$("refreshButton").addEventListener("click",loadBookings);
 
 let gcBookingChannel=null;
@@ -514,28 +537,46 @@ $("gcWorkToggle").addEventListener("click",async()=>{
   }catch(err){message("hoursMessage","Gagal mengubah status: "+err.message);alert("Status tidak tersimpan ke Supabase: "+err.message)}
   finally{btn.disabled=false}
 });
+function gcReportDate(b){const raw=b.paid_at||b.payment_at||b.updated_at||b.created_at;return raw?String(raw).slice(0,10):""}
+function gcGetIncomeRows(){
+ const from=$("gcReportFrom")?.value||"",to=$("gcReportTo")?.value||"";
+ return bookings.filter(b=>["dibayar","lunas"].includes(String(b.payment_status||"").trim().toLowerCase())).filter(b=>{const d=gcReportDate(b);return d&&(!from||d>=from)&&(!to||d<=to)});
+}
+function gcRenderIncomeReport(){
+ const paid=gcGetIncomeRows(),sum=paid.reduce((n,b)=>n+Number(b.total_price??b.estimated_price??0),0);
+ $("gcRevenue").textContent=money(sum);$("gcPaidCount").textContent=String(paid.length);$("gcAveragePaid").textContent=money(paid.length?sum/paid.length:0);
+ $("gcIncomeDetail").textContent=paid.length+" transaksi lunas pada rentang tanggal yang dipilih.";
+ const history=$("gcTransactionHistory");if(!history)return;
+ const sorted=[...paid].sort((a,b)=>gcReportDate(b).localeCompare(gcReportDate(a)));
+ history.innerHTML=sorted.length?sorted.map(b=>{
+  const date=gcReportDate(b),timeRaw=b.paid_at||b.payment_at||b.updated_at||b.created_at;
+  const dateLabel=date?new Date(date+"T00:00:00").toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"Tanggal tidak tersedia";
+  const timeLabel=timeRaw?new Date(timeRaw).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",hour12:false,timeZone:"Asia/Jakarta"})+" WIB":"";
+  return '<div class="gc-extra-card" style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><strong>'+esc(b.customer_name||"Pelanggan")+'</strong><div class="muted small" style="margin-top:5px">Kode booking: '+esc(b.booking_code||"-")+'</div><div class="muted small">Tanggal: '+esc(dateLabel)+' '+esc(timeLabel)+'</div><div class="muted small">Metode: '+esc(b.payment_method||"-")+'</div></div><strong style="color:var(--orange)">'+esc(money(Number(b.total_price??b.estimated_price??0)))+'</strong></div></div>';
+ }).join(""):'<div class="gc-extra-card"><p class="muted small">Tidak ada transaksi lunas pada rentang tanggal ini.</p></div>';
+}
 function gcRenderExtraStats(){
-  const count=status=>bookings.filter(b=>String(b.status||"").toLowerCase()===status.toLowerCase()).length;
-  $("gcIncoming").textContent=count("Menunggu");
-  $("gcConfirm").textContent=count("Dikonfirmasi");
-  $("gcRepair").textContent=count("Sedang Diperbaiki");
-  $("gcDone").textContent=count("Selesai");
-  const paidStatuses=["dibayar","lunas"];const paid=bookings.filter(b=>paidStatuses.includes(String(b.payment_status||"").trim().toLowerCase()));
-  const revenue=paid.reduce((sum,b)=>sum+Number(b.total_price??b.estimated_price??0),0);
-  $("gcRevenue").textContent=money(revenue);
-  $("gcIncomeDetail").textContent=paid.length+" transaksi berstatus Dibayar.";
-  const history=$("gcTransactionHistory");
-  if(!history)return;
-  const sorted=[...paid].sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
-  history.innerHTML=sorted.length?sorted.map(b=>{
-    const name=esc(b.customer_name||b.name||"Pelanggan");
-    const code=esc(b.booking_code||"-");
-    const total=money(Number(b.total_price??b.estimated_price??0));
-    const transactionDate=b.paid_at||b.payment_at||b.updated_at||b.created_at;
-    const date=transactionDate?new Date(transactionDate).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"}):"Tanggal tidak tersedia";
-    const time=transactionDate?new Date(transactionDate).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false,timeZone:"Asia/Jakarta"})+" WIB":"Jam tidak tersedia";
-    return '<div class="gc-extra-card" style="margin:10px 0"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><strong>'+name+'</strong><div class="muted small" style="margin-top:5px">Kode booking: '+code+'</div><div class="muted small">Tanggal transaksi: '+esc(date)+'</div><div class="muted small">Jam transaksi: '+esc(time)+'</div></div><strong style="color:var(--orange)">'+esc(total)+'</strong></div></div>';
-  }).join(""):'<div class="gc-extra-card"><p class="muted small">Belum ada transaksi dengan status pembayaran Dibayar.</p></div>';
+ const count=status=>bookings.filter(b=>String(b.status||"").toLowerCase()===status.toLowerCase()).length;
+ $("gcIncoming").textContent=count("Menunggu");$("gcConfirm").textContent=count("Dikonfirmasi");$("gcRepair").textContent=count("Sedang Diperbaiki");$("gcDone").textContent=count("Selesai");
+ if(!$("gcReportFrom").value){const now=new Date();$("gcReportFrom").value=new Date(now.getFullYear(),now.getMonth(),1).toISOString().slice(0,10)}
+ if(!$("gcReportTo").value)$("gcReportTo").value=new Date().toISOString().slice(0,10);
+ gcRenderIncomeReport();
+}
+function gcCsvCell(value){let s=String(value??"");if(/^[=+@\\-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+function gcDownloadIncomeCsv(){
+ const rows=gcGetIncomeRows(),header=["Tanggal transaksi","Kode booking","Nama pelanggan","Nomor telepon","Perangkat","Metode pembayaran","Status pembayaran","Jumlah (IDR)"];
+ const data=rows.map(b=>[gcReportDate(b),b.booking_code,b.customer_name,b.phone,b.device,b.payment_method,b.payment_status,Number(b.total_price??b.estimated_price??0)]);
+ const csv="\\uFEFF"+[header,...data].map(row=>row.map(gcCsvCell).join(",")).join("\\r\\n");
+ const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="laporan-pendapatan-fixiogadget-"+($("gcReportFrom").value||"awal")+"-sd-"+($("gcReportTo").value||"akhir")+".csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+function gcPrintIncomeReport(){
+ const rows=gcGetIncomeRows(),total=rows.reduce((n,b)=>n+Number(b.total_price??b.estimated_price??0),0);
+ const fmt=n=>money(n),range=($("gcReportFrom").value||"-")+" s/d "+($("gcReportTo").value||"-");
+ const table=rows.map(b=>'<tr><td>'+esc(gcReportDate(b))+'</td><td>'+esc(b.booking_code||"-")+'</td><td>'+esc(b.customer_name||"-")+'</td><td>'+esc(b.payment_method||"-")+'</td><td class="num">'+esc(fmt(Number(b.total_price??b.estimated_price??0)))+'</td></tr>').join("");
+ const win=window.open("","_blank");if(!win){alert("Pop-up diblokir. Izinkan pop-up untuk mencetak laporan.");return}
+ win.document.write('<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Laporan Pendapatan FixioGadget</title><style>body{font:14px Arial,sans-serif;color:#222;padding:28px}h1{margin-bottom:4px}p{color:#555}.summary{padding:14px;background:#f3f4f6;margin:18px 0}table{width:100%;border-collapse:collapse;margin-top:18px}th,td{border:1px solid #ddd;padding:9px;text-align:left}th{background:#f1f1f1}.num{text-align:right}tfoot td{font-weight:bold}@media print{button{display:none}}</style></head><body><h1>FixioGadget</h1><h2>Laporan Pendapatan</h2><p>Periode: '+esc(range)+'</p><div class="summary">Total pendapatan lunas: <strong>'+esc(fmt(total))+'</strong><br>Jumlah transaksi: <strong>'+rows.length+'</strong></div><table><thead><tr><th>Tanggal</th><th>Kode booking</th><th>Pelanggan</th><th>Metode</th><th>Jumlah</th></tr></thead><tbody>'+table+'</tbody><tfoot><tr><td colspan="4">TOTAL</td><td class="num">'+esc(fmt(total))+'</td></tr></tfoot></table><p>Dicetak: '+esc(new Date().toLocaleString("id-ID"))+'</p><script>window.onload=()=>window.print()<\\/script></body></html>');
+ win.document.close();
 }
 function gcRenderContacts(){
   const seen=new Map();
